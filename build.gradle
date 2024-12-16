@@ -24,12 +24,20 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-web-services'
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Lombok
     annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
+
+    // DB
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
@@ -39,4 +47,13 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+/* deploy 서브 모듈에 있는 config 파일들을 resources로 복사 */
+task copyYaml(type: Copy) {
+    copy {
+        from './submodule/config'
+        include '*.yml'
+        into 'src/main/resources'
+    }
 }
