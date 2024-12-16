@@ -8,34 +8,34 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
 #    url: ${DB_URL}
-    #    # createDatabaseIfNotExist=true ??????? ?? ?? ??
+# createDatabaseIfNotExist=true 데이터베이스가 없을 경우 생성
 #    username: ${DB_USERNAME}
 #    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
-      ddl-auto: update # ???? ??? ???? ???? ??? ?? ?? ???? ???.
+      ddl-auto: update # 엔티티로 등록된 클래스와 매핑되는 테이블 자동 생성 주석해도 됩니다.
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-        # ???? ??? ?? ???? DB? ????? ??
+        # 자바에서 카멜로 필드 작성하면 DB에 스네이크로 기록
     properties:
       hibernate:
         show_sql: true
-#        format_sql: true # ??? ??
+#        format_sql: true # 이쁘게 보기
 
 springdoc:
   swagger-ui:
-    groups-order: DESC # ?? ??? ?????? ??
-    tags-sorter: alpha # ??? ??? ??? ??
-    operations-sorter: method # HTTP ???(GET, POST ?) ??? ??
-    disable-swagger-default-url: true # ?? Swagger URL ????
-    display-request-duration: true # ??? ?? ??? ??
-    defaultModelsExpandDepth: 2 # ?? ??? ?? ?? ??
-    defaultModelExpandDepth: 2 # ?? ??? ?? ?? ??
+    groups-order: DESC # 그룹 순서를 내림차순으로 설정
+    tags-sorter: alpha # 태그를 알파벳 순으로 정렬
+    operations-sorter: method # HTTP 메서드(GET, POST 등) 순서로 정렬
+    disable-swagger-default-url: true # 기본 Swagger URL 비활성화
+    display-request-duration: true # 요청의 처리 시간을 표시
+    defaultModelsExpandDepth: 2 # 기본 모델의 확장 깊이 설정
+    defaultModelExpandDepth: 2 # 단일 모델의 확장 깊이 설정
   api-docs:
-    path: /api-docs # API ?? ?? ??
+    path: /api-docs # API 문서 경로 설정
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
-  writer-with-default-pretty-printer: true # JSON? ??? ??
+  writer-with-default-pretty-printer: true # JSON을 예쁘게 출력
 #  paths-to-match:
-#    - /api/v1/** # ?? ??? API? ??
+#    - /api/v1/** # 특정 경로의 API만 매칭
