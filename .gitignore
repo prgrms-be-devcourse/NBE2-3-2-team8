@@ -42,3 +42,6 @@ out/
 
 ### application*.yml ###
 src/main/resources/*.yml
+
+### generated ###
+src/main/generated/
