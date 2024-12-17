@@ -11,15 +11,11 @@ import org.locationtech.jts.geom.Point;
 import org.programmers.signalbuddy.domain.crossroad.Crossroad;
 import org.programmers.signalbuddy.domain.crossroad.repository.CrossroadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ActiveProfiles;
 
 @Rollback
 @DataJpaTest
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // 외부 데이터베이스를 사용하기 위함.
 class CrossroadSaveTest {
 
     private final GeometryFactory geometryFactory = new GeometryFactory();
@@ -33,11 +29,8 @@ class CrossroadSaveTest {
         Point point = geometryFactory.createPoint(new Coordinate(127.12345, 37.12345));
 
         // Crossroad 엔티티 생성
-        Crossroad crossroad = Crossroad.builder()
-            .crossroadApiId("API12345")
-            .name("Test Crossroad")
-            .coordinate(point)
-            .build();
+        Crossroad crossroad = Crossroad.builder().crossroadApiId("API12345").name("Test Crossroad")
+            .coordinate(point).build();
 
         // When: 엔티티 저장
         Crossroad savedCrossroad = crossroadRepository.save(crossroad);
