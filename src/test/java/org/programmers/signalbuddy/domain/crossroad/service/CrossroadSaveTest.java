@@ -11,14 +11,19 @@ import org.locationtech.jts.geom.Point;
 import org.programmers.signalbuddy.domain.crossroad.Crossroad;
 import org.programmers.signalbuddy.domain.crossroad.repository.CrossroadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 
 @Rollback
+@ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @DataJpaTest
 class CrossroadSaveTest {
 
     private final GeometryFactory geometryFactory = new GeometryFactory();
+
     @Autowired
     private CrossroadRepository crossroadRepository;
 
