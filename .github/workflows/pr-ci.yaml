@@ -44,8 +44,11 @@ jobs:
 
 #      - name: Gradle로 프로젝트 Build
 #        run: ./gradlew build
+      - name: Gradle 캐시 삭제
+        run: rm -rf ~/.gradle/caches
+
       - name: Gradle로 프로젝트 Build 및 Test
-        run: ./gradlew build -Dspring.profiles.active=test
+        run: ./gradlew build -Dspring.profiles.active=test --info
 
       - name: 테스트 결과를 PR 코멘트로 출력
         uses: EnricoMi/publish-unit-test-result-action@v2
