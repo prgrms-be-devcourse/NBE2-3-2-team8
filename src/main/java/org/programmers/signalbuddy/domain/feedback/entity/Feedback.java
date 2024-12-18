@@ -8,20 +8,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.programmers.signalbuddy.domain.basetime.BaseTimeEntity;
+import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 
 @Entity(name = "feedbacks")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
-@ToString
 public class Feedback extends BaseTimeEntity {
 
     @Id
@@ -40,4 +35,15 @@ public class Feedback extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    private Feedback(FeedbackWriteRequest request, Member member) {
+        this.subject = request.getSubject();
+        this.content = request.getContent();
+        this.likeCount = 0L;
+        this.member = member;
+    }
+
+    public static Feedback create(FeedbackWriteRequest request, Member member) {
+        return new Feedback(request, member);
+    }
 }
