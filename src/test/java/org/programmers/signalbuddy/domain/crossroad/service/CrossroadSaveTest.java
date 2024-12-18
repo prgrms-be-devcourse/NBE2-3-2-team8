@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
-import org.programmers.signalbuddy.domain.crossroad.Crossroad;
+import org.programmers.signalbuddy.domain.crossroad.entity.Crossroad;
 import org.programmers.signalbuddy.domain.crossroad.repository.CrossroadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

@@ -1,38 +1,37 @@
-package org.programmers.signalbuddy.domain.social;
+package org.programmers.signalbuddy.domain.crossroad.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.locationtech.jts.geom.Point;
 import org.programmers.signalbuddy.domain.basetime.BaseTimeEntity;
-import org.programmers.signalbuddy.domain.member.Member;
 
-@Entity
+@Entity(name = "crossroads")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-public class SocialProvider extends BaseTimeEntity {
+@ToString
+public class Crossroad extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long socialProviderId;
+    private Long crossroadId;
+
+    @Column(nullable = false, unique = true)
+    private String crossroadApiId;
 
     @Column(nullable = false)
-    private String socialId;
+    private String name;
 
     @Column(nullable = false)
-    private String oauthProvider;
-
-    @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private Point coordinate;
 }
