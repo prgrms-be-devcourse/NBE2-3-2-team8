@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,9 +20,8 @@ import org.programmers.signalbuddy.domain.member.entity.Member;
 
 @Entity(name = "bookmarks")
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @ToString
 public class Bookmark extends BaseTimeEntity {
@@ -30,7 +30,7 @@ public class Bookmark extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookmarkId;
 
-    @Column(nullable = false, columnDefinition = "Point")
+    @Column(nullable = false)
     private Point coordinate;
 
     @Column(nullable = false)
