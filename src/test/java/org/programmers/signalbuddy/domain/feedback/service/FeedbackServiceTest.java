@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class FeedbackServiceTest extends ServiceTest {
 
     @Autowired
@@ -38,7 +39,6 @@ class FeedbackServiceTest extends ServiceTest {
 
     @DisplayName("피드백 작성 성공")
     @Test
-    @Transactional
     void writeFeedback() {
         // given
         String subject = "test subject";
