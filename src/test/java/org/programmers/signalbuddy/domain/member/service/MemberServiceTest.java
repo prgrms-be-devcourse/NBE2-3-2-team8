@@ -14,9 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.programmers.signalbuddy.domain.member.entity.Member;
-import org.programmers.signalbuddy.domain.member.MemberStatus;
-import org.programmers.signalbuddy.domain.member.entity.dto.MemberResponse;
-import org.programmers.signalbuddy.domain.member.entity.dto.MemberUpdateRequest;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
+import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
+import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
 
 @ExtendWith(MockitoExtension.class)

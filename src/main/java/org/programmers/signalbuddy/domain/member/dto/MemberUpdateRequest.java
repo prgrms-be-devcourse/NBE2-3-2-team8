@@ -1,4 +1,4 @@
-package org.programmers.signalbuddy.domain.member.entity.dto;
+package org.programmers.signalbuddy.domain.member.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;

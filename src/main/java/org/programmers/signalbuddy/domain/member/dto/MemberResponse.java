@@ -1,4 +1,4 @@
-package org.programmers.signalbuddy.domain.member.entity.dto;
+package org.programmers.signalbuddy.domain.member.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.programmers.signalbuddy.domain.member.MemberStatus;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 
 @Getter
 @Builder
