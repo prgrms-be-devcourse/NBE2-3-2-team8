@@ -1,5 +1,6 @@
 package org.programmers.signalbuddy.domain.comment.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Optional;
@@ -133,5 +134,37 @@ class CommentServiceTest extends ServiceTest {
             commentService.updateComment(comment.getCommentId(), request, user);
         }).isExactlyInstanceOf(BusinessException.class)
             .hasMessage(CommentErrorCode.COMMENT_MODIFIER_NOT_AUTHORIZED.getMessage());
+    }
+
+    @DisplayName("댓글 삭제 성공")
+    @Test
+    @Order(4)
+    void deleteComment() {
+        // given
+        // TODO: User 객체는 나중에 변경해야 함!
+        User user = new User();
+        user.setName(member.getMemberId().toString());
+
+        // when
+        commentService.deleteComment(comment.getCommentId(), user);
+
+        // then
+        assertThat(commentRepository.existsById(comment.getCommentId())).isFalse();
+    }
+
+    @DisplayName("댓글 작성자와 다른 사람이 삭제 시, 실패")
+    @Test
+    @Order(5)
+    void deleteCommentFailure() {
+        // given
+        // TODO: User 객체는 나중에 변경해야 함!
+        User user = new User();
+        user.setName("10");
+
+        // when & then
+        assertThatThrownBy(() -> {
+            commentService.deleteComment(comment.getCommentId(), user);
+        }).isExactlyInstanceOf(BusinessException.class)
+            .hasMessage(CommentErrorCode.COMMENT_ELIMINATOR_NOT_AUTHORIZED.getMessage());
     }
 }
