@@ -62,7 +62,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND_COMMENT));
 
-        // 댓글 작성자와 수정 요청자가 다른 경우
+        // 댓글 작성자와 삭제 요청자가 다른 경우
         if (!user.getName().equals(comment.getMember().getMemberId().toString())) {
             throw new BusinessException(CommentErrorCode.COMMENT_ELIMINATOR_NOT_AUTHORIZED);
         }
