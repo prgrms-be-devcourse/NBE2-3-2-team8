@@ -32,4 +32,13 @@ public class MemberService {
         return MemberMapper.INSTANCE.toDto(member);
     }
 
+    @Transactional
+    public MemberResponse deleteMember(Long id) {
+        // TODO : id 검증 로직 추가
+        final Member member = memberRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
+        member.softDelete();
+        log.info("Member deleted: {}", member);
+        return MemberMapper.INSTANCE.toDto(member);
+    }
 }
