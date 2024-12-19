@@ -9,6 +9,7 @@ import org.programmers.signalbuddy.domain.comment.service.CommentService;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +39,14 @@ public class CommentController {
         @RequestBody @Valid CommentRequest request,
         User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
         commentService.updateComment(commentId, request, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "댓글 삭제")
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable("commentId") Long commentId,
+        User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        commentService.deleteComment(commentId, user);
         return ResponseEntity.ok().build();
     }
 }
