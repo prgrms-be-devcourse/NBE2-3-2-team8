@@ -27,7 +27,7 @@ public class FeedbackController {
     @PostMapping("/write")
     public ResponseEntity<FeedbackResponse> writeFeedback(
         @RequestBody @Valid FeedbackWriteRequest feedbackWriteRequest,
-        User user) {    // 인자값에 User 객체는 나중에 변경해야 함!
+        User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(feedbackService.writeFeedback(feedbackWriteRequest, user));
     }

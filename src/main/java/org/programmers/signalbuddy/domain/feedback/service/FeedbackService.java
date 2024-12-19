@@ -22,7 +22,7 @@ public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final MemberRepository memberRepository;
 
-    // 인자값에 User 객체는 나중에 변경해야 함!
+    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
     @Transactional
     public FeedbackResponse writeFeedback(FeedbackWriteRequest request, User user) {
         Member member = memberRepository.findById(Long.parseLong(user.getName()))

@@ -44,7 +44,7 @@ class FeedbackServiceTest extends ServiceTest {
         String subject = "test subject";
         String content = "test content";
         FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
-        // User 객체는 나중에 변경해야 함!
+        // TODO: User 객체는 나중에 변경해야 함!
         User user = new User();
         user.setName("1");
 
