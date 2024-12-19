@@ -11,6 +11,7 @@ import org.programmers.signalbuddy.domain.member.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("members")
+@RequestMapping("api/members")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Member API")
@@ -48,7 +49,7 @@ public class MemberController {
 
     @Operation(summary = "사용자 탈퇴 API")
     @ApiResponse(responseCode = "200", description = "탈퇴 성공")
-    @PatchMapping("{id}/delete")
+    @DeleteMapping("{id}")
     public ResponseEntity<MemberResponse> deleteMember(@PathVariable Long id) {
         log.info("id : {}", id);
         final MemberResponse deleted = memberService.deleteMember(id);
