@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,6 +37,7 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("계정 조회 테스트")
     void getMember() {
         MemberResponse expectedResponse = MemberResponse.builder().memberId(id)
             .email("test@example.com").nickname("TestUser")
@@ -51,6 +53,7 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("계정 수정 테스트")
     void updateMember() {
         final MemberUpdateRequest request = MemberUpdateRequest.builder().email("test2@example.com")
             .nickname("TestUser2").profileImageUrl("http://example.com/profile.jpg")
@@ -65,6 +68,17 @@ class MemberServiceTest {
         final MemberResponse actualResponse = memberService.updateMember(id, request);
 
         assertThat(actualResponse).isEqualTo(expectedResponse);
+        verify(memberRepository, times(1)).findById(id);
+    }
+
+    @Test
+    @DisplayName("계정 탈퇴 테스트")
+    void deleteMember() {
+        final MemberStatus expected = MemberStatus.WITHDRAWAL;
+        when(memberRepository.findById(id)).thenReturn(Optional.of(member));
+
+        final MemberStatus actual = memberService.deleteMember(id).getMemberStatus();
+        assertThat(actual).isEqualTo(expected);
         verify(memberRepository, times(1)).findById(id);
     }
 }
