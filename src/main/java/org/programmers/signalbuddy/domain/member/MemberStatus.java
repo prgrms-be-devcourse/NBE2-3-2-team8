@@ -1,4 +1,4 @@
-package org.programmers.signalbuddy.domain.member.entity;
+package org.programmers.signalbuddy.domain.member;
 
 import lombok.Getter;
 
