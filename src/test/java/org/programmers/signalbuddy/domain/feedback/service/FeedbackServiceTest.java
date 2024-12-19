@@ -23,9 +23,11 @@ class FeedbackServiceTest extends ServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    private Member member;
+
     @BeforeEach
     void setup() {
-        Member member = Member.builder()
+        member = Member.builder()
             .email("test@test.com")
             .password("123456")
             .role("USER")
@@ -34,7 +36,7 @@ class FeedbackServiceTest extends ServiceTest {
             .profileImageUrl("https://test-image.com/test-123131")
             .build();
 
-        memberRepository.save(member);
+        member = memberRepository.save(member);
     }
 
     @DisplayName("피드백 작성 성공")
@@ -46,14 +48,14 @@ class FeedbackServiceTest extends ServiceTest {
         FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
         // TODO: User 객체는 나중에 변경해야 함!
         User user = new User();
-        user.setName("1");
+        user.setName(member.getMemberId().toString());
 
         // when
         FeedbackResponse actual = feedbackService.writeFeedback(request, user);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(actual.getFeedbackId()).isEqualTo(1L);
+            softAssertions.assertThat(actual.getFeedbackId()).isNotNull();
             softAssertions.assertThat(actual.getSubject()).isEqualTo(subject);
             softAssertions.assertThat(actual.getContent()).isEqualTo(content);
             softAssertions.assertThat(actual.getLikeCount()).isZero();
