@@ -34,9 +34,12 @@ class CommentServiceTest extends ServiceTest {
     @Autowired
     private FeedbackRepository feedbackRepository;
 
+    private Member member;
+    private Feedback feedback;
+
     @BeforeEach
     void setup() {
-        Member member = Member.builder()
+        member = Member.builder()
             .email("test@test.com")
             .password("123456")
             .role("USER")
@@ -44,24 +47,24 @@ class CommentServiceTest extends ServiceTest {
             .memberStatus(MemberStatus.ACTIVITY)
             .profileImageUrl("https://test-image.com/test-123131")
             .build();
-        Member savedMember = memberRepository.save(member);
+        member = memberRepository.save(member);
 
         String subject = "test subject";
         String content = "test content";
         FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
-        feedbackRepository.save(Feedback.create(request, savedMember));
+        feedback = feedbackRepository.save(Feedback.create(request, member));
     }
 
     @DisplayName("댓글 작성 성공")
     @Test
     void writeComment() {
         // given
-        Long feedbackId = 1L;
+        Long feedbackId = feedback.getFeedbackId();
         String content = "test comment content";
         CommentRequest request = new CommentRequest(feedbackId, content);
         // TODO: User 객체는 나중에 변경해야 함!
         User user = new User();
-        user.setName("1");
+        user.setName(member.getMemberId().toString());
 
         // when
         commentService.writeComment(request, user);
