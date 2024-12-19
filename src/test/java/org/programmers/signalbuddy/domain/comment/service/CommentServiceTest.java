@@ -25,8 +25,9 @@ import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.programmers.signalbuddy.global.support.ServiceTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.transaction.annotation.Transactional;
 
-//@Transactional
+@Transactional
 @TestMethodOrder(OrderAnnotation.class)
 class CommentServiceTest extends ServiceTest {
 
