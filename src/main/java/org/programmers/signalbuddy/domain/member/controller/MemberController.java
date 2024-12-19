@@ -36,10 +36,11 @@ public class MemberController {
     }
 
     @Operation(summary = "사용자 수정 API")
-    @ApiResponse(responseCode = "201", description = "수정 성공")
+    @ApiResponse(responseCode = "200", description = "수정 성공")
     @PatchMapping("{id}")
     public ResponseEntity<MemberResponse> updateMember(@PathVariable Long id,
         @Validated @RequestBody MemberUpdateRequest memberUpdateRequest) {
+        // TODO : 사용자 이미지 저장 방식 정해지면 수정 필요
         log.info("id : {}, UpdateRequest: {}", id, memberUpdateRequest);
         final MemberResponse updated = memberService.updateMember(id, memberUpdateRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(updated);
