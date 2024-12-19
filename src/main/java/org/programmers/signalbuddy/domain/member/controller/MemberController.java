@@ -2,6 +2,7 @@ package org.programmers.signalbuddy.domain.member.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.programmers.signalbuddy.domain.member.entity.dto.MemberResponse;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("members")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Member API")
 public class MemberController {
 
     private final MemberService memberService;
@@ -43,4 +45,12 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body(updated);
     }
 
+    @Operation(summary = "사용자 탈퇴 API")
+    @ApiResponse(responseCode = "200", description = "탈퇴 성공")
+    @PatchMapping("{id}/delete")
+    public ResponseEntity<MemberResponse> deleteMember(@PathVariable Long id) {
+        log.info("id : {}", id);
+        final MemberResponse deleted = memberService.deleteMember(id);
+        return ResponseEntity.status(HttpStatus.OK).body(deleted);
+    }
 }

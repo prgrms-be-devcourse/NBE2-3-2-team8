@@ -58,6 +58,9 @@ public class Member extends BaseTimeEntity {
         if (request.getProfileImageUrl() != null) {
             this.profileImageUrl = request.getProfileImageUrl();
         }
+    }
 
+    public void softDelete() {
+        this.memberStatus = MemberStatus.WITHDRAWAL;
     }
 }
