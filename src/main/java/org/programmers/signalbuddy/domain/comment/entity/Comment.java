@@ -30,7 +30,7 @@ public class Comment extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feedback_id", nullable = false)
     private Feedback feedback;
 
