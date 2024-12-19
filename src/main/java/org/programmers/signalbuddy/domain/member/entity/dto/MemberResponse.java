@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.programmers.signalbuddy.domain.member.entity.MemberStatus;
+import org.programmers.signalbuddy.domain.member.MemberStatus;
 
 @Getter
 @Builder
