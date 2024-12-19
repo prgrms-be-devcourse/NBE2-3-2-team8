@@ -14,8 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.programmers.signalbuddy.domain.basetime.BaseTimeEntity;
-import org.programmers.signalbuddy.domain.member.MemberStatus;
-import org.programmers.signalbuddy.domain.member.entity.dto.MemberUpdateRequest;
+import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 
 @Entity(name = "members")
 @Getter
