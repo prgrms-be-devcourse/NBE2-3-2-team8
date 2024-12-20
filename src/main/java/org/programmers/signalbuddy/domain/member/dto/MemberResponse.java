@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.programmers.signalbuddy.domain.member.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 
 @Getter
@@ -32,7 +33,7 @@ public class MemberResponse {
     private String profileImageUrl;
 
     @Schema(description = "회원 역할", example = "USER")
-    private String role;
+    private MemberRole role;
 
     @Schema(description = "회원 상태", exampleClasses = MemberStatus.class)
     private MemberStatus memberStatus;
