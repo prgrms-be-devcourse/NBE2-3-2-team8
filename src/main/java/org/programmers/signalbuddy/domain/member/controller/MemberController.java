@@ -1,19 +1,8 @@
 package org.programmers.signalbuddy.domain.member.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
-import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
-import org.programmers.signalbuddy.domain.member.dto.AdminMemberResponse;
-import org.programmers.signalbuddy.domain.member.service.AdminMemberService;
+import org.programmers.signalbuddy.domain.member.entity.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.service.MemberService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
