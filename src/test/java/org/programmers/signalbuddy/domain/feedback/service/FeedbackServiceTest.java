@@ -117,7 +117,7 @@ class FeedbackServiceTest extends ServiceTest {
         FeedbackWriteRequest request = new FeedbackWriteRequest(updatedSubject, updatedContent);
         // TODO: User 객체는 나중에 변경해야 함!
         User user = new User();
-        user.setName("10");
+        user.setName("99999");
 
         // when & then
         assertThatThrownBy(() -> {
@@ -149,7 +149,7 @@ class FeedbackServiceTest extends ServiceTest {
         Long feedbackId = feedback.getFeedbackId();
         // TODO: User 객체는 나중에 변경해야 함!
         User user = new User();
-        user.setName("10");
+        user.setName("99999");
 
         // when & then
         assertThatThrownBy(() -> {
@@ -158,7 +158,7 @@ class FeedbackServiceTest extends ServiceTest {
             .hasMessage(FeedbackErrorCode.FEEDBACK_MODIFIER_NOT_AUTHORIZED.getMessage());
     }
 
-    @DisplayName("피드백 상세 조회")
+    @DisplayName("피드백 상세 조회 성공")
     @Test
     void searchFeedbackDetail() {
         // given
