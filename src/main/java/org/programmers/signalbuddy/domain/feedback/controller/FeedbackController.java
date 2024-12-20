@@ -10,6 +10,7 @@ import org.programmers.signalbuddy.domain.feedback.service.FeedbackService;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,14 @@ public class FeedbackController {
         @RequestBody @Valid FeedbackWriteRequest feedbackWriteRequest,
         User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
         feedbackService.updateFeedback(feedbackId, feedbackWriteRequest, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "피드백 삭제")
+    @DeleteMapping("/{feedbackId}")
+    public ResponseEntity<Void> deleteFeedback(@PathVariable("feedbackId") Long feedbackId,
+        User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        feedbackService.deleteFeedback(feedbackId, user);
         return ResponseEntity.ok().build();
     }
 }
