@@ -10,6 +10,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.programmers.signalbuddy.domain.bookmark.dto.BookmarkResponse;
 import org.programmers.signalbuddy.domain.bookmark.entity.Bookmark;
+import org.programmers.signalbuddy.domain.member.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
@@ -32,7 +33,7 @@ class BookmarkRepositoryTest extends RepositoryTest {
     @BeforeEach
     void setUp() {
         member = Member.builder().email("test@example.com").password("password123")
-            .nickname("TestUser").profileImageUrl("http://example.com/profile.jpg").role("USER")
+            .nickname("TestUser").profileImageUrl("http://example.com/profile.jpg").role(MemberRole.USER)
             .memberStatus(MemberStatus.ACTIVITY).build();
     }
 
