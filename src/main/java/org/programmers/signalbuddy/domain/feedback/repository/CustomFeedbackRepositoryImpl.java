@@ -11,6 +11,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
+import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,8 +22,8 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class CustomFeedbackRepositoryImpl implements CustomFeedbackRepository {
 
-    private static final QBean<FeedbackResponse.MemberResponse> memberResponseDto = Projections.fields(
-        FeedbackResponse.MemberResponse.class, member.memberId, member.nickname,
+    private static final QBean<MemberResponse> memberResponseDto = Projections.fields(
+        MemberResponse.class, member.memberId, member.email, member.nickname,
         member.profileImageUrl, member.role, member.memberStatus);
 
     private static final QBean<FeedbackResponse> feedbackResponseDto = Projections.fields(
@@ -41,7 +42,8 @@ public class CustomFeedbackRepositoryImpl implements CustomFeedbackRepository {
             .orderBy(new OrderSpecifier<>(Order.DESC, feedback.updatedAt)).fetch();
 
         Long count = jpaQueryFactory.select(feedback.count()).from(feedback)
-            .join(member).on(feedback.member.eq(member)).fetchJoin().fetchOne();
+            .join(member).on(feedback.member.eq(member)).fetchJoin()
+            .where(member.memberStatus.eq(MemberStatus.ACTIVITY)).fetchOne();
 
         return new PageImpl<>(results, pageable, (count == null ? 0L : count));
     }

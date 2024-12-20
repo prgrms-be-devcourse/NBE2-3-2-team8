@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
+import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 
 @Getter
 @Builder
@@ -22,15 +22,15 @@ public class FeedbackResponse {
     private LocalDateTime updatedAt;
     private MemberResponse member;
 
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class MemberResponse {
-        private Long memberId;
-        private String nickname;
-        private String profileImageUrl;
-        private String role;
-        private MemberStatus memberStatus;
-    }
+//    @Getter
+//    @Builder
+//    @NoArgsConstructor
+//    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+//    public static class MemberResponse {
+//        private Long memberId;
+//        private String nickname;
+//        private String profileImageUrl;
+//        private String role;
+//        private MemberStatus memberStatus;
+//    }
 }
