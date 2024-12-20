@@ -30,7 +30,16 @@ public class FeedbackController {
 
     private final FeedbackService feedbackService;
 
-    @Operation(summary = "피드백 목록")
+    @Operation(summary = "피드백 작성")
+    @PostMapping("/write")
+    public ResponseEntity<FeedbackResponse> writeFeedback(
+        @RequestBody @Valid FeedbackWriteRequest feedbackWriteRequest,
+        User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(feedbackService.writeFeedback(feedbackWriteRequest, user));
+    }
+
+    @Operation(summary = "피드백 목록 조회")
     @GetMapping
     public ResponseEntity<PageResponse<FeedbackResponse>> searchFeedbackList(
         @PageableDefault(page = 0, size = 10) Pageable pageable) {
@@ -42,15 +51,6 @@ public class FeedbackController {
     public ResponseEntity<FeedbackResponse> searchFeedbackDetail(
         @PathVariable("feedbackId") Long feedbackId) {
         return ResponseEntity.ok().body(feedbackService.searchFeedbackDetail(feedbackId));
-    }
-
-    @Operation(summary = "피드백 작성")
-    @PostMapping("/write")
-    public ResponseEntity<FeedbackResponse> writeFeedback(
-        @RequestBody @Valid FeedbackWriteRequest feedbackWriteRequest,
-        User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(feedbackService.writeFeedback(feedbackWriteRequest, user));
     }
 
     @Operation(summary = "피드백 수정")
