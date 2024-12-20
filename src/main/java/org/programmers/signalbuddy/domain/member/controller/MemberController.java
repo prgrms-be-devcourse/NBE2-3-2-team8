@@ -65,5 +65,4 @@ public class MemberController {
         List<AdminMemberResponse> members = adminMemberService.getAllMembers();
         return ResponseEntity.ok(members);
     }
-
 }
