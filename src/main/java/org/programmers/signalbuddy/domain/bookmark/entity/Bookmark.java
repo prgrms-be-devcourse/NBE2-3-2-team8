@@ -45,4 +45,13 @@ public class Bookmark extends BaseTimeEntity {
         this.address = address;
         this.member = member;
     }
+
+    public void update(Point coordinate, String address) {
+        if (coordinate != null) {
+            this.coordinate = coordinate;
+        }
+        if (address != null) {
+            this.address = address;
+        }
+    }
 }
