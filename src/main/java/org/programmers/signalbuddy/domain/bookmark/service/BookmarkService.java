@@ -36,8 +36,7 @@ public class BookmarkService {
     }
 
     public BookmarkResponse createBookmark(BookmarkRequest createRequest, User user) {
-        final Member member = memberRepository.findById(1L) // TODO : 1L -> memberId로 수정 필요
-            .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
+        final Member member = getMember(user);
 
         final Point point = toPoint(createRequest.getLng(), createRequest.getLat());
 
@@ -48,8 +47,7 @@ public class BookmarkService {
 
     @Transactional
     public BookmarkResponse updateBookmark(BookmarkRequest updateRequest, Long id, User user) {
-        final Member member = memberRepository.findById(1L) // TODO : 1L -> memberId로 수정 필요
-            .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
+        final Member member = getMember(user);
 
         final Bookmark bookmark = bookmarkRepository.findById(id)
             .orElseThrow(() -> new BusinessException(BookmarkErrorCode.NOT_FOUND_BOOKMARK));
@@ -58,6 +56,19 @@ public class BookmarkService {
 
         bookmark.update(point, updateRequest.getAddress());
         return BookmarkMapper.INSTANCE.toDto(bookmark);
+    }
+
+    @Transactional
+    public void deleteBookmark(Long id, User user) {
+        final Member member = getMember(user);
+        final Bookmark bookmark = bookmarkRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(BookmarkErrorCode.NOT_FOUND_BOOKMARK));
+        bookmarkRepository.delete(bookmark);
+    }
+
+    private Member getMember(User user) {
+        return memberRepository.findById(1L) // TODO : 1L -> memberId로 수정 필요
+            .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
     private Point toPoint(double lng, double lat) {
