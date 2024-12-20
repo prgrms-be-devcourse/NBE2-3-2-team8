@@ -2,6 +2,7 @@ package org.programmers.signalbuddy.domain.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.programmers.signalbuddy.domain.member.dto.MemberPagingResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
 import org.programmers.signalbuddy.domain.member.dto.AdminMemberResponse;
@@ -11,6 +12,10 @@ import org.programmers.signalbuddy.domain.member.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
