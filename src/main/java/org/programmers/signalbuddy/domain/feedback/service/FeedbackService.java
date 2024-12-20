@@ -48,4 +48,18 @@ public class FeedbackService {
 
         feedback.updateFeedback(request);
     }
+
+    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+    @Transactional
+    public void deleteFeedback(Long feedbackId, User user) {
+        Feedback feedback = feedbackRepository.findById(feedbackId)
+            .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
+
+        // 피드백 작성자와 삭제 요청자가 다른 경우
+        if (!feedback.getMember().getMemberId().equals(Long.parseLong(user.getName()))) {
+            throw new BusinessException(FeedbackErrorCode.FEEDBACK_ELIMINATOR_NOT_AUTHORIZED);
+        }
+
+        feedbackRepository.deleteById(feedbackId);
+    }
 }
