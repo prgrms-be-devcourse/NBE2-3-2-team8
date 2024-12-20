@@ -32,7 +32,7 @@ public class BookmarkService {
 
     public Page<BookmarkResponse> findPagedBookmarks(Pageable pageable, User user) {
         // TODO : 2번째 인자 memberId 수정 필요
-        return bookmarkRepository.findPagedByMember(pageable, 1L);
+        return bookmarkRepository.findPagedByMember(pageable, Long.parseLong(user.getName()));
     }
 
     public BookmarkResponse createBookmark(BookmarkRequest createRequest, User user) {
@@ -67,7 +67,7 @@ public class BookmarkService {
     }
 
     private Member getMember(User user) {
-        return memberRepository.findById(1L) // TODO : 1L -> memberId로 수정 필요
+        return memberRepository.findById(Long.parseLong(user.getName())) // TODO : User 수정 필요
             .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
