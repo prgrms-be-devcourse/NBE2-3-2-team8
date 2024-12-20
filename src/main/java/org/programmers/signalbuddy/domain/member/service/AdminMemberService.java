@@ -11,6 +11,8 @@ import org.programmers.signalbuddy.domain.bookmark.repository.BookmarkRepository
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.dto.AdminMemberResponse;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,16 +23,15 @@ public class AdminMemberService {
     private final MemberRepository memberRepository;
     private final BookmarkRepository bookmarkRepository;
 
-    public List<AdminMemberResponse> getAllMembers() {
-        List<Member> lists = memberRepository.findAll();
+    public Page<AdminMemberResponse> getAllMembers(Pageable pageable) {
+        Page<Member> membersPage = memberRepository.findAll(pageable);
         List<AdminMemberResponse> responses = new ArrayList<>();
 
-        for (Member member : lists) {
+        Page<AdminMemberResponse> adminMemberResponses = membersPage.map(member -> {
             List<Bookmark> bookmarks = bookmarkRepository.findAllByMember_MemberId(member.getMemberId());
             List<AdminBookmarkResponse> adminBookmarkResponses = BookmarkMapper.INSTANCE.toAdminDto(bookmarks);
 
-
-            AdminMemberResponse adminMemberResponse = AdminMemberResponse.builder()
+            return AdminMemberResponse.builder()
                 .memberId(member.getMemberId())
                 .email(member.getEmail())
                 .nickname(member.getNickname())
@@ -39,10 +40,11 @@ public class AdminMemberService {
                 .memberStatus(member.getMemberStatus())
                 .bookmarkResponses(adminBookmarkResponses)
                 .build();
+        });
 
-            responses.add(adminMemberResponse);
-        }
-        return responses;
+        return adminMemberResponses;
     }
+
+
 
 }
