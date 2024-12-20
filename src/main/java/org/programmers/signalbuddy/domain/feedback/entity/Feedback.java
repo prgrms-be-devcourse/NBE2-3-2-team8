@@ -46,4 +46,14 @@ public class Feedback extends BaseTimeEntity {
     public static Feedback create(FeedbackWriteRequest request, Member member) {
         return new Feedback(request, member);
     }
+
+    public void updateFeedback(FeedbackWriteRequest request) {
+        if (!this.subject.equals(request.getSubject())) {
+            this.subject = request.getSubject();
+        }
+
+        if (!this.content.equals(request.getContent())) {
+            this.content = request.getContent();
+        }
+    }
 }
