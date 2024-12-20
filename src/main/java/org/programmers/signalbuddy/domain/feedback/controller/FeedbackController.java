@@ -7,10 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.service.FeedbackService;
+import org.programmers.signalbuddy.global.dto.PageResponse;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class FeedbackController {
 
     private final FeedbackService feedbackService;
+
+    @Operation(summary = "피드백 목록")
+    @GetMapping
+    public ResponseEntity<PageResponse<FeedbackResponse>> searchFeedbackList(
+        @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        return ResponseEntity.ok().body(feedbackService.searchFeedbackList(pageable));
+    }
 
     @Operation(summary = "피드백 작성")
     @PostMapping("/write")
