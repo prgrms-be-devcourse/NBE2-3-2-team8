@@ -1,5 +1,6 @@
 package org.programmers.signalbuddy.domain.feedback.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Optional;
@@ -121,6 +122,38 @@ class FeedbackServiceTest extends ServiceTest {
         // when & then
         assertThatThrownBy(() -> {
             feedbackService.updateFeedback(feedbackId, request, user);
+        }).isExactlyInstanceOf(BusinessException.class)
+            .hasMessage(FeedbackErrorCode.FEEDBACK_MODIFIER_NOT_AUTHORIZED.getMessage());
+    }
+
+    @DisplayName("피드백 삭제 성공")
+    @Test
+    void deleteFeedback() {
+        // given
+        Long feedbackId = feedback.getFeedbackId();
+        // TODO: User 객체는 나중에 변경해야 함!
+        User user = new User();
+        user.setName(member.getMemberId().toString());
+
+        // when
+        feedbackService.deleteFeedback(feedbackId, user);
+
+        // then
+        assertThat(feedbackRepository.existsById(feedbackId)).isFalse();
+    }
+
+    @DisplayName("피드백 작성자와 다른 사람이 삭제 시 실패")
+    @Test
+    void deleteFeedbackFailure() {
+        // given
+        Long feedbackId = feedback.getFeedbackId();
+        // TODO: User 객체는 나중에 변경해야 함!
+        User user = new User();
+        user.setName("10");
+
+        // when & then
+        assertThatThrownBy(() -> {
+            feedbackService.deleteFeedback(feedbackId, user);
         }).isExactlyInstanceOf(BusinessException.class)
             .hasMessage(FeedbackErrorCode.FEEDBACK_MODIFIER_NOT_AUTHORIZED.getMessage());
     }
