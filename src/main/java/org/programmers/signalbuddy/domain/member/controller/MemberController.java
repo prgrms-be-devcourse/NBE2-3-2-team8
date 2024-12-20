@@ -6,11 +6,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.programmers.signalbuddy.domain.member.dto.MemberPagingResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
 import org.programmers.signalbuddy.domain.member.dto.AdminMemberResponse;
 import org.programmers.signalbuddy.domain.member.service.AdminMemberService;
 import org.programmers.signalbuddy.domain.member.service.MemberService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -61,8 +66,14 @@ public class MemberController {
     }
 
     @GetMapping("admin")
-    public ResponseEntity<List<AdminMemberResponse>> getMembers(){
-        final List<AdminMemberResponse> members = adminMemberService.getAllMembers();
+    public ResponseEntity<Page<AdminMemberResponse>> getMembers(MemberPagingResponse memberPagingResponse){
+        Pageable pageable = PageRequest.of(
+            memberPagingResponse.getPage(),
+            memberPagingResponse.getSize(),
+            Sort.by(Sort.Direction.ASC, memberPagingResponse.getSort())
+        );
+
+        Page<AdminMemberResponse> members = adminMemberService.getAllMembers(pageable);
         return ResponseEntity.ok(members);
     }
 }
