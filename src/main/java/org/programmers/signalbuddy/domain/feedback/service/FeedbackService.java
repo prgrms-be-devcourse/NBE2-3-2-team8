@@ -31,6 +31,12 @@ public class FeedbackService {
         return new PageResponse<>(responsePage);
     }
 
+    public FeedbackResponse searchFeedbackDetail(Long feedbackId) {
+        Feedback feedback = feedbackRepository.findById(feedbackId)
+            .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
+        return FeedbackMapper.INSTANCE.toResponse(feedback);
+    }
+
     // TODO: 인자값에 User 객체는 나중에 변경해야 함!
     @Transactional
     public FeedbackResponse writeFeedback(FeedbackWriteRequest request, User user) {

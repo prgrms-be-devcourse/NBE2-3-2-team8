@@ -37,6 +37,13 @@ public class FeedbackController {
         return ResponseEntity.ok().body(feedbackService.searchFeedbackList(pageable));
     }
 
+    @Operation(summary = "피드백 상세 조회")
+    @GetMapping("/{feedbackId}")
+    public ResponseEntity<FeedbackResponse> searchFeedbackDetail(
+        @PathVariable("feedbackId") Long feedbackId) {
+        return ResponseEntity.ok().body(feedbackService.searchFeedbackDetail(feedbackId));
+    }
+
     @Operation(summary = "피드백 작성")
     @PostMapping("/write")
     public ResponseEntity<FeedbackResponse> writeFeedback(
