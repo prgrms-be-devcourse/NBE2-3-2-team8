@@ -1,9 +1,12 @@
 package org.programmers.signalbuddy.domain.member.controller;
 
+import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.programmers.signalbuddy.domain.member.entity.dto.AdminMemberResponse;
+import org.programmers.signalbuddy.domain.member.service.AdminMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
+    private final AdminMemberService adminMemberService;
 
 
     @Operation(summary = "사용자 조회 API")
@@ -55,4 +59,11 @@ public class MemberController {
         final MemberResponse deleted = memberService.deleteMember(id);
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
+
+    @GetMapping("/admin")
+    public ResponseEntity<List<AdminMemberResponse>> getMembers() {
+        List<AdminMemberResponse> members = adminMemberService.getAllMembers();
+        return ResponseEntity.ok(members);
+    }
+
 }

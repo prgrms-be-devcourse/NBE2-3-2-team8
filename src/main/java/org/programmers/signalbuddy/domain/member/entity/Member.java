@@ -16,6 +16,7 @@ import lombok.ToString;
 import org.programmers.signalbuddy.domain.basetime.BaseTimeEntity;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
+import org.programmers.signalbuddy.domain.member.MemberRole;
 
 @Entity(name = "members")
 @Getter
@@ -40,7 +41,8 @@ public class Member extends BaseTimeEntity {
     private String profileImageUrl;
 
     @Column(nullable = false)
-    private String role; // TODO: (USER, ADMIN) Enum 으로 변경
+    @Enumerated(EnumType.STRING)
+    private MemberRole role;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -64,4 +66,6 @@ public class Member extends BaseTimeEntity {
     public void softDelete() {
         this.memberStatus = MemberStatus.WITHDRAWAL;
     }
+
+
 }
