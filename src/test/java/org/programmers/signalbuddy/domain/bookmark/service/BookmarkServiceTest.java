@@ -87,4 +87,15 @@ class BookmarkServiceTest extends ServiceTest {
         assertThat(found.get().getCoordinate().getX()).isEqualTo(expected.getLng());
         assertThat(found.get().getCoordinate().getY()).isEqualTo(expected.getLat());
     }
+
+    @Test
+    @DisplayName("즐겨찾기 삭제 테스트")
+    void deleteBookmark() {
+        final Long bookmarkId = 1L;
+        bookmarkService.deleteBookmark(bookmarkId, new User());
+        final Optional<Bookmark> found = bookmarkRepository.findById(bookmarkId);
+
+        assertThat(found.isPresent()).isFalse();
+        assertThat(bookmarkRepository.existsById(bookmarkId)).isFalse();
+    }
 }
