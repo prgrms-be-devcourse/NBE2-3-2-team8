@@ -19,6 +19,7 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -43,6 +44,20 @@ public class BookmarkService {
         final Bookmark bookmark = BookmarkMapper.INSTANCE.toEntity(createRequest, point, member);
         final Bookmark save = bookmarkRepository.save(bookmark);
         return BookmarkMapper.INSTANCE.toDto(save);
+    }
+
+    @Transactional
+    public BookmarkResponse updateBookmark(BookmarkRequest updateRequest, Long id, User user) {
+        final Member member = memberRepository.findById(1L) // TODO : 1L -> memberId로 수정 필요
+            .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
+
+        final Bookmark bookmark = bookmarkRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(BookmarkErrorCode.NOT_FOUND_BOOKMARK));
+
+        final Point point = toPoint(updateRequest.getLng(), updateRequest.getLat());
+
+        bookmark.update(point, updateRequest.getAddress());
+        return BookmarkMapper.INSTANCE.toDto(bookmark);
     }
 
     private Point toPoint(double lng, double lat) {
