@@ -15,6 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,5 +60,14 @@ public class BookmarkController {
         log.info("updateRequest: {}", updateRequest);
         final BookmarkResponse updated = bookmarkService.updateBookmark(updateRequest, id, user);
         return ResponseEntity.ok().body(updated);
+    }
+
+    @Operation(summary = "즐겨찾기 삭제", description = "즐겨찾기 삭제 기능")
+    @DeleteMapping("{id}")
+    @ApiResponse(responseCode = "200", description = "즐겨찾기 삭제 성공")
+    public ResponseEntity<Void> deleteBookmark(@PathVariable Long id, User user) {
+        log.info("delete bookmark id: {}", id);
+        bookmarkService.deleteBookmark(id, user);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
