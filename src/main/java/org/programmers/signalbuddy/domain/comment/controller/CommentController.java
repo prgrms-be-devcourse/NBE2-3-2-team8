@@ -5,11 +5,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.comment.dto.CommentRequest;
+import org.programmers.signalbuddy.domain.comment.dto.CommentResponse;
 import org.programmers.signalbuddy.domain.comment.service.CommentService;
+import org.programmers.signalbuddy.global.dto.PageResponse;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +36,14 @@ public class CommentController {
         User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
         commentService.writeComment(request, user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Operation(summary = "댓글 목록 조회")
+    @GetMapping("/{feedbackId}")
+    public ResponseEntity<PageResponse<CommentResponse>> searchCommentList(
+        @PathVariable("feedbackId") Long feedbackId,
+        @PageableDefault(page = 0, size = 7)Pageable pageable) {
+        return ResponseEntity.ok(commentService.searchCommentList(feedbackId , pageable));
     }
 
     @Operation(summary = "댓글 수정")
