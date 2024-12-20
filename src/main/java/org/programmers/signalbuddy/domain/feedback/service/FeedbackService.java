@@ -5,6 +5,7 @@ import org.programmers.signalbuddy.domain.feedback.dto.FeedbackMapper;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
+import org.programmers.signalbuddy.domain.feedback.exception.FeedbackErrorCode;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
@@ -32,5 +33,19 @@ public class FeedbackService {
         Feedback savedFeedback = feedbackRepository.save(feedback);
 
         return FeedbackMapper.INSTANCE.toResponse(savedFeedback);
+    }
+
+    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+    @Transactional
+    public void updateFeedback(Long feedbackId, FeedbackWriteRequest request, User user) {
+        Feedback feedback = feedbackRepository.findById(feedbackId)
+            .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
+
+        // 피드백 작성자와 수정 요청자가 다른 경우
+        if (!feedback.getMember().getMemberId().equals(Long.parseLong(user.getName()))) {
+            throw new BusinessException(FeedbackErrorCode.FEEDBACK_MODIFIER_NOT_AUTHORIZED);
+        }
+
+        feedback.updateFeedback(request);
     }
 }
