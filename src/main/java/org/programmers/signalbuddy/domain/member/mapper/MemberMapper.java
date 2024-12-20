@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
-import org.programmers.signalbuddy.domain.member.entity.dto.AdminMemberResponse;
+import org.programmers.signalbuddy.domain.member.dto.AdminMemberResponse;
 
 @Mapper
 public interface MemberMapper {

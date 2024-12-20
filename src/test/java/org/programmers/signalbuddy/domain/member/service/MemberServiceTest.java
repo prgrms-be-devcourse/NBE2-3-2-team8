@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.programmers.signalbuddy.domain.member.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
@@ -32,7 +33,7 @@ class MemberServiceTest {
     @BeforeEach
     void setUp() {
         member = Member.builder().memberId(id).email("test@example.com").password("password123")
-            .nickname("TestUser").profileImageUrl("http://example.com/profile.jpg").role("USER")
+            .nickname("TestUser").profileImageUrl("http://example.com/profile.jpg").role(MemberRole.USER)
             .memberStatus(MemberStatus.ACTIVITY).build();
     }
 

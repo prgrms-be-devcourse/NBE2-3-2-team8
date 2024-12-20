@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
-import org.programmers.signalbuddy.domain.member.entity.dto.AdminMemberResponse;
+import org.programmers.signalbuddy.domain.member.dto.AdminMemberResponse;
 import org.programmers.signalbuddy.domain.member.service.AdminMemberService;
 import org.programmers.signalbuddy.domain.member.service.MemberService;
 import org.springframework.http.HttpStatus;
