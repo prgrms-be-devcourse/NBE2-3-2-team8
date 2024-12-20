@@ -15,7 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.programmers.signalbuddy.domain.basetime.BaseTimeEntity;
 import org.programmers.signalbuddy.domain.member.MemberRole;
-import org.programmers.signalbuddy.domain.member.MemberStatus;
+import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 
 @Entity(name = "members")
 @Getter
@@ -47,5 +48,22 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MemberStatus memberStatus;
 
+    public void updateMember(MemberUpdateRequest request) {
+        if (request.getEmail() != null) {
+            this.email = request.getEmail();
+        }
+        if (request.getPassword() != null) {
+            this.password = request.getPassword(); // TODO: 암호화 적용
+        }
+        if (request.getNickname() != null) {
+            this.nickname = request.getNickname();
+        }
+        if (request.getProfileImageUrl() != null) {
+            this.profileImageUrl = request.getProfileImageUrl();
+        }
+    }
 
+    public void softDelete() {
+        this.memberStatus = MemberStatus.WITHDRAWAL;
+    }
 }

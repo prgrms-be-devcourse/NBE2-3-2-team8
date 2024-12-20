@@ -1,4 +1,4 @@
-package org.programmers.signalbuddy.domain.member;
+package org.programmers.signalbuddy.domain.member.entity.enums;
 
 import lombok.Getter;
 
