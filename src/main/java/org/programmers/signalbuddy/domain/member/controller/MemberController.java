@@ -63,9 +63,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 
-    @GetMapping("/admin")
-    public ResponseEntity<List<AdminMemberResponse>> getMembers() {
-        List<AdminMemberResponse> members = adminMemberService.getAllMembers();
+    @Operation(summary = "관리자: 전체 사용자 조회 API")
     @GetMapping("admin")
     public ResponseEntity<Page<AdminMemberResponse>> getMembers(@PageableDefault(page = 0, size = 10, sort = "email") Pageable pageable) {
 
