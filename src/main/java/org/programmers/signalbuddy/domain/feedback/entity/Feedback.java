@@ -2,6 +2,8 @@ package org.programmers.signalbuddy.domain.feedback.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,6 +34,10 @@ public class Feedback extends BaseTimeEntity {
     @Column(nullable = false)
     private Long likeCount;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AnswerStatus answerStatus;
+
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -40,6 +46,7 @@ public class Feedback extends BaseTimeEntity {
         this.subject = request.getSubject();
         this.content = request.getContent();
         this.likeCount = 0L;
+        this.answerStatus = AnswerStatus.BEFORE;
         this.member = member;
     }
 
@@ -54,6 +61,14 @@ public class Feedback extends BaseTimeEntity {
 
         if (!this.content.equals(request.getContent())) {
             this.content = request.getContent();
+        }
+    }
+
+    public void updateFeedbackStatus() {
+        if (AnswerStatus.BEFORE.equals(this.getAnswerStatus())) {
+            this.answerStatus = AnswerStatus.COMPLETION;
+        } else if (AnswerStatus.COMPLETION.equals(this.getAnswerStatus())) {
+            this.answerStatus = AnswerStatus.BEFORE;
         }
     }
 }

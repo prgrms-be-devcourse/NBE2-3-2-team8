@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.programmers.signalbuddy.domain.feedback.entity.AnswerStatus;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 
 @Getter
@@ -22,6 +23,7 @@ public class FeedbackResponse {
     private String subject;
     private String content;
     private Long likeCount;
+    private AnswerStatus answerStatus;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private MemberResponse member;
