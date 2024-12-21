@@ -40,9 +40,8 @@ public class CommentService {
         Comment comment = Comment.creator().request(request).feedback(feedback).member(member)
             .build();
 
-        // TODO: 나중에 Member Role 타입 비교 변경!!
         // 관리자일 때 피드백 상태 변경
-        if (member.getRole().equals("ADMIN")) {
+        if (Member.isAdmin(comment.getMember())) {
             feedback.updateFeedbackStatus();
         }
 
@@ -61,8 +60,8 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND_COMMENT));
 
-        // 댓글 작성자와 수정 요청자가 다른 경우
-        if (!user.getName().equals(comment.getMember().getMemberId().toString())) {
+        // 수정 요청자와 댓글 작성자 다른 경우
+        if (Member.isNotSameMember(user, comment.getMember())) {
             throw new BusinessException(CommentErrorCode.COMMENT_MODIFIER_NOT_AUTHORIZED);
         }
 
@@ -75,14 +74,13 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND_COMMENT));
 
-        // 댓글 작성자와 삭제 요청자가 다른 경우
-        if (!user.getName().equals(comment.getMember().getMemberId().toString())) {
+        // 삭제 요청자와 댓글 작성자 다른 경우
+        if (Member.isNotSameMember(user, comment.getMember())) {
             throw new BusinessException(CommentErrorCode.COMMENT_ELIMINATOR_NOT_AUTHORIZED);
         }
 
-        // TODO: 나중에 Member Role 타입 비교 변경!!
         // 관리자일 때 피드백 상태 변경
-        if (comment.getMember().getRole().equals("ADMIN")) {
+        if (Member.isAdmin(comment.getMember())) {
             comment.getFeedback().updateFeedbackStatus();
         }
 
