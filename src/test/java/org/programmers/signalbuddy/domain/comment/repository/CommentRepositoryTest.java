@@ -12,6 +12,7 @@ import org.programmers.signalbuddy.domain.comment.entity.Comment;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
+import org.programmers.signalbuddy.domain.member.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
@@ -37,7 +38,7 @@ class CommentRepositoryTest extends RepositoryTest {
 
     @BeforeEach
     void setup() {
-        member = Member.builder().email("test@test.com").password("123456").role("USER")
+        member = Member.builder().email("test@test.com").password("123456").role(MemberRole.USER)
             .nickname("tester").memberStatus(MemberStatus.ACTIVITY)
             .profileImageUrl("https://test-image.com/test-123131").build();
         member = memberRepository.save(member);
