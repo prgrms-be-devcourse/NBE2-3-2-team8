@@ -7,10 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.service.FeedbackService;
+import org.programmers.signalbuddy.global.dto.PageResponse;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +37,20 @@ public class FeedbackController {
         User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(feedbackService.writeFeedback(feedbackWriteRequest, user));
+    }
+
+    @Operation(summary = "피드백 목록 조회")
+    @GetMapping
+    public ResponseEntity<PageResponse<FeedbackResponse>> searchFeedbackList(
+        @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        return ResponseEntity.ok().body(feedbackService.searchFeedbackList(pageable));
+    }
+
+    @Operation(summary = "피드백 상세 조회")
+    @GetMapping("/{feedbackId}")
+    public ResponseEntity<FeedbackResponse> searchFeedbackDetail(
+        @PathVariable("feedbackId") Long feedbackId) {
+        return ResponseEntity.ok().body(feedbackService.searchFeedbackDetail(feedbackId));
     }
 
     @Operation(summary = "피드백 수정")

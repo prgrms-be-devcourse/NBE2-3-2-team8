@@ -10,8 +10,11 @@ import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.programmers.signalbuddy.global.dto.PageResponse;
 import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,17 @@ public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
     private final MemberRepository memberRepository;
+
+    public PageResponse<FeedbackResponse> searchFeedbackList(Pageable pageable) {
+        Page<FeedbackResponse> responsePage = feedbackRepository.findAllByActiveMembers(pageable);
+        return new PageResponse<>(responsePage);
+    }
+
+    public FeedbackResponse searchFeedbackDetail(Long feedbackId) {
+        Feedback feedback = feedbackRepository.findById(feedbackId)
+            .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
+        return FeedbackMapper.INSTANCE.toResponse(feedback);
+    }
 
     // TODO: 인자값에 User 객체는 나중에 변경해야 함!
     @Transactional

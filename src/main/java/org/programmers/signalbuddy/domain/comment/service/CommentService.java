@@ -2,6 +2,7 @@ package org.programmers.signalbuddy.domain.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.comment.dto.CommentRequest;
+import org.programmers.signalbuddy.domain.comment.dto.CommentResponse;
 import org.programmers.signalbuddy.domain.comment.entity.Comment;
 import org.programmers.signalbuddy.domain.comment.exception.CommentErrorCode;
 import org.programmers.signalbuddy.domain.comment.repository.CommentRepository;
@@ -11,8 +12,11 @@ import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.programmers.signalbuddy.global.dto.PageResponse;
 import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,13 +37,16 @@ public class CommentService {
         Feedback feedback = feedbackRepository.findById(request.getFeedbackId())
             .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
 
-        Comment comment = Comment.creator()
-            .request(request)
-            .feedback(feedback)
-            .member(memeber)
+        Comment comment = Comment.creator().request(request).feedback(feedback).member(memeber)
             .build();
 
         commentRepository.save(comment);
+    }
+
+    public PageResponse<CommentResponse> searchCommentList(Long feedbackId, Pageable pageable) {
+        Page<CommentResponse> responsePage = commentRepository.findAllByFeedbackIdAndActiveMembers(
+            feedbackId, pageable);
+        return new PageResponse<>(responsePage);
     }
 
     // TODO: 인자값에 User 객체는 나중에 변경해야 함!

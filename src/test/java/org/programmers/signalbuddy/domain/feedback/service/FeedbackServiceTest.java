@@ -118,7 +118,7 @@ class FeedbackServiceTest extends ServiceTest {
         FeedbackWriteRequest request = new FeedbackWriteRequest(updatedSubject, updatedContent);
         // TODO: User 객체는 나중에 변경해야 함!
         User user = new User();
-        user.setName("10");
+        user.setName("99999");
 
         // when & then
         assertThatThrownBy(() -> {
@@ -150,12 +150,32 @@ class FeedbackServiceTest extends ServiceTest {
         Long feedbackId = feedback.getFeedbackId();
         // TODO: User 객체는 나중에 변경해야 함!
         User user = new User();
-        user.setName("10");
+        user.setName("99999");
 
         // when & then
         assertThatThrownBy(() -> {
             feedbackService.deleteFeedback(feedbackId, user);
         }).isExactlyInstanceOf(BusinessException.class)
             .hasMessage(FeedbackErrorCode.FEEDBACK_MODIFIER_NOT_AUTHORIZED.getMessage());
+    }
+
+    @DisplayName("피드백 상세 조회 성공")
+    @Test
+    void searchFeedbackDetail() {
+        // given
+        Long feedbackId = feedback.getFeedbackId();
+
+        // when
+        FeedbackResponse response = feedbackService.searchFeedbackDetail(feedbackId);
+
+        // then
+        Optional<Feedback> actual = feedbackRepository.findById(feedbackId);
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(actual.get().getFeedbackId()).isEqualTo(feedbackId);
+            softAssertions.assertThat(actual.get().getSubject()).isEqualTo(response.getSubject());
+            softAssertions.assertThat(actual.get().getContent()).isEqualTo(response.getContent());
+            softAssertions.assertThat(actual.get().getMember().getMemberId())
+                .isEqualTo(feedback.getMember().getMemberId());
+        });
     }
 }

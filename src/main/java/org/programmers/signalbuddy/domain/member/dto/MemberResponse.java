@@ -13,7 +13,7 @@ import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @EqualsAndHashCode

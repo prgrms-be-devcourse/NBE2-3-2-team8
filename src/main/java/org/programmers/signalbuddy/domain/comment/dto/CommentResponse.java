@@ -1,4 +1,4 @@
-package org.programmers.signalbuddy.domain.feedback.dto;
+package org.programmers.signalbuddy.domain.comment.dto;
 
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -12,12 +12,10 @@ import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class FeedbackResponse {
+public class CommentResponse {
 
-    private Long feedbackId;
-    private String subject;
+    private Long commentId;
     private String content;
-    private Long likeCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private MemberResponse member;
