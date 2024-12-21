@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.programmers.signalbuddy.domain.feedback.entity.AnswerStatus;
+import org.programmers.signalbuddy.domain.feedback.entity.enums.AnswerStatus;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 
 @Getter
