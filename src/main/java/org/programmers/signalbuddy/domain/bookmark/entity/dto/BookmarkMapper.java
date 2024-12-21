@@ -12,6 +12,7 @@ public interface BookmarkMapper {
     BookmarkMapper INSTANCE = Mappers.getMapper(BookmarkMapper.class);
 
 
+    @Mapping(source = "member.memberId", target = "memberId")
     BookmarkResponse toDto(Bookmark bookmark);
 
     List<AdminBookmarkResponse> toAdminDto(List<Bookmark> bookmarks);
