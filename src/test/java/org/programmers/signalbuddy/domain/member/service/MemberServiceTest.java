@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.programmers.signalbuddy.domain.member.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
@@ -32,7 +33,7 @@ class MemberServiceTest {
     @BeforeEach
     void setUp() {
         member = Member.builder().memberId(id).email("test@example.com").password("password123")
-            .nickname("TestUser").profileImageUrl("http://example.com/profile.jpg").role("USER")
+            .nickname("TestUser").profileImageUrl("http://example.com/profile.jpg").role(MemberRole.USER)
             .memberStatus(MemberStatus.ACTIVITY).build();
     }
 
@@ -41,7 +42,7 @@ class MemberServiceTest {
     void getMember() {
         MemberResponse expectedResponse = MemberResponse.builder().memberId(id)
             .email("test@example.com").nickname("TestUser")
-            .profileImageUrl("http://example.com/profile.jpg").role("USER")
+            .profileImageUrl("http://example.com/profile.jpg").role(MemberRole.USER)
             .memberStatus(MemberStatus.ACTIVITY).build();
 
         when(memberRepository.findById(id)).thenReturn(Optional.of(member));
@@ -61,7 +62,7 @@ class MemberServiceTest {
         final MemberResponse expectedResponse = MemberResponse.builder().memberId(id)
             .email("test2@example.com").nickname("TestUser2")
             .profileImageUrl("http://example.com/profile.jpg").memberStatus(MemberStatus.ACTIVITY)
-            .role("USER").build();
+            .role(MemberRole.USER).build();
 
         when(memberRepository.findById(id)).thenReturn(Optional.of(member));
 

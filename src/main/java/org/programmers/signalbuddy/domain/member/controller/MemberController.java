@@ -7,7 +7,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
+import org.programmers.signalbuddy.domain.member.dto.AdminMemberResponse;
+import org.programmers.signalbuddy.domain.member.service.AdminMemberService;
 import org.programmers.signalbuddy.domain.member.service.MemberService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
+    private final AdminMemberService adminMemberService;
 
 
     @Operation(summary = "사용자 조회 API")
@@ -54,5 +60,13 @@ public class MemberController {
         log.info("id : {}", id);
         final MemberResponse deleted = memberService.deleteMember(id);
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
+    }
+
+    @Operation(summary = "관리자: 전체 사용자 조회 API")
+    @GetMapping("admin")
+    public ResponseEntity<Page<AdminMemberResponse>> getMembers(@PageableDefault(page = 0, size = 10, sort = "email") Pageable pageable) {
+
+        Page<AdminMemberResponse> members = adminMemberService.getAllMembers(pageable);
+        return ResponseEntity.ok(members);
     }
 }
