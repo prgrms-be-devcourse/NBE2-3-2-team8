@@ -29,7 +29,8 @@ public class CustomFeedbackRepositoryImpl implements CustomFeedbackRepository {
 
     private static final QBean<FeedbackResponse> feedbackResponseDto = Projections.fields(
         FeedbackResponse.class, feedback.feedbackId, feedback.subject, feedback.content,
-        feedback.likeCount, feedback.createdAt, feedback.updatedAt, memberResponseDto.as("member"));
+        feedback.likeCount, feedback.answerStatus, feedback.createdAt, feedback.updatedAt,
+        memberResponseDto.as("member"));
 
     private static final QBean<FeedbackResponse> feedbackNoMemberDto = Projections.fields(
         FeedbackResponse.class, feedback.feedbackId, feedback.subject, feedback.content,
