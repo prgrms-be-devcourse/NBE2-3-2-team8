@@ -17,6 +17,6 @@ public class BookmarkResponse {
 
     private String address;
 
-    private Long MemberId;
+    private Long memberId;
 
 }
