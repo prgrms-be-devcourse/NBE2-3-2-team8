@@ -9,6 +9,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QBean;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.comment.dto.CommentResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
@@ -41,14 +42,15 @@ public class CustomCommentRepositoryImpl implements CustomCommentRepository {
             .where(member.memberStatus.eq(MemberStatus.ACTIVITY))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
-            .orderBy(new OrderSpecifier<>(Order.ASC, comment.createdAt))
-            .fetch();
+            .orderBy(new OrderSpecifier<>(Order.ASC, comment.createdAt)).fetch();
 
-        Long count = jpaQueryFactory
-            .select(comment.count()).from(comment)
-            .join(member).on(comment.member.eq(member)).fetchJoin()
-            .where(member.memberStatus.eq(MemberStatus.ACTIVITY)).fetchOne();
+        long count = Optional.ofNullable(
+            jpaQueryFactory
+                .select(comment.count()).from(comment)
+                .join(member).on(comment.member.eq(member)).fetchJoin()
+                .where(member.memberStatus.eq(MemberStatus.ACTIVITY)).fetchOne()
+            ).orElse(0L);
 
-        return new PageImpl<>(results, pageable, (count == null ? 0L : count));
+        return new PageImpl<>(results, pageable, count);
     }
 }
