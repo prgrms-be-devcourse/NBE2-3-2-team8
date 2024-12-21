@@ -9,6 +9,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QBean;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
@@ -43,13 +44,16 @@ public class CustomFeedbackRepositoryImpl implements CustomFeedbackRepository {
             .where(member.memberStatus.eq(MemberStatus.ACTIVITY))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
-            .orderBy(new OrderSpecifier<>(Order.DESC, feedback.updatedAt)).fetch();
+            .orderBy(new OrderSpecifier<>(Order.DESC, feedback.createdAt)).fetch();
 
-        Long count = jpaQueryFactory.select(feedback.count()).from(feedback)
-            .join(member).on(feedback.member.eq(member)).fetchJoin()
-            .where(member.memberStatus.eq(MemberStatus.ACTIVITY)).fetchOne();
+        long count = Optional.ofNullable(
+            jpaQueryFactory
+                .select(feedback.count()).from(feedback)
+                .join(member).on(feedback.member.eq(member)).fetchJoin()
+                .where(member.memberStatus.eq(MemberStatus.ACTIVITY)).fetchOne()
+        ).orElse(0L);
 
-        return new PageImpl<>(results, pageable, (count == null ? 0L : count));
+        return new PageImpl<>(results, pageable, count);
     }
 
     @Override
