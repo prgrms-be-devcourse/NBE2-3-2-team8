@@ -1,4 +1,4 @@
-package org.programmers.signalbuddy.domain.feedback.entity;
+package org.programmers.signalbuddy.domain.feedback.entity.enums;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -17,7 +17,7 @@ import org.programmers.signalbuddy.domain.comment.entity.Comment;
 import org.programmers.signalbuddy.domain.comment.exception.CommentErrorCode;
 import org.programmers.signalbuddy.domain.comment.repository.CommentRepository;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
-import org.programmers.signalbuddy.domain.feedback.entity.AnswerStatus;
+import org.programmers.signalbuddy.domain.feedback.entity.enums.AnswerStatus;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
 import org.programmers.signalbuddy.domain.member.MemberRole;

@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.programmers.signalbuddy.domain.basetime.BaseTimeEntity;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
+import org.programmers.signalbuddy.domain.feedback.entity.enums.AnswerStatus;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 
 @Entity(name = "feedbacks")
