@@ -7,4 +7,6 @@ import org.springframework.data.domain.Pageable;
 public interface CustomFeedbackRepository {
 
     Page<FeedbackResponse> findAllByActiveMembers(Pageable pageable);
+
+    Page<FeedbackResponse> findPagedByMember(Long memberId, Pageable pageable);
 }

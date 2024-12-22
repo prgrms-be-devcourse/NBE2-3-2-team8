@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
+import org.programmers.signalbuddy.domain.feedback.service.FeedbackService;
 import org.programmers.signalbuddy.domain.member.dto.AdminMemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
@@ -33,7 +35,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final AdminMemberService adminMemberService;
-
+    private final FeedbackService feedbackService;
 
     @Operation(summary = "사용자 조회 API")
     @GetMapping("{id}")
@@ -76,5 +78,16 @@ public class MemberController {
     public ResponseEntity<AdminMemberResponse> getAdminMember(@PathVariable Long id) {
         final AdminMemberResponse member = adminMemberService.getMember(id);
         return ResponseEntity.ok(member);
+    }
+
+    @Operation(summary = "해당 사용자 피드백 목록 조회 API")
+    @ApiResponse(responseCode = "200", description = "피드백 목록 조회 성공")
+    @GetMapping("{id}/feedbacks")
+    public ResponseEntity<Page<FeedbackResponse>> getFeedbacks(@PathVariable Long id,
+        @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        log.info("id : {}", id);
+        final Page<FeedbackResponse> feedbacks = feedbackService.getFeedbacksByMemberId(id,
+            pageable);
+        return ResponseEntity.ok(feedbacks);
     }
 }

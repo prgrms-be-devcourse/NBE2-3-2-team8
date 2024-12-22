@@ -30,6 +30,10 @@ public class CustomFeedbackRepositoryImpl implements CustomFeedbackRepository {
         FeedbackResponse.class, feedback.feedbackId, feedback.subject, feedback.content,
         feedback.likeCount, feedback.createdAt, feedback.updatedAt, memberResponseDto.as("member"));
 
+    private static final QBean<FeedbackResponse> feedbackNoMemberDto = Projections.fields(
+        FeedbackResponse.class, feedback.feedbackId, feedback.subject, feedback.content,
+        feedback.likeCount, feedback.createdAt, feedback.updatedAt);
+
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
@@ -46,5 +50,17 @@ public class CustomFeedbackRepositoryImpl implements CustomFeedbackRepository {
             .where(member.memberStatus.eq(MemberStatus.ACTIVITY)).fetchOne();
 
         return new PageImpl<>(results, pageable, (count == null ? 0L : count));
+    }
+
+    @Override
+    public Page<FeedbackResponse> findPagedByMember(Long memberId, Pageable pageable) {
+        final List<FeedbackResponse> responses = jpaQueryFactory.select(feedbackNoMemberDto)
+            .from(feedback).join(member)
+            .on(feedback.member.eq(member).and(member.memberId.eq(memberId)))
+            .offset(pageable.getOffset()).limit(pageable.getPageSize())
+            .orderBy(new OrderSpecifier<>(Order.DESC, feedback.updatedAt)).fetch();
+        final Long count = jpaQueryFactory.select(feedback.count()).from(feedback).join(member)
+            .on(member.memberId.eq(memberId)).fetchOne();
+        return new PageImpl<>(responses, pageable, count != null ? count : 0);
     }
 }
