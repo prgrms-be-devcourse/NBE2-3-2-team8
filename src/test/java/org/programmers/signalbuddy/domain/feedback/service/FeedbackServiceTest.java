@@ -21,6 +21,8 @@ import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.programmers.signalbuddy.global.support.ServiceTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -176,6 +178,30 @@ class FeedbackServiceTest extends ServiceTest {
             softAssertions.assertThat(actual.get().getContent()).isEqualTo(response.getContent());
             softAssertions.assertThat(actual.get().getMember().getMemberId())
                 .isEqualTo(feedback.getMember().getMemberId());
+        });
+    }
+
+    @DisplayName("Member id로 피드백 목록 조회")
+    @Test
+    void searchFeedbackDetailFailure() {
+        for (int i = 1; i <= 10; i++) {
+            String subject = "test subject " + i;
+            String content = "test content " + i;
+            FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
+            feedbackRepository.save(Feedback.create(request, member));
+        }
+
+        final Page<FeedbackResponse> feedbacks = feedbackService.getFeedbacksByMemberId(
+            member.getMemberId(), PageRequest.of(0, 5));
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(feedbacks.getTotalPages()).isEqualTo(3);
+            softAssertions.assertThat(feedbacks.getTotalElements()).isEqualTo(11);
+            softAssertions.assertThat(feedbacks.getContent().size()).isEqualTo(5); // 한 페이지당 5개
+
+            FeedbackResponse firstFeedback = feedbacks.getContent().get(0);
+            softAssertions.assertThat(firstFeedback.getSubject()).isEqualTo("test subject 10");
+            softAssertions.assertThat(firstFeedback.getContent()).isEqualTo("test content 10");
         });
     }
 }
