@@ -64,10 +64,17 @@ public class MemberController {
 
     @Operation(summary = "관리자: 전체 사용자 조회 API")
     @GetMapping("admin")
-    public ResponseEntity<Page<AdminMemberResponse>> getMembers(
+    public ResponseEntity<Page<AdminMemberResponse>> getAdminMembers(
         @PageableDefault(page = 0, size = 10, sort = "email") Pageable pageable) {
 
         Page<AdminMemberResponse> members = adminMemberService.getAllMembers(pageable);
         return ResponseEntity.ok(members);
+    }
+
+    @Operation(summary = "관리자 : 사용자 조회 API")
+    @GetMapping("admin/{id}")
+    public ResponseEntity<AdminMemberResponse> getAdminMember(@PathVariable Long id) {
+        final AdminMemberResponse member = adminMemberService.getMember(id);
+        return ResponseEntity.ok(member);
     }
 }
