@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.programmers.signalbuddy.domain.member.entity.dto.AdminMemberResponse;
+import org.programmers.signalbuddy.domain.member.dto.AdminMemberResponse;
 import org.programmers.signalbuddy.domain.member.service.AdminMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
@@ -65,7 +65,8 @@ public class MemberController {
 
     @Operation(summary = "관리자: 전체 사용자 조회 API")
     @GetMapping("admin")
-    public ResponseEntity<Page<AdminMemberResponse>> getMembers(@PageableDefault(page = 0, size = 10, sort = "email") Pageable pageable) {
+    public ResponseEntity<Page<AdminMemberResponse>> getMembers(
+        @PageableDefault(page = 0, size = 10, sort = "email") Pageable pageable) {
 
         Page<AdminMemberResponse> members = adminMemberService.getAllMembers(pageable);
         return ResponseEntity.ok(members);
