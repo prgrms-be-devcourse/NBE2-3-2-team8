@@ -13,6 +13,7 @@ import org.programmers.signalbuddy.domain.bookmark.dto.BookmarkRequest;
 import org.programmers.signalbuddy.domain.bookmark.dto.BookmarkResponse;
 import org.programmers.signalbuddy.domain.bookmark.entity.Bookmark;
 import org.programmers.signalbuddy.domain.bookmark.repository.BookmarkRepository;
+import org.programmers.signalbuddy.domain.member.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
@@ -41,7 +42,7 @@ class BookmarkServiceTest extends ServiceTest {
 
     @BeforeEach
     void setup() {
-        member = Member.builder().email("bookmark@bookmark.com").password("123456").role("USER")
+        member = Member.builder().email("bookmark@bookmark.com").password("123456").role(MemberRole.USER)
             .nickname("bookmarkTest").memberStatus(MemberStatus.ACTIVITY)
             .profileImageUrl("https://book-test-image.com/test-123131").build();
         member = memberRepository.save(member);
