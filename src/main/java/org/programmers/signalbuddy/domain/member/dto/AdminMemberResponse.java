@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.programmers.signalbuddy.domain.bookmark.entity.dto.AdminBookmarkResponse;
 import org.programmers.signalbuddy.domain.member.MemberRole;
-import org.programmers.signalbuddy.domain.member.MemberStatus;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 
 @Getter
 @NoArgsConstructor

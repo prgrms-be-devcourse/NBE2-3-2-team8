@@ -3,9 +3,8 @@ package org.programmers.signalbuddy.domain.member.mapper;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+import org.programmers.signalbuddy.domain.member.dto.AdminMemberResponse;
 import org.programmers.signalbuddy.domain.member.entity.Member;
-import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
-import org.programmers.signalbuddy.domain.member.entity.dto.AdminMemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 
 @Mapper
