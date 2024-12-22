@@ -68,10 +68,9 @@ public class Member extends BaseTimeEntity {
         this.memberStatus = MemberStatus.WITHDRAWAL;
     }
 
-    // TODO: 나중에 Member Role 타입 비교 변경!!
     // 관리자인지 확인
     public static boolean isAdmin(Member member) {
-        return "ADMIN".equals(member.getRole());
+        return MemberRole.ADMIN.equals(member.getRole());
     }
 
     // 요청자와 작성자가 다른 경우
