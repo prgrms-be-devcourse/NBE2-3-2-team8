@@ -10,7 +10,9 @@ import org.programmers.signalbuddy.domain.bookmark.entity.dto.BookmarkMapper;
 import org.programmers.signalbuddy.domain.bookmark.repository.BookmarkRepository;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.dto.AdminMemberResponse;
+import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,6 +45,25 @@ public class AdminMemberService {
         });
 
         return adminMemberResponses;
+    }
+
+    public AdminMemberResponse getMember(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(()-> new BusinessException(
+            MemberErrorCode.NOT_FOUND_MEMBER));
+        List<Bookmark> bookmarks = bookmarkRepository.findAllByMember_MemberId(member.getMemberId());
+        List<AdminBookmarkResponse> adminBookmarkResponses = BookmarkMapper.INSTANCE.toAdminDto(bookmarks);
+
+        AdminMemberResponse response = AdminMemberResponse.builder()
+            .memberId(member.getMemberId())
+            .email(member.getEmail())
+            .nickname(member.getNickname())
+            .profileImageUrl(member.getProfileImageUrl())
+            .role(member.getRole())
+            .memberStatus(member.getMemberStatus())
+            .bookmarkResponses(adminBookmarkResponses)
+            .build();
+
+        return response;
     }
 
 
