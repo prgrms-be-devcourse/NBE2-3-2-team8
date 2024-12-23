@@ -3,6 +3,7 @@ package org.programmers.signalbuddy.domain.feedback.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
@@ -10,7 +11,9 @@ import org.programmers.signalbuddy.domain.feedback.service.FeedbackService;
 import org.programmers.signalbuddy.global.dto.PageResponse;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Feedback API")
@@ -37,6 +41,18 @@ public class FeedbackController {
         User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(feedbackService.writeFeedback(feedbackWriteRequest, user));
+    }
+
+    @Operation(summary = "관리자 피드백 목록 조회")
+    @GetMapping("/admin")
+    public ResponseEntity<PageResponse<FeedbackResponse>> searchFeedbackList(
+        @PageableDefault(page = 0, size = 10, sort = "createAt", direction = Direction.DESC) Pageable pageable,
+        @RequestParam(required = false, name = "startDate")
+        @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+        @RequestParam(required = false, name = "endDate")
+        @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+        @RequestParam(required = false, name = "answerStatus") Long answerStatus) {
+        return ResponseEntity.ok().body(feedbackService.searchFeedbackList(pageable, startDate, endDate, answerStatus));
     }
 
     @Operation(summary = "피드백 목록 조회")
