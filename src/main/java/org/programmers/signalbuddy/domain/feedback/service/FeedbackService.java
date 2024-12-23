@@ -1,5 +1,6 @@
 package org.programmers.signalbuddy.domain.feedback.service;
 
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackMapper;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
@@ -31,6 +32,12 @@ public class FeedbackService {
         return new PageResponse<>(responsePage);
     }
 
+    public PageResponse<FeedbackResponse> searchFeedbackList(Pageable pageable,
+        LocalDate startDate, LocalDate endDate, Long answerStatus) {
+        Page<FeedbackResponse> responsePage = feedbackRepository.findAll(pageable, startDate, endDate, answerStatus);
+        return new PageResponse<>(responsePage);
+    }
+
     public FeedbackResponse searchFeedbackDetail(Long feedbackId) {
         Feedback feedback = feedbackRepository.findById(feedbackId)
             .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
@@ -56,7 +63,7 @@ public class FeedbackService {
             .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
 
         // 피드백 작성자와 수정 요청자가 다른 경우
-        if (!feedback.getMember().getMemberId().equals(Long.parseLong(user.getName()))) {
+        if (Member.isNotSameMember(user, feedback.getMember())) {
             throw new BusinessException(FeedbackErrorCode.FEEDBACK_MODIFIER_NOT_AUTHORIZED);
         }
 
@@ -70,7 +77,7 @@ public class FeedbackService {
             .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
 
         // 피드백 작성자와 삭제 요청자가 다른 경우
-        if (!feedback.getMember().getMemberId().equals(Long.parseLong(user.getName()))) {
+        if (Member.isNotSameMember(user, feedback.getMember())) {
             throw new BusinessException(FeedbackErrorCode.FEEDBACK_ELIMINATOR_NOT_AUTHORIZED);
         }
 
