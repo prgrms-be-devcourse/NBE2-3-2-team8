@@ -8,5 +8,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
+
     Page<Member> findAll(Pageable pageable);
+
+    Member save(Member member);
+
+    boolean existsByEmail(String email);
 }

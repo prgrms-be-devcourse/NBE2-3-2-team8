@@ -1,6 +1,7 @@
 package org.programmers.signalbuddy.domain.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.programmers.signalbuddy.domain.member.MemberRole;
+import org.programmers.signalbuddy.domain.member.dto.MemberJoinRequest;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
@@ -82,4 +84,39 @@ class MemberServiceTest {
         assertThat(actual).isEqualTo(expected);
         verify(memberRepository, times(1)).findById(id);
     }
+
+    @Test
+    @DisplayName("회원 가입 성공")
+    void savedMember() {
+
+        //given
+        final MemberJoinRequest request = MemberJoinRequest.builder()
+            .email("test2@example.com")
+            .nickname("TestUser2")
+            .profileImageUrl("http://example.com/profile.jpg")
+            .password("password123")
+            .build();
+        final Member expectedMember = Member.builder()
+            .memberId(id)
+            .email("test2@example.com")
+            .nickname("TestUser2")
+            .profileImageUrl("http://example.com/profile.jpg")
+            .memberStatus(MemberStatus.ACTIVITY)
+            .role(MemberRole.USER).build();
+
+        when(memberRepository.save(any(Member.class))).thenReturn(expectedMember);
+
+        //when
+        MemberResponse actualResponse = memberService.joinMember(request);
+
+        //then
+        assertThat(actualResponse.getEmail()).isEqualTo(expectedMember.getEmail());
+        assertThat(actualResponse.getNickname()).isEqualTo(expectedMember.getNickname());
+        assertThat(actualResponse.getProfileImageUrl()).isEqualTo(expectedMember.getProfileImageUrl());
+        assertThat(actualResponse.getMemberStatus()).isEqualTo(expectedMember.getMemberStatus());
+        assertThat(actualResponse.getRole()).isEqualTo(expectedMember.getRole());
+
+        verify(memberRepository, times(1)).save(any(Member.class));
+    }
+
 }

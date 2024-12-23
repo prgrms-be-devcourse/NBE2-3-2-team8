@@ -2,9 +2,12 @@ package org.programmers.signalbuddy.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.programmers.signalbuddy.domain.member.MemberRole;
+import org.programmers.signalbuddy.domain.member.dto.MemberJoinRequest;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.mapper.MemberMapper;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
@@ -42,4 +45,26 @@ public class MemberService {
         log.info("Member deleted: {}", member);
         return MemberMapper.INSTANCE.toDto(member);
     }
+
+    @Transactional
+    public MemberResponse joinMember(MemberJoinRequest memberJoinRequest) {
+
+        // 이미 존재하는 사용자인지 확인
+        if (memberRepository.existsByEmail(memberJoinRequest.getEmail())) {
+            throw new BusinessException(MemberErrorCode.ALREADY_EXIST_EMAIL);
+        }
+
+        Member joinMember = Member.builder()
+            .email(memberJoinRequest.getEmail())
+            .nickname(memberJoinRequest.getNickname())
+            .password(memberJoinRequest.getPassword())
+            .profileImageUrl(memberJoinRequest.getProfileImageUrl())
+            .memberStatus(MemberStatus.ACTIVITY)
+            .role(MemberRole.USER)
+            .build();
+
+        memberRepository.save(joinMember);
+        return MemberMapper.INSTANCE.toDto(joinMember);
+    }
+
 }
