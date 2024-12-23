@@ -58,7 +58,7 @@ class CommentServiceTest extends ServiceTest {
             .profileImageUrl("https://test-image.com/test-123131").build();
         member = memberRepository.save(member);
 
-        admin = Member.builder().email("admin@test.com").password("123456").role("ADMIN")
+        admin = Member.builder().email("admin@test.com").password("123456").role(MemberRole.ADMIN)
             .nickname("admin").memberStatus(MemberStatus.ACTIVITY)
             .profileImageUrl("https://test-image.com/test-123131").build();
         admin = memberRepository.save(admin);
