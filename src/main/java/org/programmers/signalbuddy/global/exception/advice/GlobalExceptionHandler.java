@@ -5,6 +5,8 @@ import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.programmers.signalbuddy.global.exception.ErrorCode;
 import org.programmers.signalbuddy.global.exception.GlobalErrorCode;
 import org.programmers.signalbuddy.global.exception.advice.dto.ErrorResponse;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,6 +30,14 @@ public class GlobalExceptionHandler {
         String message = e.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
         ErrorResponse errorResponse = new ErrorResponse(code, message);
         return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidDataAccessApiUsage(
+        InvalidDataAccessApiUsageException e) {
+        logError(e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponse(GlobalErrorCode.BAD_REQUEST));
     }
 
     @ExceptionHandler(Exception.class)
