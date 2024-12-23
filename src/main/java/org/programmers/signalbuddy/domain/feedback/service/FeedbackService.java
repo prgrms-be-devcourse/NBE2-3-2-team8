@@ -7,6 +7,7 @@ import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.feedback.exception.FeedbackErrorCode;
+import org.programmers.signalbuddy.domain.feedback.repository.FeedbackJdbcRepository;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
@@ -26,6 +27,7 @@ public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
     private final MemberRepository memberRepository;
+    private final FeedbackJdbcRepository feedbackJdbcRepository;
 
     public PageResponse<FeedbackResponse> searchFeedbackList(Pageable pageable) {
         Page<FeedbackResponse> responsePage = feedbackRepository.findAllByActiveMembers(pageable);
@@ -35,6 +37,12 @@ public class FeedbackService {
     public PageResponse<FeedbackResponse> searchFeedbackList(Pageable pageable,
         LocalDate startDate, LocalDate endDate, Long answerStatus) {
         Page<FeedbackResponse> responsePage = feedbackRepository.findAll(pageable, startDate, endDate, answerStatus);
+        return new PageResponse<>(responsePage);
+    }
+
+    public PageResponse<FeedbackResponse> searchByKeyword(Pageable pageable, String keyword,
+        Long answerStatus) {
+        Page<FeedbackResponse> responsePage = feedbackJdbcRepository.fullTextSearch(pageable, keyword, answerStatus);
         return new PageResponse<>(responsePage);
     }
 
