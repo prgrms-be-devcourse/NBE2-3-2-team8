@@ -52,7 +52,18 @@ public class FeedbackController {
         @RequestParam(required = false, name = "endDate")
         @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
         @RequestParam(required = false, name = "answerStatus") Long answerStatus) {
-        return ResponseEntity.ok().body(feedbackService.searchFeedbackList(pageable, startDate, endDate, answerStatus));
+        return ResponseEntity.ok()
+            .body(feedbackService.searchFeedbackList(pageable, startDate, endDate, answerStatus));
+    }
+
+    @Operation(summary = "관리자 피드백 검색")
+    @GetMapping(value = "/admin", params = "keyword")
+    public ResponseEntity<PageResponse<FeedbackResponse>> searchFeedbackList(
+        @PageableDefault(page = 0, size = 10, sort = "createAt", direction = Direction.DESC) Pageable pageable,
+        @RequestParam(name = "keyword") String keyword,
+        @RequestParam(required = false, name = "answerStatus") Long answerStatus) {
+        return ResponseEntity.ok()
+            .body(feedbackService.searchByKeyword(pageable, keyword, answerStatus));
     }
 
     @Operation(summary = "피드백 목록 조회")
