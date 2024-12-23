@@ -45,7 +45,7 @@ public final class QueryDSLUtil {
      *
      * @param pageable 쿼리 파라미터로 가져온 값들
      * @param type     정렬할 컬럼의 클래스 <br> ex) QFeedback.feedback.getClass()
-     * @param variable 정렬할 필드명
+     * @param variable 정렬할 QClass의 필드명 <br> ex) "feedback"
      * @return 정렬 조건을 반환
      * @throws org.springframework.dao.InvalidDataAccessApiUsageException 잘못된 필드명을 입력하면 쿼리를 처리하는 중
      *                                                                    해당 예외가 발생한다.
@@ -68,7 +68,8 @@ public final class QueryDSLUtil {
                 pathBuilder.getComparable(order.getProperty(), Comparable.class)));
         }
 
-        @SuppressWarnings("unchecked") OrderSpecifier<?>[] results = orderSpecifiers.toArray(
+        @SuppressWarnings("unchecked")
+        OrderSpecifier<?>[] results = orderSpecifiers.toArray(
             new OrderSpecifier<?>[0]);
         return results;
     }
