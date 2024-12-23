@@ -1,5 +1,8 @@
 package org.programmers.signalbuddy.domain.feedback.repository;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
@@ -15,9 +18,11 @@ import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
 import org.programmers.signalbuddy.global.support.RepositoryTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 
 class FeedbackRepositoryTest extends RepositoryTest {
 
@@ -63,5 +68,37 @@ class FeedbackRepositoryTest extends RepositoryTest {
             softAssertions.assertThat(actual.getContent().get(3).getMember().getMemberId())
                 .isEqualTo(member.getMemberId());
         });
+    }
+
+    // TODO: 더 다양한 데이터를 이용하여 추가 검증 필요
+    @DisplayName("관리자 : 피드백 목록을 다양한 조건으로 조회")
+    @Test
+    void findAll() {
+        // when
+        Pageable pageable = PageRequest.of(3, 10, Direction.DESC, "feedbackId", "createdAt");
+        Page<FeedbackResponse> actual = feedbackRepository.findAll(pageable, null, null,
+            0L);
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(actual.getTotalElements()).isEqualTo(123);
+            softAssertions.assertThat(actual.getTotalPages()).isEqualTo(13);
+            softAssertions.assertThat(actual.getNumber()).isEqualTo(3);
+            softAssertions.assertThat(actual.getContent().size()).isEqualTo(10);
+            softAssertions.assertThat(actual.getContent().get(3).getFeedbackId()).isNotNull();
+            softAssertions.assertThat(actual.getContent().get(3).getMember().getMemberId())
+                .isEqualTo(member.getMemberId());
+        });
+    }
+
+    @DisplayName("관리자 : 피드백 목록을 다양한 조건으로 조회, 잘못된 컬럼명을 요청할 때")
+    @Test
+    void findAllFailure() {
+        // given
+        Pageable pageable = PageRequest.of(3, 10, Direction.DESC, "xxxxx");
+
+        // when & then
+        assertThatThrownBy(() -> feedbackRepository.findAll(pageable, null, LocalDate.now(),
+            0L)).isExactlyInstanceOf(InvalidDataAccessApiUsageException.class);
     }
 }
