@@ -18,8 +18,8 @@ import org.programmers.signalbuddy.domain.comment.entity.Comment;
 import org.programmers.signalbuddy.domain.comment.exception.CommentErrorCode;
 import org.programmers.signalbuddy.domain.comment.repository.CommentRepository;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
-import org.programmers.signalbuddy.domain.feedback.entity.enums.AnswerStatus;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
+import org.programmers.signalbuddy.domain.feedback.entity.enums.AnswerStatus;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
 import org.programmers.signalbuddy.domain.member.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
@@ -29,10 +29,13 @@ import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.programmers.signalbuddy.global.support.ServiceTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @TestMethodOrder(OrderAnnotation.class)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class CommentServiceTest extends ServiceTest {
 
     @Autowired
@@ -127,7 +130,7 @@ class CommentServiceTest extends ServiceTest {
         commentService.writeComment(request, user);
 
         // then
-        Optional<Comment> actual = commentRepository.findById(4L);
+        Optional<Comment> actual = commentRepository.findById(2L);
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(actual).get().isNotNull();
             softAssertions.assertThat(actual.get().getCommentId()).isNotNull();
@@ -233,7 +236,7 @@ class CommentServiceTest extends ServiceTest {
 
         // when
         commentService.writeComment(request, user);
-        commentService.deleteComment(10L, user);
+        commentService.deleteComment(2L, user);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {

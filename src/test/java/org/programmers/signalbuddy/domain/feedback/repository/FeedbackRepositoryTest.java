@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,12 +52,6 @@ class FeedbackRepositoryTest extends RepositoryTest {
             feedbackList.add(Feedback.create(request, member));
         }
         feedbackRepository.saveAll(feedbackList);
-    }
-
-    @AfterEach
-    void teardown() {
-        feedbackRepository.deleteAll();
-        memberRepository.deleteAll();
     }
 
     @DisplayName("탈퇴하지 않은 유저들의 피드백 목록 가져오기")

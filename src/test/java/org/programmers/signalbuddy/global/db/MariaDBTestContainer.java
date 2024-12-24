@@ -13,7 +13,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public interface MariaDBTestContainer {
 
     @Container
-    MariaDBContainer<?> MARIADB_CONTAINER = new MariaDBContainer<>("mariadb:10.11")
+    MariaDBContainer<?> MARIADB_CONTAINER = new MariaDBContainer<>("mariadb:11.5")
         .withDatabaseName("test")
         .withUsername("test")
         .withPassword("test");
