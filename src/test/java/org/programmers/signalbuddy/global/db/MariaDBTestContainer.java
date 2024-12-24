@@ -10,7 +10,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-public abstract class MariaDBTestContainer {
+public interface MariaDBTestContainer {
 
     @Container
     MariaDBContainer MARIADB_CONTAINER = new MariaDBContainer("mariadb:11.5");
