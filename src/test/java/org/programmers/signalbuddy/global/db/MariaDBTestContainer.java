@@ -1,5 +1,7 @@
 package org.programmers.signalbuddy.global.db;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.test.context.ActiveProfiles;
@@ -13,5 +15,15 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public interface MariaDBTestContainer {
 
     @Container
-    MariaDBContainer MARIADB_CONTAINER = new MariaDBContainer("mariadb:11.5");
+    MariaDBContainer<?> MARIADB_CONTAINER = new MariaDBContainer<>("mariadb:11.5");
+
+    @BeforeAll
+    static void setup() {
+        MARIADB_CONTAINER.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        MARIADB_CONTAINER.stop();
+    }
 }
