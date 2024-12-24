@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.locationtech.jts.geom.Point;
 import org.programmers.signalbuddy.domain.basetime.BaseTimeEntity;
+import org.programmers.signalbuddy.domain.crossroad.dto.CrossroadApiResponse;
 
 @Entity(name = "crossroads")
 @Getter
@@ -34,4 +35,10 @@ public class Crossroad extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Point coordinate;
+
+    public Crossroad(CrossroadApiResponse response) {
+        this.crossroadApiId = response.getCrossroadApiId();
+        this.name = response.getName();
+        this.coordinate = response.getPoint();
+    }
 }
