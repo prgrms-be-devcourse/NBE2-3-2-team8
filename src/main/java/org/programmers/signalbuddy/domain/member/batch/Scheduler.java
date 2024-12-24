@@ -21,7 +21,6 @@ public class Scheduler {
     public void runJob() throws Exception {
 
         JobParameters params = new JobParametersBuilder()
-            .addLong("timestamp", System.currentTimeMillis())
             .toJobParameters();
         jobLauncher.run(deleteMemberJob, params);
     }
