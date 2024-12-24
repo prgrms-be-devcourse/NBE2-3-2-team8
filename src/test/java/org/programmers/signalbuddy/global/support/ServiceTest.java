@@ -7,6 +7,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-public abstract class ServiceTest implements MariaDBTestContainer {
+public abstract class ServiceTest extends MariaDBTestContainer {
 
 }

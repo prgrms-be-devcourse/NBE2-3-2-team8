@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Import;
 
 @DataJpaTest
 @Import(TestQuerydslConfig.class)
-public abstract class RepositoryTest implements MariaDBTestContainer {
+public abstract class RepositoryTest extends MariaDBTestContainer {
 
 }

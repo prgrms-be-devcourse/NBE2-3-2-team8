@@ -6,6 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
-public abstract class JdbcTest implements MariaDBTestContainer {
+public abstract class JdbcTest extends MariaDBTestContainer {
 
 }
