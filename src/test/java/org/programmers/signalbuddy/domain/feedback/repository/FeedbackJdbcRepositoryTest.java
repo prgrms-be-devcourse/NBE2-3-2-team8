@@ -53,15 +53,15 @@ class FeedbackJdbcRepositoryTest extends JdbcTest {
         }
         feedbackRepository.saveAll(feedbackList);
 
-        jdbcTemplate.execute("CREATE FULLTEXT INDEX idx_subject_content ON feedbacks (subject, content)");
+        jdbcTemplate.execute("CREATE FULLTEXT INDEX IF NOT EXISTS idx_subject_content ON feedbacks (subject, content)");
     }
 
     @AfterEach
-    void tearDown() {
+    void teardown() {
         feedbackRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
-    // TODO: H2를 MariaDB TestContainers로 바꾸면 테스트 코드 완성하기
     @DisplayName("Full Text Search를 이용한 검색 쿼리")
     @Test
     void fullTextSearch() {
