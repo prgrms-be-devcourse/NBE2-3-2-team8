@@ -1,10 +1,10 @@
 package org.programmers.signalbuddy.global.db;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -15,15 +15,15 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public interface MariaDBTestContainer {
 
     @Container
-    MariaDBContainer<?> MARIADB_CONTAINER = new MariaDBContainer<>("mariadb:11.5");
+    MariaDBContainer<?> MARIADB_CONTAINER = new MariaDBContainer<>("mariadb:latest")
+        .withDatabaseName("test")
+        .withUsername("test")
+        .withPassword("test");
 
-    @BeforeAll
-    static void setup() {
-        MARIADB_CONTAINER.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        MARIADB_CONTAINER.stop();
+    @DynamicPropertySource
+    static void properties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", MARIADB_CONTAINER::getJdbcUrl);
+        registry.add("spring.datasource.username", MARIADB_CONTAINER::getUsername);
+        registry.add("spring.datasource.password", MARIADB_CONTAINER::getPassword);
     }
 }
