@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="headerStyles">
+  <!-- 공통 스타일 -->
+  <link href="/css/common/common.css" rel="stylesheet">
+  <!-- 헤더 스타일 -->
+  <link href="/css/common/header.css" rel="stylesheet">
+</head>
+<header th:fragment="headerFragment">
+  <div class="flex items-center justify-between px-6 py-4 bg-neutral-200">
+    <a class="logo-box" href="#">
+      <img alt="" class="logo" src="/images/logo.png">
+      <div class="font-title text-neutral-950 text-lg">Signal Buddy</div>
+    </a>
+    <nav class="flex items-center space-x-4">
+      <!--   회원 헤더   -->
+      <!--      <a class="text-neutral-600 text-sm" href="#">피드백</a>-->
+      <!--      <a class="text-neutral-600 text-sm" href="#">마이 페이지</a>-->
+      <!--      <span class="border-l border-neutral-300 h-4 mx-2"></span>-->
+      <!--      <button class="px-4 py-1 rounded-md bg-neutral-950 text-neutral-50 text-sm">로그아웃</button>-->
+      <!--   비회원 헤더   -->
+      <a class="text-neutral-600 text-sm" href="#">피드백</a>
+      <span class="border-l border-neutral-300 h-4 mx-2"></span>
+      <button class="px-4 py-1 rounded-md bg-neutral-950 text-neutral-50 text-sm" href="#">회원가입
+      </button>
+      <button class="px-4 py-1 rounded-md bg-neutral-950 text-neutral-50 text-sm">로그인</button>
+    </nav>
+  </div>
+</header>

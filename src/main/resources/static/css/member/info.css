@@ -1,0 +1,14 @@
+.profile-img {
+  width: 120px;
+}
+
+.input-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.input-value {
+  width: 300px;
+}
