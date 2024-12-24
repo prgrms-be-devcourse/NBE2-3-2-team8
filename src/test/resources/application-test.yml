@@ -2,13 +2,13 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-#    url: jdbc:tc:mariadb:11.5://test
-#    username: test
-#    password: test
+    url: jdbc:tc:mariadb:10.11://test
+    username: test
+    password: test
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
       naming:
         # 자바에서 카멜로 필드 작성하면 DB에 스네이크로 기록
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
