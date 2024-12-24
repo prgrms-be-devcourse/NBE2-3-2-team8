@@ -1,5 +1,6 @@
 package org.programmers.signalbuddy.global.exception.advice;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.programmers.signalbuddy.global.exception.ErrorCode;
@@ -28,6 +29,15 @@ public class GlobalExceptionHandler {
         logError(e);
         int code = GlobalErrorCode.BAD_REQUEST.getCode();
         String message = e.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+        ErrorResponse errorResponse = new ErrorResponse(code, message);
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleValidException(ConstraintViolationException e) {
+        logError(e);
+        int code = GlobalErrorCode.BAD_REQUEST.getCode();
+        String message = e.getMessage();
         ErrorResponse errorResponse = new ErrorResponse(code, message);
         return ResponseEntity.badRequest().body(errorResponse);
     }
