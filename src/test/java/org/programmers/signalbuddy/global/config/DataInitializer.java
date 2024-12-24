@@ -2,7 +2,6 @@ package org.programmers.signalbuddy.global.config;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -17,48 +16,46 @@ public class DataInitializer {
 
     private static final int OFF = 0;
     private static final int ON = 1;
-    private static final int FIRST_COLUMN = 1;
-    private static final String FLYWAY = "flyway";
+    private static final int COLUMN_INDEX = 1;
+
+    private final List<String> tableNames = new ArrayList<>();
 
     @Autowired
     private DataSource dataSource;
+
     @PersistenceContext
-    private EntityManager em;
+    private EntityManager entityManager;
 
-    private final List<String> deleteDMLs = new ArrayList<>();
-
-    @Transactional
-    public void deleteAll() {
-        if (deleteDMLs.isEmpty()) {
-            init();
-        }
-        setForeignKeyEnabled(OFF);
-        truncateAllTables();
-        setForeignKeyEnabled(ON);
-    }
-
-    private void setForeignKeyEnabled(final int enabled) {
-        em.createNativeQuery("SET foreign_key_checks = " + enabled).executeUpdate();
-    }
-
-    private void truncateAllTables() {
-        deleteDMLs.stream()
-            .map(em::createNativeQuery)
-            .forEach(Query::executeUpdate);
-    }
-
-    private void init() {
+    private void findDatabaseTableNames() {
         try (final Statement statement = dataSource.getConnection().createStatement()) {
-            final ResultSet resultSet = statement.executeQuery("SHOW TABLES ");
-
+            ResultSet resultSet = statement.executeQuery("SHOW TABLES");
             while (resultSet.next()) {
-                final String tableName = resultSet.getString(FIRST_COLUMN);
-                if (tableName.contains(FLYWAY)) {
-                    continue;
-                }
-                deleteDMLs.add("TRUNCATE " + tableName);
-            }        } catch (Exception e) {
+                final String tableName = resultSet.getString(COLUMN_INDEX);
+                tableNames.add(tableName);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void truncate() {
+        setForeignKeyCheck(OFF);
+        for (String tableName : tableNames) {
+            entityManager.createNativeQuery(String.format("TRUNCATE TABLE %s", tableName)).executeUpdate();
+        }
+        setForeignKeyCheck(ON);
+    }
+
+    private void setForeignKeyCheck(int mode) {
+        entityManager.createNativeQuery(String.format("SET FOREIGN_KEY_CHECKS = %d", mode)).executeUpdate();
+    }
+
+    @Transactional
+    public void clear() {
+        if (tableNames.isEmpty()) {
+            findDatabaseTableNames();
+        }
+        entityManager.clear();
+        truncate();
     }
 }

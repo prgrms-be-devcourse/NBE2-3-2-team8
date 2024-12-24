@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 @DataJpaTest
-@Import(TestQuerydslConfig.class)
+@Import({TestQuerydslConfig.class, DataInitializer.class})
 public abstract class RepositoryTest implements MariaDBTestContainer {
 
     @Autowired
@@ -17,6 +17,6 @@ public abstract class RepositoryTest implements MariaDBTestContainer {
 
     @BeforeEach
     void delete() {
-        dataInitializer.deleteAll();
+        dataInitializer.clear();
     }
 }

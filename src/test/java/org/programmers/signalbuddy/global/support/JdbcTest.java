@@ -5,10 +5,10 @@ import org.programmers.signalbuddy.global.config.DataInitializer;
 import org.programmers.signalbuddy.global.db.MariaDBTestContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.annotation.Import;
 
-@Transactional
 @SpringBootTest
+@Import(DataInitializer.class)
 public abstract class JdbcTest implements MariaDBTestContainer {
 
     @Autowired
@@ -16,6 +16,6 @@ public abstract class JdbcTest implements MariaDBTestContainer {
 
     @BeforeEach
     void delete() {
-        dataInitializer.deleteAll();
+        dataInitializer.clear();
     }
 }
