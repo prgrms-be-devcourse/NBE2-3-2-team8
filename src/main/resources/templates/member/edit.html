@@ -22,56 +22,66 @@
         <img alt="Profile" class="rounded-full profile-img"
              th:src="${'/api/members/files/' + member.profileImageUrl}">
       </div>
-      <form class="space-y-4">
+      <div class="space-y-4">
         <div class="input-box">
           <div class="flex flex-col input-value">
             <label class="text-neutral-600 text-sm mb-1">이메일</label>
             <input class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
-                   id="email" readonly th:value="${member.email}" type="text"/>
+                   id="email" th:value="${member.email}" type="text"/>
           </div>
           <div class="flex flex-col input-value">
             <label class="text-neutral-600 text-sm mb-1">닉네임</label>
             <input class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
-                   id="nickname" readonly th:value="${member.nickname}" type="text"/>
+                   id="nickname" th:value="${member.nickname}" type="text"/>
+          </div>
+          <div class="flex flex-col input-value">
+            <label class="text-neutral-600 text-sm mb-1">비밀번호</label>
+            <input class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
+                   id="password" type="text"/>
           </div>
           <div class="mt-6 flex justify-center space-x-4">
-            <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50 cancel"
-                    onclick="deleteBtn(this)" th:attr="data-id=${member.memberId}">탈퇴
-            </button>
-            <a class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50"
-               href="/members/edit">수정</a>
+            <a class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50 cancel" href="/members">취소</a>
+            <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50" th:attr="data-id=${member.memberId}" onclick="editBtn(this)">확인</button>
           </div>
         </div>
-      </form>
+      </div>
     </section>
   </main>
 </div>
 <script>
-  const deleteBtn = (btn) => {
+  const editBtn = (btn) => {
+    const email = document.querySelector('#email').value;
+    const nickname = document.querySelector('#nickname').value;
+    const password = document.querySelector('#password').value.trim();
     const id = btn.dataset.id;
-    const flag = confirm("탈퇴 하시겠습니까?");
 
-    if (!flag) {
-      return;
+    const params = {
+      email,
+      nickname
+    }
+    if(password) {
+      params.password = password
     }
     fetch(`/api/members/${id}`, {
-      method: "delete",
+      method: "patch",
       headers: {
         "Content-Type": "application/json",
-      }
+      },
+      body: JSON.stringify(params),
     })
     .then(response => {
       return response.json();
     })
     .then(data => {
-      console.log('회원 탈퇴 성공:', data);
-      alert("탈퇴 성공했습니다.")
-      window.location.href = '/'
+      console.log('업데이트 성공:', data);
+      alert("수정이 완료되었습니다.")
+      window.location.href = '/members'
     })
     .catch(error => {
-      console.error('회원 탈퇴 실패:', error);
+      console.error('업데이트 실패:', error);
     });
   }
+
 </script>
 </body>
 </html>
