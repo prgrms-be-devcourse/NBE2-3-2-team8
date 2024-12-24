@@ -12,6 +12,7 @@ import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
 import org.programmers.signalbuddy.domain.admin.service.AdminService;
 import org.programmers.signalbuddy.domain.member.service.MemberService;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -105,4 +106,11 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(saved);
     }
 
+    @GetMapping("/files/{filename}")
+    @Operation(summary = "이미지 조회 API", description = "페이지에서 이미지를 조회할 수 있는 API")
+    @ApiResponse(responseCode = "200", description = "이미지 파일 리턴")
+    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
+        final Resource image = memberService.getProfileImage(filename);
+        return ResponseEntity.status(HttpStatus.OK).body(image);
+    }
 }
