@@ -2,27 +2,28 @@ package org.programmers.signalbuddy.domain.feedback.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.member.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.programmers.signalbuddy.global.support.JdbcTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-@Transactional
-@SpringBootTest
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
-class FeedbackJdbcRepositoryTest {
+class FeedbackJdbcRepositoryTest extends JdbcTest {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private FeedbackJdbcRepository feedbackJdbcRepository;
@@ -50,30 +51,26 @@ class FeedbackJdbcRepositoryTest {
             feedbackList.add(Feedback.create(request, member));
         }
         feedbackRepository.saveAll(feedbackList);
+
+        jdbcTemplate.execute("CREATE FULLTEXT INDEX IF NOT EXISTS idx_subject_content ON feedbacks (subject, content)");
     }
 
-    @AfterEach
-    void tearDown() {
-        feedbackRepository.deleteAll();
-    }
-
-    // TODO: H2를 MariaDB TestContainers로 바꾸면 테스트 코드 완성하기
     @DisplayName("Full Text Search를 이용한 검색 쿼리")
     @Test
     void fullTextSearch() {
-//        // when
-//        Pageable pageable = PageRequest.of(3, 10);
-//        Page<FeedbackResponse> actual = feedbackJdbcRepository.fullTextSearch(pageable, "test", 0L);
-//
-//        // then
-//        SoftAssertions.assertSoftly(softAssertions -> {
-//            softAssertions.assertThat(actual.getTotalElements()).isEqualTo(123);
-//            softAssertions.assertThat(actual.getTotalPages()).isEqualTo(13);
-//            softAssertions.assertThat(actual.getNumber()).isEqualTo(3);
-//            softAssertions.assertThat(actual.getContent().size()).isEqualTo(10);
-//            softAssertions.assertThat(actual.getContent().get(3).getFeedbackId()).isNotNull();
-//            softAssertions.assertThat(actual.getContent().get(3).getMember().getMemberId())
-//                .isEqualTo(member.getMemberId());
-//        });
+        // when
+        Pageable pageable = PageRequest.of(3, 10);
+        Page<FeedbackResponse> actual = feedbackJdbcRepository.fullTextSearch(pageable, "test", 0L);
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(actual.getTotalElements()).isEqualTo(123);
+            softAssertions.assertThat(actual.getTotalPages()).isEqualTo(13);
+            softAssertions.assertThat(actual.getNumber()).isEqualTo(3);
+            softAssertions.assertThat(actual.getContent().size()).isEqualTo(10);
+            softAssertions.assertThat(actual.getContent().get(3).getFeedbackId()).isNotNull();
+            softAssertions.assertThat(actual.getContent().get(3).getMember().getMemberId())
+                .isEqualTo(member.getMemberId());
+        });
     }
 }

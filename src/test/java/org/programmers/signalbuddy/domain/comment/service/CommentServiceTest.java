@@ -17,8 +17,8 @@ import org.programmers.signalbuddy.domain.comment.entity.Comment;
 import org.programmers.signalbuddy.domain.comment.exception.CommentErrorCode;
 import org.programmers.signalbuddy.domain.comment.repository.CommentRepository;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
-import org.programmers.signalbuddy.domain.feedback.entity.enums.AnswerStatus;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
+import org.programmers.signalbuddy.domain.feedback.entity.enums.AnswerStatus;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
 import org.programmers.signalbuddy.domain.member.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
@@ -119,7 +119,7 @@ class CommentServiceTest extends ServiceTest {
         commentService.writeComment(request, user);
 
         // then
-        Optional<Comment> actual = commentRepository.findById(4L);
+        Optional<Comment> actual = commentRepository.findById(2L);
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(actual).get().isNotNull();
             softAssertions.assertThat(actual.get().getCommentId()).isNotNull();
@@ -225,7 +225,7 @@ class CommentServiceTest extends ServiceTest {
 
         // when
         commentService.writeComment(request, user);
-        commentService.deleteComment(10L, user);
+        commentService.deleteComment(2L, user);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {

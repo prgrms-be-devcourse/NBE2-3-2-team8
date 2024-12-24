@@ -49,7 +49,7 @@ class BookmarkRepositoryTest extends RepositoryTest {
             bookmarkRepository.save(bookmark);
         }
 
-        /* H2 데이터베이스에서 ST_X 함수 이용 X
+        /* H2 데이터베이스에서 ST_X 함수 이용 X*/
         Pageable pageable = PageRequest.of(0, 5);
         Page<BookmarkResponse> bookmarksPage = bookmarkRepository.findPagedByMember(pageable, 1L);
 
@@ -62,7 +62,7 @@ class BookmarkRepositoryTest extends RepositoryTest {
 
         BookmarkResponse firstBookmark = bookmarksPage.getContent().get(0);
         assertThat(firstBookmark.getAddress()).isEqualTo("Address 1");
-        */
+
     }
 
 }
