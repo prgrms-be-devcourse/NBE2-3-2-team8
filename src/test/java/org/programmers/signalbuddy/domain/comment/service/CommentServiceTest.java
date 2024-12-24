@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -72,6 +73,13 @@ class CommentServiceTest extends ServiceTest {
             .request(new CommentRequest(feedback.getFeedbackId(), "test comment content"))
             .feedback(feedback).member(member).build();
         comment = commentRepository.save(comment);
+    }
+
+    @AfterEach
+    void teardown() {
+        commentRepository.deleteAll();
+        feedbackRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @DisplayName("댓글 작성 성공")
