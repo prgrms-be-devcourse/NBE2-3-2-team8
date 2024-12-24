@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>계정 관리</title>
+  <th:block th:replace="~{fragments/header::headerStyles}"></th:block>
+  <link rel="stylesheet" href="/css/member/info.css">
+</head>
+<body>
+<!-- 헤더 파일 -->
+<th:block th:replace="~{fragments/header::headerFragment}"></th:block>
+<div class="bg-neutral-100 shadow rounded-lg mx-auto">
+  <main class="flex px-6 py-10">
+    <!--  마이페이지 사이드바  -->
+    <aside th:replace="~{fragments/sidebar::sidebarFragment}"></aside>
+    <!--  본문 시작  -->
+    <section class="flex-1 bg-white shadow rounded-md ml-6 p-8"><h2
+        class="font-title text-neutral-950 text-xl mb-8">계정 관리</h2>
+      <div class="flex items-center justify-center mb-6">
+        <img alt="" class="rounded-full profile-img" src="/images/member/profile-icon.png">
+      </div>
+      <form class="space-y-4">
+        <div class="input-box">
+          <div class="flex flex-col input-value">
+            <label class="text-neutral-600 text-sm mb-1">이메일</label>
+            <input
+                class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
+                id="email" readonly type="text" value="abc@example.com"/>
+          </div>
+          <div class="flex flex-col input-value">
+            <label class="text-neutral-600 text-sm mb-1">닉네임</label>
+            <input
+                class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
+                id="nickname" readonly type="text" value="매미"/>
+          </div>
+          <div class="flex flex-col input-value">
+            <label class="text-neutral-600 text-sm mb-1">이름</label>
+            <input
+                class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
+                id="name" readonly type="text" value="홍길동"/>
+          </div>
+          <div class="mt-6 flex justify-center space-x-4">
+            <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50" type="button"> 탈퇴
+            </button>
+            <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50" type="button"> 수정
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </main>
+</div>
+</body>
+</html>
