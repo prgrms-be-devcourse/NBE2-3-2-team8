@@ -1,12 +1,12 @@
 package org.programmers.signalbuddy.global.support;
 
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.programmers.signalbuddy.global.db.MariaDBTestContainer;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SpringBootTest
-@ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
-public abstract class ServiceTest {
+@ExtendWith(SpringExtension.class)
+public abstract class ServiceTest implements MariaDBTestContainer {
 
 }
