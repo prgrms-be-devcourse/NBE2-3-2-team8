@@ -23,10 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class FeedbackRepositoryTest extends RepositoryTest {
 
     @Autowired
