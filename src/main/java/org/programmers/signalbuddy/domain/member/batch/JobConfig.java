@@ -47,6 +47,7 @@ public class JobConfig {
             transactionManager).reader(customReader()).writer(deleteMemberWriter()).build();
     }
 
+
     @Bean
     @StepScope
     public CustomReader customReader() {
