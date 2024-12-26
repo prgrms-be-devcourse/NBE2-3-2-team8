@@ -16,7 +16,7 @@ public class MemberWebController {
     private final MemberService memberService;
 
     @GetMapping
-    public ModelAndView info(ModelAndView mv) {
+    public ModelAndView getMemberView(ModelAndView mv) {
         mv.setViewName("member/info");
         // TODO : 수정 필요
         final MemberResponse member = memberService.getMember(1L);
@@ -25,7 +25,7 @@ public class MemberWebController {
     }
 
     @GetMapping("edit")
-    public ModelAndView infoView(ModelAndView mv) {
+    public ModelAndView editMemberView(ModelAndView mv) {
         mv.setViewName("member/edit");
         // TODO : 수정 필요
         final MemberResponse member = memberService.getMember(1L);

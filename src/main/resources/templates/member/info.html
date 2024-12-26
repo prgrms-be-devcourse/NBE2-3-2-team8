@@ -16,8 +16,8 @@
     <!--  마이페이지 사이드바  -->
     <aside th:replace="~{fragments/sidebar::sidebarFragment}"></aside>
     <!--  본문 시작  -->
-    <section class="flex-1 bg-white shadow rounded-md ml-6 p-8"><h2
-        class="font-title text-neutral-950 text-xl mb-8">계정 관리</h2>
+    <section class="flex-1 bg-white shadow rounded-md ml-6 p-8">
+      <h2 class="font-title text-neutral-950 text-xl mb-8">계정 관리</h2>
       <div class="flex items-center justify-center mb-6">
         <img alt="Profile" class="rounded-full profile-img"
              th:src="${'/api/members/files/' + member.profileImageUrl}">

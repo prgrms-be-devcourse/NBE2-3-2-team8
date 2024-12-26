@@ -1,0 +1,70 @@
+.gap-2 {
+  gap: 8px;
+}
+
+.text-primary-700 {
+  --tw-text-opacity: 1;
+  color: rgba(70, 140, 213, 1);
+}
+
+.text-neutral-500 {
+  --tw-text-opacity: 1;
+  color: rgb(153 153 153 / var(--tw-text-opacity));
+}
+
+.p-6 {
+  padding: 24px;
+}
+
+.p-4 {
+  padding: 16px;
+}
+
+.border-t {
+  border-top-width: 1px;
+}
+
+.pt-4 {
+  padding-top: 16px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.bookmark-box {
+  border-radius: 9999px;
+  height: 60px;
+}
+
+.bookmark-name {
+  font-size: 13px;
+}
+
+.bookmark-address {
+  font-size: 11px;
+}
+
+.bookmarks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.active {
+  color: #486284;
+  font-weight: bold;
+}
+
+.bookmark-add {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.add {
+  color: rgba(148, 146, 154, 1)
+}
+
+.add-box {
+  cursor: pointer;
+}
