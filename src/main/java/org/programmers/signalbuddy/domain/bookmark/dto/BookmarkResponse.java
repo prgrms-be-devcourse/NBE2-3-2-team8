@@ -23,4 +23,6 @@ public class BookmarkResponse {
     private double lng;
 
     private String address;
+
+    private String name;
 }

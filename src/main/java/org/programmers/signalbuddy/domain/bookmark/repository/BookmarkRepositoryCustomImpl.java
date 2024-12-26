@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
 public class BookmarkRepositoryCustomImpl implements BookmarkRepositoryCustom {
 
     private static final QBean<BookmarkResponse> pageBookmarkDto = Projections.fields(
-        BookmarkResponse.class, bookmark.bookmarkId, bookmark.address,
+        BookmarkResponse.class, bookmark.bookmarkId, bookmark.address, bookmark.name,
         Expressions.numberTemplate(Double.class, "ST_X({0})", bookmark.coordinate).as("lng"),
         Expressions.numberTemplate(Double.class, "ST_Y({0})", bookmark.coordinate).as("lat"));
 
