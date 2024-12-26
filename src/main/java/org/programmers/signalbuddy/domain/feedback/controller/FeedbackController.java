@@ -47,11 +47,9 @@ public class FeedbackController {
     @GetMapping("/admin")
     public ResponseEntity<PageResponse<FeedbackResponse>> searchFeedbackList(
         @PageableDefault(page = 0, size = 10, sort = "createAt", direction = Direction.DESC) Pageable pageable,
-        @RequestParam(required = false, name = "startDate")
-        @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-        @RequestParam(required = false, name = "endDate")
-        @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-        @RequestParam(required = false, name = "answerStatus") Long answerStatus) {
+        @RequestParam(required = false, name = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+        @RequestParam(required = false, name = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+        @RequestParam(required = false, name = "answerStatus", defaultValue = "-1") Long answerStatus) {
         return ResponseEntity.ok()
             .body(feedbackService.searchFeedbackList(pageable, startDate, endDate, answerStatus));
     }
@@ -61,7 +59,7 @@ public class FeedbackController {
     public ResponseEntity<PageResponse<FeedbackResponse>> searchFeedbackList(
         @PageableDefault(page = 0, size = 10, sort = "createAt", direction = Direction.DESC) Pageable pageable,
         @RequestParam(name = "keyword") String keyword,
-        @RequestParam(required = false, name = "answerStatus") Long answerStatus) {
+        @RequestParam(required = false, name = "answerStatus", defaultValue = "-1") Long answerStatus) {
         return ResponseEntity.ok()
             .body(feedbackService.searchByKeyword(pageable, keyword, answerStatus));
     }
@@ -69,8 +67,9 @@ public class FeedbackController {
     @Operation(summary = "피드백 목록 조회")
     @GetMapping
     public ResponseEntity<PageResponse<FeedbackResponse>> searchFeedbackList(
-        @PageableDefault(page = 0, size = 10) Pageable pageable) {
-        return ResponseEntity.ok().body(feedbackService.searchFeedbackList(pageable));
+        @PageableDefault(page = 0, size = 10) Pageable pageable,
+        @RequestParam(required = false, name = "answerStatus", defaultValue = "-1") Long answerStatus) {
+        return ResponseEntity.ok().body(feedbackService.searchFeedbackList(pageable, answerStatus));
     }
 
     @Operation(summary = "피드백 상세 조회")
