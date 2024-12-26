@@ -56,7 +56,8 @@ class FeedbackRepositoryTest extends RepositoryTest {
     void findAllByActiveMembers() {
         // when
         Pageable pageable = PageRequest.of(3, 10);
-        Page<FeedbackResponse> actual = feedbackRepository.findAllByActiveMembers(pageable);
+        Long answerStatus = -1L; // 모든 피드백 보기
+        Page<FeedbackResponse> actual = feedbackRepository.findAllByActiveMembers(pageable, answerStatus);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
