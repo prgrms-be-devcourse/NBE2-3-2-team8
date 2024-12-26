@@ -1,7 +1,7 @@
 package org.programmers.signalbuddy.domain.member.batch;
 
 
-import javax.sql.DataSource;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.programmers.signalbuddy.domain.member.entity.Member;
@@ -30,7 +30,7 @@ public class JobConfig {
 
     private static final int chunkSize = 10;
     private final MemberRepository memberRepository;
-    private final MemberBatchRepository memberBatchRepository;
+    private final EntityManagerFactory entityManagerFactory;
 
     @Bean
     public Job deleteMemberJob(JobRepository jobRepository,
@@ -48,8 +48,9 @@ public class JobConfig {
     }
 
     @Bean
+    @StepScope
     public CustomReader customReader() {
-        return new CustomReader(memberBatchRepository, chunkSize);
+        return new CustomReader(entityManagerFactory, chunkSize);
     }
 
     @Bean
