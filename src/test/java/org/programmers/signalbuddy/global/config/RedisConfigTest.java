@@ -10,14 +10,14 @@ import org.programmers.signalbuddy.global.support.ServiceTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 public class RedisConfigTest extends ServiceTest implements RedisTestContainer {
 
     private static final Logger log = LoggerFactory.getLogger(RedisConfigTest.class);
     @Autowired
-    RedisTemplate<String, String> redisTemplate;
+    private StringRedisTemplate redisTemplate;
 
     @DisplayName("redis 작동 확인")
     @Test
