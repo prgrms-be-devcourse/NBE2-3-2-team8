@@ -41,6 +41,9 @@ public class DataInitializer {
     private void truncate() {
         setForeignKeyCheck(OFF);
         for (String tableName : tableNames) {
+            if (tableName.startsWith("BATCH")) {
+                continue;
+            }
             entityManager.createNativeQuery(String.format("TRUNCATE TABLE %s", tableName)).executeUpdate();
         }
         setForeignKeyCheck(ON);
