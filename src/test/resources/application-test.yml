@@ -17,6 +17,13 @@ spring:
         show_sql: true
         format_sql: true # 이쁘게 보기
         dialect: org.hibernate.dialect.MariaDBDialect
+    open-in-view: false
+
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
 
 logging:
   level:
