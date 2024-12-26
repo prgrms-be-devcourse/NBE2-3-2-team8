@@ -45,21 +45,21 @@ public class CustomFeedbackRepositoryImpl implements CustomFeedbackRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<FeedbackResponse> findAllByActiveMembers(Pageable pageable) {
+    public Page<FeedbackResponse> findAllByActiveMembers(Pageable pageable, Long answerStatus) {
+        BooleanExpression answerStatusCondition = answerStatusCondition(answerStatus);
+
         List<FeedbackResponse> results = jpaQueryFactory
             .select(feedbackResponseDto).from(feedback)
             .join(member).on(feedback.member.eq(member)).fetchJoin()
-            .where(member.memberStatus.eq(MemberStatus.ACTIVITY))
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
+            .where(member.memberStatus.eq(MemberStatus.ACTIVITY).and(answerStatusCondition))
+            .offset(pageable.getOffset()).limit(pageable.getPageSize())
             .orderBy(new OrderSpecifier<>(Order.DESC, feedback.createdAt)).fetch();
 
         long count = Optional.ofNullable(
-            jpaQueryFactory
-                .select(feedback.count()).from(feedback)
+            jpaQueryFactory.select(feedback.count()).from(feedback)
                 .join(member).on(feedback.member.eq(member)).fetchJoin()
-                .where(member.memberStatus.eq(MemberStatus.ACTIVITY)).fetchOne()
-        ).orElse(0L);
+                .where(member.memberStatus.eq(MemberStatus.ACTIVITY).and(answerStatusCondition))
+                .fetchOne()).orElse(0L);
 
         return new PageImpl<>(results, pageable, count);
     }
@@ -81,20 +81,20 @@ public class CustomFeedbackRepositoryImpl implements CustomFeedbackRepository {
         LocalDate startDate, LocalDate endDate, Long answerStatus) {
 
         BooleanExpression betweenDates = betweenDates(feedback.createdAt, startDate, endDate);
+        BooleanExpression answerStatusCondition = answerStatusCondition(answerStatus);
 
         List<FeedbackResponse> results = jpaQueryFactory
             .select(feedbackResponseDto).from(feedback)
             .join(member).on(feedback.member.eq(member)).fetchJoin()
             .where(betweenDates.and(answerStatusCondition(answerStatus)))
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
+            .offset(pageable.getOffset()).limit(pageable.getPageSize())
             .orderBy(getOrderSpecifiers(pageable, feedback.getType(), "feedback")).fetch();
 
         long count = Optional.ofNullable(
             jpaQueryFactory
                 .select(feedback.count()).from(feedback)
                 .join(member).on(feedback.member.eq(member)).fetchJoin()
-                .where(betweenDates.and(answerStatusCondition(answerStatus))).fetchOne()
+                .where(betweenDates.and(answerStatusCondition)).fetchOne()
         ).orElse(0L);
 
         return new PageImpl<>(results, pageable, count);

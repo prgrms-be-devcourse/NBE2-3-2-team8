@@ -29,20 +29,23 @@ public class FeedbackService {
     private final MemberRepository memberRepository;
     private final FeedbackJdbcRepository feedbackJdbcRepository;
 
-    public PageResponse<FeedbackResponse> searchFeedbackList(Pageable pageable) {
-        Page<FeedbackResponse> responsePage = feedbackRepository.findAllByActiveMembers(pageable);
+    public PageResponse<FeedbackResponse> searchFeedbackList(Pageable pageable, Long answerStatus) {
+        Page<FeedbackResponse> responsePage = feedbackRepository.findAllByActiveMembers(pageable,
+            answerStatus);
         return new PageResponse<>(responsePage);
     }
 
     public PageResponse<FeedbackResponse> searchFeedbackList(Pageable pageable,
         LocalDate startDate, LocalDate endDate, Long answerStatus) {
-        Page<FeedbackResponse> responsePage = feedbackRepository.findAll(pageable, startDate, endDate, answerStatus);
+        Page<FeedbackResponse> responsePage = feedbackRepository.findAll(pageable, startDate,
+            endDate, answerStatus);
         return new PageResponse<>(responsePage);
     }
 
     public PageResponse<FeedbackResponse> searchByKeyword(Pageable pageable, String keyword,
         Long answerStatus) {
-        Page<FeedbackResponse> responsePage = feedbackJdbcRepository.fullTextSearch(pageable, keyword, answerStatus);
+        Page<FeedbackResponse> responsePage = feedbackJdbcRepository.fullTextSearch(pageable,
+            keyword, answerStatus);
         return new PageResponse<>(responsePage);
     }
 
