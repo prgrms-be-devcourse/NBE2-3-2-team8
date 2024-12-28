@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Webcrumbs Plugin</title>
+  <!-- 공통 스타일 -->
+  <link href="/css/common/common.css" rel="stylesheet" />
+  <!-- 헤더 스타일 -->
+  <link href="/css/common/header.css" rel="stylesheet" />
+
+  <link href="/css/feedback/list.css" rel="stylesheet" />
+</head>
+<body>
+<th:block th:replace="~{fragments/header::headerFragment}"></th:block>
+<div id="webcrumbs">
+  <div class="w-[1200px] mx-auto bg-white shadow rounded-lg">
+    <main class="p-6 bg-neutral-50">
+      <section class="mb-4">
+        <div class="flex gap-2">
+          <button
+              class="px-5 py-2 bg-red-100 text-red-600 border-2 border-red-600 rounded-full"
+              id="answer-before"
+              th:data-url="@{/feedbacks(page=${response.getCurrentPageNumber()}, size=${response.getPageSize()}, answerStatus=0)}"
+          >
+            답변 전
+          </button>
+          <button
+              class="px-5 py-2 bg-green-100 text-green-600 border-2 border-green-600 rounded-full"
+              id="answer-completed"
+              th:data-url="@{/feedbacks(page=${response.getCurrentPageNumber()}, size=${response.getPageSize()}, answerStatus=1)}"
+          >
+            답변 완료
+          </button>
+          <button
+              class="px-5 py-2 bg-yellow-400 text-neutral-900 font-semibold rounded-full"
+              id="answer-all"
+              th:data-url="@{/feedbacks(page=${response.getCurrentPageNumber()}, size=${response.getPageSize()}, answerStatus=-1)}"
+          >
+            ALL
+          </button>
+        </div>
+      </section>
+      <section class="overflow-hidden border rounded-md">
+        <table class="w-full border-collapse bg-white text-neutral-950">
+          <thead class="bg-neutral-100">
+          <tr>
+            <th class="py-3 px-4 text-left font-semibold border-b">
+              번호
+            </th>
+            <th class="py-3 px-4 text-left font-semibold border-b">
+              제목
+            </th>
+            <th class="py-3 px-4 text-left font-semibold border-b">
+              작성자
+            </th>
+            <th class="py-3 px-4 text-left font-semibold border-b">
+              작성일
+              <span class="material-symbols-outlined text-xs"
+              >arrow_drop_down</span
+              >
+            </th>
+            <th class="py-3 px-4 text-left font-semibold border-b">
+              진행상태
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="even:bg-neutral-50" th:each="feedback : ${response.getSearchResults()}">
+            <td class="py-2 px-4 border-b" th:text="${feedback.getFeedbackId()}">8</td>
+            <td class="py-2 px-4 border-b">
+              <a th:text="${feedback.getSubject()}" th:href="@{/feedbacks/{feedbackId}(feedbackId=${feedback.getFeedbackId()})}">건의합니다8</a>
+            </td>
+            <td class="py-2 px-4 border-b" th:text="${feedback.getMember().getNickname()}">작성자h</td>
+            <td class="py-2 px-4 border-b" th:text="${feedback.getCreatedAt().toString().substring(0, 10)}">2024-12-12</td>
+            <td class="py-2 px-4 border-b">
+                    <span
+                        class="px-3 py-1 rounded-full text-xs bg-red-500 text-white"
+                        th:if="${feedback.getAnswerStatus().name().equals('BEFORE')}"
+                    >
+                      답변 전
+                    </span>
+              <span
+                  class="px-3 py-1 rounded-full text-xs bg-green-500 text-white"
+                  th:unless="${feedback.getAnswerStatus().name().equals('BEFORE')}"
+              >
+                      답변 완료
+                    </span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </section>
+      <footer class="flex justify-between items-center mt-4">
+            <span class="material-symbols-outlined text-neutral-400"
+            >edit 작성하기</span
+            >
+      </footer>
+      <div class="flex gap-4 justify-center items-center">
+        <div class="flex gap-2 items-center text-sm text-neutral-600"
+             th:if="${response.getTotalElements() > 0}">
+          <span class="material-symbols-outlined" th:if="${response.hasPrevious}">
+            <a th:href="@{/feedbacks(page=${response.getCurrentPageNumber() - 1}, size=${response.getPageSize()}, answerStatus=${answerStatus})}">chevron_left</a>
+          </span>
+          <span th:each="num : ${#numbers.sequence(1, response.getTotalPages())}">
+                <a th:text="${num}"
+                   th:href="@{/feedbacks(page=${num - 1}, size=${response.getPageSize()}, answerStatus=${answerStatus})}"
+                   th:class="${(num - 1) == response.getCurrentPageNumber()} ? 'bold' : ''">1</a>
+          </span>
+          <span class="material-symbols-outlined" th:if="${response.hasNext}">
+            <a th:href="@{/feedbacks(page=${response.getCurrentPageNumber() + 1}, size=${response.getPageSize()}, answerStatus=${answerStatus})}">chevron_right</a>
+          </span>
+        </div>
+      </div>
+    </main>
+    <div class="flex gap-4 justify-center items-center"></div>
+  </div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+  document.getElementById("answer-before").addEventListener("click", (event) => {
+    const url = event.target.getAttribute("data-url");
+    window.location.href = url;
+  });
+
+  document.getElementById("answer-completed").addEventListener("click", (event) => {
+    const url = event.target.getAttribute("data-url");
+    window.location.href = url;
+  });
+
+  document.getElementById("answer-all").addEventListener("click", (event) => {
+    const url = event.target.getAttribute("data-url");
+    window.location.href = url;
+  });
+</script>
