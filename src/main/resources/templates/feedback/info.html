@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Webcrumbs Plugin</title>
   <!-- 공통 스타일 -->
-  <link href="/css/common/common.css" rel="stylesheet" />
+  <link href="/css/common/common.css" rel="stylesheet"/>
   <!-- 헤더 스타일 -->
-  <link href="/css/common/header.css" rel="stylesheet" />
+  <link href="/css/common/header.css" rel="stylesheet"/>
 
-  <link href="/css/feedback/info.css" rel="stylesheet" />
+  <link href="/css/feedback/info.css" rel="stylesheet"/>
 </head>
 <body>
 <th:block th:replace="~{fragments/header::headerFragment}"></th:block>
@@ -28,11 +28,12 @@
                     th:if="${feedback.getAnswerStatus().name().equals('BEFORE')}">
                 답변 전
               </span>
-              <span class="bg-primary-500 text-primary-50 text-sm py-1 px-2 rounded-md bg-green-500"
-                    th:unless="${feedback.getAnswerStatus().name().equals('BEFORE')}">
+          <span class="bg-primary-500 text-primary-50 text-sm py-1 px-2 rounded-md bg-green-500"
+                th:unless="${feedback.getAnswerStatus().name().equals('BEFORE')}">
                 답변 완료
               </span>
-          <h2 class="text-lg font-bold text-neutral-950" th:text="${feedback.getSubject()}">건의합니다~</h2>
+          <h2 class="text-lg font-bold text-neutral-950" th:text="${feedback.getSubject()}">
+            건의합니다~</h2>
         </div>
         <div class="relative">
           <button class="cursor-pointer" id="feedback-menu-btn">
@@ -66,34 +67,33 @@
         </button>
       </div>
     </section>
-    <section class="bg-neutral-50 rounded-lg p-4 mb-4">
-      <div class="text-sm text-neutral-600 mb-1">
-            <span class="bg-danger-500 text-danger-50 py-1 px-2 rounded-md text-xs mr-2">
-              관리자
-            </span>
-        2024-12-12 16:10:23
-      </div>
-      <p class="text-neutral-900 break-words">
-        피드백 감사합니다!<br />
-        .........
-      </p>
-    </section>
-    <section class="bg-neutral-50 rounded-lg p-4 text-sm mb-4">
+
+    <!-- 댓글 부분 -->
+    <section class="bg-neutral-50 rounded-lg p-4 text-sm mb-4"
+             th:each="comment : ${commentPage.getSearchResults()}">
       <div class="flex justify-between items-center mb-1">
-        <div class="text-neutral-600">nick | 2024-12-12 16:20:45</div>
+        <div class="text-neutral-600"
+             th:text="${comment.getMember().getNickname()} + ' | ' +
+           ${feedback.getUpdatedAt().toString().replace('T', ' ').substring(0, 16)}">
+          nick | 2024-12-12 16:20:45
+        </div>
         <div class="flex gap-2">
-          <button class="py-1 px-3 bg-neutral-200 text-neutral-700 rounded-md hover:bg-neutral-300">
+          <button
+              class="py-1 px-3 bg-neutral-200 text-neutral-700 rounded-md hover:bg-neutral-300">
             수정
           </button>
-          <button class="py-1 px-3 bg-neutral-200 text-neutral-700 rounded-md hover:bg-neutral-300">
+          <button
+              class="py-1 px-3 bg-neutral-200 text-neutral-700 rounded-md hover:bg-neutral-300">
             삭제
           </button>
         </div>
       </div>
-      <p class="text-neutral-900 break-words">
+      <p class="text-neutral-900 break-words" th:text="${comment.getContent()}">
         이건인정;;;;;;;;;;;;;;;;;;;;;;;;
       </p>
     </section>
+
+    <!-- 댓글 작성 부분 -->
     <section class="bg-white rounded-lg p-4">
       <div class="text-sm font-semibold text-neutral-900 mb-2">
         댓글 작성
