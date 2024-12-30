@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.programmers.signalbuddy.domain.member.MemberRole;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.dto.MemberJoinRequest;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;

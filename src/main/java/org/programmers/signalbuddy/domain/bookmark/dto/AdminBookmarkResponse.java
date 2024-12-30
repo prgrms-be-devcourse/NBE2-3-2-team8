@@ -1,9 +1,8 @@
-package org.programmers.signalbuddy.domain.bookmark.entity.dto;
+package org.programmers.signalbuddy.domain.bookmark.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.locationtech.jts.geom.Point;
 
 
 @Getter

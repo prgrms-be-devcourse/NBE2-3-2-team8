@@ -1,9 +1,11 @@
 package org.programmers.signalbuddy.domain.bookmark.mapper;
 
+import java.util.List;
 import org.locationtech.jts.geom.Point;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import org.programmers.signalbuddy.domain.bookmark.dto.AdminBookmarkResponse;
 import org.programmers.signalbuddy.domain.bookmark.dto.BookmarkRequest;
 import org.programmers.signalbuddy.domain.bookmark.dto.BookmarkResponse;
 import org.programmers.signalbuddy.domain.bookmark.entity.Bookmark;
@@ -29,4 +31,7 @@ public interface BookmarkMapper {
     default double getLat(Point point) {
         return point.getY();
     }
+
+    // 관리자
+    List<AdminBookmarkResponse> toAdminDto(List<Bookmark> bookmarks);
 }

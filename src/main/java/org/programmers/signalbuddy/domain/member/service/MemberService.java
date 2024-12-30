@@ -2,7 +2,7 @@ package org.programmers.signalbuddy.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.programmers.signalbuddy.domain.member.MemberRole;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.dto.MemberJoinRequest;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;

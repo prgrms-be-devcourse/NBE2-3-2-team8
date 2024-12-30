@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.programmers.signalbuddy.domain.member.MemberRole;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 
 @Getter

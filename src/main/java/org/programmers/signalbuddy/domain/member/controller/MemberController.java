@@ -7,11 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.feedback.service.FeedbackService;
-import org.programmers.signalbuddy.domain.member.dto.AdminMemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberJoinRequest;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
-import org.programmers.signalbuddy.domain.member.service.AdminMemberService;
+import org.programmers.signalbuddy.domain.admin.service.AdminService;
 import org.programmers.signalbuddy.domain.member.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
-    private final AdminMemberService adminMemberService;
+    private final AdminService adminService;
     private final FeedbackService feedbackService;
 
     @Operation(summary = "사용자 조회 API")
@@ -66,6 +65,8 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 
+    //TODO : 주석제거
+    /*
     @Operation(summary = "관리자: 전체 사용자 조회 API")
     @GetMapping("admin")
     public ResponseEntity<Page<AdminMemberResponse>> getAdminMembers(
@@ -81,7 +82,7 @@ public class MemberController {
         final AdminMemberResponse member = adminMemberService.getMember(id);
         return ResponseEntity.ok(member);
     }
-
+*/
     @Operation(summary = "해당 사용자 피드백 목록 조회 API")
     @ApiResponse(responseCode = "200", description = "피드백 목록 조회 성공")
     @GetMapping("{id}/feedbacks")

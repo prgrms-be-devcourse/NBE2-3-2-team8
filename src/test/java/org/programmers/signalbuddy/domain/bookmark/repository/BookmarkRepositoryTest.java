@@ -10,7 +10,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.programmers.signalbuddy.domain.bookmark.dto.BookmarkResponse;
 import org.programmers.signalbuddy.domain.bookmark.entity.Bookmark;
-import org.programmers.signalbuddy.domain.member.MemberRole;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;

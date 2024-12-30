@@ -1,13 +1,12 @@
-package org.programmers.signalbuddy.domain.member.entity.dto;
+package org.programmers.signalbuddy.domain.admin.dto;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.programmers.signalbuddy.domain.bookmark.entity.dto.AdminBookmarkResponse;
-import org.programmers.signalbuddy.domain.bookmark.entity.dto.BookmarkResponse;
-import org.programmers.signalbuddy.domain.member.MemberRole;
+import org.programmers.signalbuddy.domain.bookmark.dto.AdminBookmarkResponse;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 
 @Getter

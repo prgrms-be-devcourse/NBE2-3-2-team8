@@ -17,7 +17,7 @@ import org.programmers.signalbuddy.domain.basetime.BaseTimeEntity;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
-import org.programmers.signalbuddy.domain.member.MemberRole;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 
 @Entity(name = "members")
 @Getter

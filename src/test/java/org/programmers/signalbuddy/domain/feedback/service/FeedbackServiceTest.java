@@ -13,7 +13,7 @@ import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.feedback.exception.FeedbackErrorCode;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
-import org.programmers.signalbuddy.domain.member.MemberRole;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;

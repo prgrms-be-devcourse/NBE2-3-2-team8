@@ -1,4 +1,4 @@
-package org.programmers.signalbuddy.domain.member.batch;
+package org.programmers.signalbuddy.domain.admin.batch;
 
 
 import jakarta.persistence.EntityManagerFactory;
