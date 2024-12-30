@@ -598,3 +598,7 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(68 255 68 / var(--tw-bg-opacity));
 }
+
+#menu-box {
+  display: none;
+}

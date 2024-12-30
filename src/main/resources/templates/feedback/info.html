@@ -35,12 +35,11 @@
           <h2 class="text-lg font-bold text-neutral-950" th:text="${feedback.getSubject()}">건의합니다~</h2>
         </div>
         <div class="relative">
-          <button class="cursor-pointer">
+          <button class="cursor-pointer" id="feedback-menu-btn">
             <span class="material-symbols-outlined">more_vert</span>
           </button>
-          <div
-              class="absolute bg-white rounded-md shadow-md z-10 right-0 mt-2 text-sm w-[120px]"
-          >
+          <div class="absolute bg-white rounded-md shadow-md z-10 right-0 mt-2 text-sm w-[120px]"
+               id="menu-box">
             <ul>
               <li class="px-4 py-2 hover:bg-neutral-100">수정하기</li>
               <li class="px-4 py-2 hover:bg-neutral-100">삭제하기</li>
@@ -113,3 +112,26 @@
 </div>
 </body>
 </html>
+
+<script type="text/javascript">
+  const menuBtn = document.getElementById("feedback-menu-btn");
+  const menu = document.getElementById("menu-box");
+
+  menuBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+
+    if (menu.style.display === 'none') {
+      menu.style.display = 'block';
+    } else {
+      menu.style.display = 'none';
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    menu.style.display = 'none';
+  });
+
+  menu.addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+</script>
