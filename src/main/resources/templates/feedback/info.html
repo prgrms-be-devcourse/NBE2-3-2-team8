@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Webcrumbs Plugin</title>
+  <!-- 공통 스타일 -->
+  <link href="/css/common/common.css" rel="stylesheet" />
+  <!-- 헤더 스타일 -->
+  <link href="/css/common/header.css" rel="stylesheet" />
+
+  <link href="/css/feedback/info.css" rel="stylesheet" />
+</head>
+<body>
+<th:block th:replace="~{fragments/header::headerFragment}"></th:block>
+<div id="webcrumbs">
+  <div
+      class="w-[800px] bg-neutral-100 rounded-lg shadow-md min-h-[600px] mx-auto p-4"
+  >
+    <header class="text-center mb-8">
+      <h1 class="text-2xl font-title text-neutral-900">피드백 게시판</h1>
+      <p class="text-neutral-700">건의 사항을 자유롭게 남겨주세요.</p>
+    </header>
+    <section class="bg-white rounded-lg p-4 mb-4">
+      <div class="flex justify-between items-center mb-2">
+        <div class="flex items-center gap-2">
+              <span class="bg-primary-500 text-primary-50 text-sm py-1 px-2 rounded-md bg-red-500"
+                    th:if="${feedback.getAnswerStatus().name().equals('BEFORE')}">
+                답변 전
+              </span>
+              <span class="bg-primary-500 text-primary-50 text-sm py-1 px-2 rounded-md bg-green-500"
+                    th:unless="${feedback.getAnswerStatus().name().equals('BEFORE')}">
+                답변 완료
+              </span>
+          <h2 class="text-lg font-bold text-neutral-950" th:text="${feedback.getSubject()}">건의합니다~</h2>
+        </div>
+        <div class="relative">
+          <button class="cursor-pointer">
+            <span class="material-symbols-outlined">more_vert</span>
+          </button>
+          <div
+              class="absolute bg-white rounded-md shadow-md z-10 right-0 mt-2 text-sm w-[120px]"
+          >
+            <ul>
+              <li class="px-4 py-2 hover:bg-neutral-100">수정하기</li>
+              <li class="px-4 py-2 hover:bg-neutral-100">삭제하기</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="text-sm text-neutral-500 mb-2"
+           th:text="'작성자: ' + ${feedback.getMember().getNickname()} + ' | ' +
+           ${feedback.getUpdatedAt().toString().replace('T', ' ').substring(0, 16)}">
+        작성자: 닉네임 | 2024-12-12 14:13:10
+      </div>
+      <p class="text-neutral-900" th:text="${feedback.getContent()}">
+        이거이거 바꿔주세요 바꿔주세요
+      </p>
+      <div class="flex gap-4 mt-4">
+        <button class="flex items-center text-neutral-700 hover:text-primary-500">
+          <span class="material-symbols-outlined mr-1">chat_bubble</span>
+          댓글쓰기
+        </button>
+        <button class="flex items-center text-neutral-700 hover:text-primary-500">
+          <span class="material-symbols-outlined mr-1">favorite</span>
+          좋아요
+        </button>
+      </div>
+    </section>
+    <section class="bg-neutral-50 rounded-lg p-4 mb-4">
+      <div class="text-sm text-neutral-600 mb-1">
+            <span class="bg-danger-500 text-danger-50 py-1 px-2 rounded-md text-xs mr-2">
+              관리자
+            </span>
+        2024-12-12 16:10:23
+      </div>
+      <p class="text-neutral-900 break-words">
+        피드백 감사합니다!<br />
+        .........
+      </p>
+    </section>
+    <section class="bg-neutral-50 rounded-lg p-4 text-sm mb-4">
+      <div class="flex justify-between items-center mb-1">
+        <div class="text-neutral-600">nick | 2024-12-12 16:20:45</div>
+        <div class="flex gap-2">
+          <button class="py-1 px-3 bg-neutral-200 text-neutral-700 rounded-md hover:bg-neutral-300">
+            수정
+          </button>
+          <button class="py-1 px-3 bg-neutral-200 text-neutral-700 rounded-md hover:bg-neutral-300">
+            삭제
+          </button>
+        </div>
+      </div>
+      <p class="text-neutral-900 break-words">
+        이건인정;;;;;;;;;;;;;;;;;;;;;;;;
+      </p>
+    </section>
+    <section class="bg-white rounded-lg p-4">
+      <div class="text-sm font-semibold text-neutral-900 mb-2">
+        댓글 작성
+      </div>
+      <textarea
+          class="w-full h-[100px] bg-neutral-50 rounded-md p-2 border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          placeholder="댓글을 입력하세요."
+      ></textarea>
+      <div class="text-right mt-2">
+        <button class="py-1 px-4 bg-primary-500 text-primary-50 rounded-md hover:bg-primary-600">
+          등록
+        </button>
+      </div>
+    </section>
+  </div>
+</div>
+</body>
+</html>
