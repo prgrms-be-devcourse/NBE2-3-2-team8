@@ -8,5 +8,4 @@ import org.programmers.signalbuddy.domain.member.entity.Member;
 @Mapper
 public interface AdminMapper {
     AdminMapper INSTANCE = Mappers.getMapper(AdminMapper.class);
-    AdminMemberResponse toAdminDto(Member member);
 }
