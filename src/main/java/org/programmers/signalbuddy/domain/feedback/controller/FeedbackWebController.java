@@ -1,9 +1,12 @@
 package org.programmers.signalbuddy.domain.feedback.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.programmers.signalbuddy.domain.comment.dto.CommentResponse;
+import org.programmers.signalbuddy.domain.comment.service.CommentService;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.feedback.service.FeedbackService;
 import org.programmers.signalbuddy.global.dto.PageResponse;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -19,13 +22,14 @@ import org.springframework.web.servlet.ModelAndView;
 public class FeedbackWebController {
 
     private final FeedbackService feedbackService;
+    private final CommentService commentService;
 
     @GetMapping
-    public ModelAndView searchFeedbackList(
-        @PageableDefault(page = 0, size = 10) Pageable pageable,
+    public ModelAndView searchFeedbackList(@PageableDefault(page = 0, size = 10) Pageable pageable,
         @RequestParam(required = false, name = "answerStatus", defaultValue = "-1") Long answerStatus,
         ModelAndView mv) {
-        PageResponse<FeedbackResponse> response = feedbackService.searchFeedbackList(pageable, answerStatus);
+        PageResponse<FeedbackResponse> response = feedbackService.searchFeedbackList(pageable,
+            answerStatus);
         mv.setViewName("feedback/list");
         mv.addObject("response", response);
         mv.addObject("answerStatus", answerStatus);
@@ -33,12 +37,15 @@ public class FeedbackWebController {
     }
 
     @GetMapping("/{feedbackId}")
-    public ModelAndView searchFeedbackDetail(
-        @PathVariable("feedbackId") Long feedbackId,
+    public ModelAndView searchFeedbackDetail(@PathVariable("feedbackId") Long feedbackId,
         ModelAndView mv) {
         FeedbackResponse feedback = feedbackService.searchFeedbackDetail(feedbackId);
+        PageResponse<CommentResponse> commentPage = commentService.searchCommentList(feedbackId,
+            PageRequest.of(0, 1000));   // 페이지네이션 없이 모든 댓글을 가져오기 위함
+
         mv.setViewName("feedback/info");
         mv.addObject("feedback", feedback);
+        mv.addObject("commentPage", commentPage);
         return mv;
     }
 }
