@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.programmers.signalbuddy.domain.admin.mapper.AdminMapper;
 import org.programmers.signalbuddy.domain.bookmark.entity.Bookmark;
 import org.programmers.signalbuddy.domain.bookmark.dto.AdminBookmarkResponse;
 import org.programmers.signalbuddy.domain.bookmark.mapper.BookmarkMapper;
@@ -34,22 +35,10 @@ public class AdminService {
 
             List<AdminBookmarkResponse> adminBookmarkResponses = bookmarkRepository.findBookmarkByMember(
                 member.getMemberId());
+            AdminMemberResponse response = AdminMapper.INSTANCE.toAdminMemberResponse(member,
+                adminBookmarkResponses);
 
-            String userAddress = checkUserAddress(adminBookmarkResponses);
-
-            return AdminMemberResponse.builder()
-                .memberId(member.getMemberId())
-                .email(member.getEmail())
-                .nickname(member.getNickname())
-                .profileImageUrl(member.getProfileImageUrl())
-                .createdAt(member.getCreatedAt())
-                .updatedAt(member.getUpdatedAt())
-                .role(member.getRole())
-                .memberStatus(member.getMemberStatus())
-                .userAddress(userAddress)
-                .bookmarkCount(adminBookmarkResponses.size())
-                .bookmarkResponses(adminBookmarkResponses)
-                .build();
+            return response;
         });
 
         return adminMemberResponses;
@@ -62,32 +51,9 @@ public class AdminService {
         List<AdminBookmarkResponse> adminBookmarkResponses = bookmarkRepository.findBookmarkByMember(
             member.getMemberId());
 
-        String userAddress = checkUserAddress(adminBookmarkResponses);
-
-        AdminMemberResponse response = AdminMemberResponse.builder()
-            .memberId(member.getMemberId())
-            .email(member.getEmail())
-            .nickname(member.getNickname())
-            .profileImageUrl(member.getProfileImageUrl())
-            .role(member.getRole())
-            .createdAt(member.getCreatedAt())
-            .updatedAt(member.getUpdatedAt())
-            .memberStatus(member.getMemberStatus())
-            .userAddress(userAddress)
-            .bookmarkCount(adminBookmarkResponses.size())
-            .bookmarkResponses(adminBookmarkResponses)
-            .build();
+        AdminMemberResponse response = AdminMapper.INSTANCE.toAdminMemberResponse(member,
+            adminBookmarkResponses);
 
         return response;
     }
-
-    public String checkUserAddress(List<AdminBookmarkResponse> adminBookmarkResponse) {
-        if(adminBookmarkResponse.isEmpty()){
-            return "";
-        }else{
-            return adminBookmarkResponse.get(0).getAddress();
-        }
-    }
-
-
 }
