@@ -21,6 +21,7 @@ import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
@@ -97,7 +98,6 @@ class MemberServiceTest {
             .password("password123")
             .build();
         final Member expectedMember = Member.builder()
-            .memberId(id)
             .email("test2@example.com")
             .nickname("TestUser2")
             .profileImageUrl("http://example.com/profile.jpg")

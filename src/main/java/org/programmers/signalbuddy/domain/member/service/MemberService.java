@@ -12,6 +12,7 @@ import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.mapper.MemberMapper;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
 import org.programmers.signalbuddy.global.exception.BusinessException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     public MemberResponse getMember(Long id) {
         return memberRepository.findById(id).map(MemberMapper.INSTANCE::toDto)
@@ -54,10 +56,12 @@ public class MemberService {
             throw new BusinessException(MemberErrorCode.ALREADY_EXIST_EMAIL);
         }
 
+        String encodePassword = bCryptPasswordEncoder.encode(memberJoinRequest.getPassword());
+
         Member joinMember = Member.builder()
             .email(memberJoinRequest.getEmail())
             .nickname(memberJoinRequest.getNickname())
-            .password(memberJoinRequest.getPassword())
+            .password(encodePassword)
             .profileImageUrl(memberJoinRequest.getProfileImageUrl())
             .memberStatus(MemberStatus.ACTIVITY)
             .role(MemberRole.USER)
