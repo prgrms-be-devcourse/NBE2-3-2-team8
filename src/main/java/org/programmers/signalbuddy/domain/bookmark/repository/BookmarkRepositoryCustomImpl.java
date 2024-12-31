@@ -11,6 +11,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.programmers.signalbuddy.domain.bookmark.dto.AdminBookmarkResponse;
 import org.programmers.signalbuddy.domain.bookmark.dto.BookmarkResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,6 +27,10 @@ public class BookmarkRepositoryCustomImpl implements BookmarkRepositoryCustom {
         Expressions.numberTemplate(Double.class, "ST_X({0})", bookmark.coordinate).as("lng"),
         Expressions.numberTemplate(Double.class, "ST_Y({0})", bookmark.coordinate).as("lat"));
 
+    private final QBean<AdminBookmarkResponse> adminBookmarkDto = Projections.fields(
+        AdminBookmarkResponse.class, bookmark.bookmarkId, bookmark.address
+    );
+
     private final JPAQueryFactory queryFactory;
 
     @Override
@@ -40,5 +45,14 @@ public class BookmarkRepositoryCustomImpl implements BookmarkRepositoryCustom {
             .on(member.memberId.eq(1L)) // TODO : 1L -> memberId
             .fetchOne();
         return new PageImpl<>(responses, pageable, count != null ? count : 0);
+    }
+
+    @Override
+    public List<AdminBookmarkResponse> findBookmarkByMember(Long memberId) {
+        final List<AdminBookmarkResponse> responses = queryFactory.select(adminBookmarkDto).from(bookmark)
+            .join(member)
+            .on(bookmark.member.eq(member).and(member.memberId.eq(memberId)))
+            .orderBy(new OrderSpecifier<>(Order.ASC, bookmark.createdAt)).fetch();
+        return responses;
     }
 }
