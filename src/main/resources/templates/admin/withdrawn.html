@@ -17,11 +17,10 @@
 <body>
 <aside><th:block th:replace="~{fragments/sidebar::sidebarFragment}"></th:block></aside>
 <table th:each="member : ${members.content}">
-  <tr th:onclick="|location.href='@{/admins/detail/{id}(id=${member.memberId})}'|">
-    <td th:text="${member.memberId}"></td>
+  <tr>
     <td th:text="${member.nickname}"></td>
-    <td th:text="${member.userAddress}"></td>
-    <td th:text="${member.bookmarkCount}"></td>
+    <td th:text="${member.updatedAt}"></td>
+    <td th:text="${member.memberStatus}"></td>
   </tr>
 </table>
 

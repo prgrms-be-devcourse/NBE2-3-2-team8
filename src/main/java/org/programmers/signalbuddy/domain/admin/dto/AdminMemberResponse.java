@@ -1,5 +1,6 @@
 package org.programmers.signalbuddy.domain.admin.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,10 @@ public class AdminMemberResponse {
     private MemberRole role;
 
     private MemberStatus memberStatus;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     private String userAddress;
 
