@@ -44,10 +44,12 @@
                th:attrappend="data-feedback-id=${feedbackId}">
             <ul>
               <li class="px-4 py-2 hover:bg-neutral-100">
-                수정하기
+                <a th:href="@{/feedbacks/edit/{feedbackId}(feedbackId=${feedback.getFeedbackId()})}">
+                  수정하기
+                </a>
               </li>
               <li class="px-4 py-2 hover:bg-neutral-100"
-                      id="delete-btn">
+                  id="delete-btn">
                 삭제하기
               </li>
             </ul>
