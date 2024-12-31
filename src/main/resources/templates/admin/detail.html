@@ -5,6 +5,24 @@
   <title>Title</title>
 </head>
 <body>
-
+<!--왼쪽 : 이름, 가입일 , 상태-->
+<!--오른쪽 : 즐겨찾기 목록-->
+<div>
+<!--  왼쪽-->
+  <div>
+    <img th:src="@{/images/profile-icon.png}">
+    <p th:text="${member.nickname}"></p>
+    <p th:text="가입일 + ${member.createdAt}"></p>
+    <p th:text="${member.memberStatus}"></p>
+  </div>
+<!--  오른쪽-->
+  <div>
+    <table>
+      <tr th:each="bookmarks : ${member.bookmarkResponses}">
+      <td th:text="${bookmarks.getAddress()}"></td>
+      </tr>>
+    </table>
+  </div>
+</div>
 </body>
 </html>
