@@ -1,5 +1,6 @@
 package org.programmers.signalbuddy.domain.member.repository;
 
+import java.util.Optional;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Page<Member> findAll(Pageable pageable);
 
+    boolean existsByEmail(String email);
+
+    Optional<Member> findByEmail(String email);
+
     Member save(Member member);
 
-    boolean existsByEmail(String email);
+    void delete(Member member);
 }
