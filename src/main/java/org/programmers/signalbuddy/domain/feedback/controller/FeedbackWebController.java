@@ -75,4 +75,15 @@ public class FeedbackWebController {
         mv.setViewName("redirect:/feedbacks");
         return mv;
     }
+
+    @GetMapping("/edit/{feedbackId}")
+    public ModelAndView showEditFeedbackPage(@PathVariable("feedbackId") Long feedbackId,
+        User user,  // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        ModelAndView mv) {
+        FeedbackResponse feedback = feedbackService.searchFeedbackDetail(feedbackId);
+        mv.setViewName("feedback/edit");
+        mv.addObject("feedback", new FeedbackWriteRequest(feedback.getSubject(),
+            feedback.getContent()));
+        return mv;
+    }
 }

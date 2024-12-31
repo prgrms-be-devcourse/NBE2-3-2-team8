@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signal Buddy</title>
+  <!-- 공통 스타일 -->
+  <link href="/css/common/common.css" rel="stylesheet" />
+  <!-- 헤더 스타일 -->
+  <link href="/css/common/header.css" rel="stylesheet" />
+
+  <link href="/css/feedback/write.css" rel="stylesheet" />
+</head>
+<body>
+<th:block th:replace="~{fragments/header::headerFragment}"></th:block>
+<div id="webcrumbs">
+  <div
+      class="w-[1000px] bg-gray-50 min-h-[700px] mx-auto rounded-lg shadow-lg p-10 space-y-8"
+  >
+    <section>
+      <h1 class="text-3xl font-title font-bold text-neutral-950">
+        피드백 게시판
+      </h1>
+      <p class="text-lg text-neutral-800">
+        건의 사항을 자유롭게 남겨주세요.
+      </p>
+    </section>
+      <div class="bg-white p-8 rounded-lg shadow-md space-y-6"
+           id="edit-form"
+           th:attrappend="data-feedback-id=${feedbackId}">
+        <label for="subject" class="block text-lg font-bold text-neutral-950"
+        >제목</label
+        >
+        <input
+            type="text"
+            id="subject"
+            placeholder="제목을 입력해주세요"
+            class="w-full border border-neutral-300 rounded-md px-4 py-2 mt-2 focus:ring-2 focus:ring-primary-500 focus:outline-none"
+            required
+            th:value="${feedback.getSubject()}"
+        />
+      </div>
+      <div>
+        <label
+            for="content"
+            class="block text-lg font-bold text-neutral-950"
+        >내용</label
+        >
+        <textarea
+            id="content"
+            rows="8"
+            placeholder="내용을 입력해주세요"
+            class="w-full border border-neutral-300 rounded-md px-4 py-2 mt-2 focus:ring-2 focus:ring-primary-500 focus:outline-none resize-none"
+            required
+            th:text="${feedback.getContent()}"
+        ></textarea>
+      </div>
+      <div class="flex justify-between items-center">
+        <button class="bg-neutral-300 text-neutral-800 py-2 px-6 rounded-md">
+          첨부파일
+        </button>
+        <button class="bg-green-400 text-neutral-50 py-2 px-8 rounded-md" id="edit-btn">
+          등록
+        </button>
+      </div>
+  </div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+  const editBtn = document.getElementById("edit-btn");
+
+  editBtn.addEventListener("click", (event) => {
+    const feedbackId = document.getElementById("edit-form").getAttribute("data-feedback-id");
+    const subject = document.getElementById("subject").value;
+    const content = document.getElementById("content").value;
+
+    fetch(`/api/feedbacks/${feedbackId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        'subject': subject,
+        'content': content
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        window.location.href = `/feedbacks/${feedbackId}`; // 수정 후 피드백 목록 페이지로 리다이렉트
+      } else {
+        alert('수정에 실패했습니다.');
+        response.json()
+        .then(data => console.log(data.message));
+      }
+    })
+    .catch(error => {
+      console.error('수정 요청 중 오류 발생:', error);
+    });
+  });
+</script>
