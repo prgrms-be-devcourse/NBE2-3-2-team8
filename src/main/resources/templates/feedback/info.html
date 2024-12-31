@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Webcrumbs Plugin</title>
+  <title>Signal Buddy</title>
   <!-- 공통 스타일 -->
   <link href="/css/common/common.css" rel="stylesheet"/>
   <!-- 헤더 스타일 -->
@@ -40,10 +40,18 @@
             <span class="material-symbols-outlined">more_vert</span>
           </button>
           <div class="absolute bg-white rounded-md shadow-md z-10 right-0 mt-2 text-sm w-[120px]"
-               id="menu-box">
+               id="menu-box"
+               th:attrappend="data-feedback-id=${feedbackId}">
             <ul>
-              <li class="px-4 py-2 hover:bg-neutral-100">수정하기</li>
-              <li class="px-4 py-2 hover:bg-neutral-100">삭제하기</li>
+              <li class="px-4 py-2 hover:bg-neutral-100">
+                <a th:href="@{/feedbacks/edit/{feedbackId}(feedbackId=${feedback.getFeedbackId()})}">
+                  수정하기
+                </a>
+              </li>
+              <li class="px-4 py-2 hover:bg-neutral-100"
+                  id="delete-btn">
+                삭제하기
+              </li>
             </ul>
           </div>
         </div>
@@ -116,6 +124,7 @@
 <script type="text/javascript">
   const menuBtn = document.getElementById("feedback-menu-btn");
   const menu = document.getElementById("menu-box");
+  const deleteBtn = document.getElementById("delete-btn");
 
   menuBtn.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -133,5 +142,29 @@
 
   menu.addEventListener('click', (event) => {
     event.stopPropagation();
+  });
+
+  // 삭제 요청
+  deleteBtn.addEventListener("click", (event) => {
+    const feedbackId = menu.getAttribute('data-feedback-id');
+
+    fetch(`/api/feedbacks/${feedbackId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        window.location.href = '/feedbacks'; // 삭제 후 피드백 목록 페이지로 리다이렉트
+      } else {
+        alert('삭제에 실패했습니다.');
+        response.json()
+        .then(data => console.log(data.message));
+      }
+    })
+    .catch(error => {
+      console.error('삭제 요청 중 오류 발생:', error);
+    });
   });
 </script>

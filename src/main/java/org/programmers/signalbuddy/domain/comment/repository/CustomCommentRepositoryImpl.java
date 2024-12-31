@@ -39,7 +39,8 @@ public class CustomCommentRepositoryImpl implements CustomCommentRepository {
         List<CommentResponse> results = jpaQueryFactory
             .select(commentResponseDto).from(comment)
             .join(member).on(comment.member.eq(member)).fetchJoin()
-            .where(member.memberStatus.eq(MemberStatus.ACTIVITY))
+            .where(member.memberStatus.eq(MemberStatus.ACTIVITY)
+                .and(comment.feedback.feedbackId.eq(feedbackId)))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .orderBy(new OrderSpecifier<>(Order.ASC, comment.createdAt)).fetch();
@@ -48,7 +49,8 @@ public class CustomCommentRepositoryImpl implements CustomCommentRepository {
             jpaQueryFactory
                 .select(comment.count()).from(comment)
                 .join(member).on(comment.member.eq(member)).fetchJoin()
-                .where(member.memberStatus.eq(MemberStatus.ACTIVITY)).fetchOne()
+                .where(member.memberStatus.eq(MemberStatus.ACTIVITY)
+                    .and(comment.feedback.feedbackId.eq(feedbackId))).fetchOne()
             ).orElse(0L);
 
         return new PageImpl<>(results, pageable, count);

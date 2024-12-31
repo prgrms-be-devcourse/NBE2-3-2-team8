@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signal Buddy</title>
+  <!-- 공통 스타일 -->
+  <link href="/css/common/common.css" rel="stylesheet" />
+  <!-- 헤더 스타일 -->
+  <link href="/css/common/header.css" rel="stylesheet" />
+
+  <link href="/css/feedback/write.css" rel="stylesheet" />
+</head>
+<body>
+<th:block th:replace="~{fragments/header::headerFragment}"></th:block>
+<div id="webcrumbs">
+  <div
+      class="w-[1000px] bg-gray-50 min-h-[700px] mx-auto rounded-lg shadow-lg p-10 space-y-8"
+  >
+    <section>
+      <h1 class="text-3xl font-title font-bold text-neutral-950">
+        피드백 게시판
+      </h1>
+      <p class="text-lg text-neutral-800">
+        건의 사항을 자유롭게 남겨주세요.
+      </p>
+    </section>
+    <form class="bg-white p-8 rounded-lg shadow-md space-y-6"
+          th:action="@{/feedbacks/write}" th:object="${request}" method="post">
+      <div>
+        <label for="subject" class="block text-lg font-bold text-neutral-950"
+        >제목</label
+        >
+        <input
+            type="text"
+            id="subject"
+            placeholder="제목을 입력해주세요"
+            class="w-full border border-neutral-300 rounded-md px-4 py-2 mt-2 focus:ring-2 focus:ring-primary-500 focus:outline-none"
+            required
+            th:field="*{subject}"
+        />
+      </div>
+      <div>
+        <label
+            for="content"
+            class="block text-lg font-bold text-neutral-950"
+        >내용</label
+        >
+        <textarea
+            id="content"
+            rows="8"
+            placeholder="내용을 입력해주세요"
+            class="w-full border border-neutral-300 rounded-md px-4 py-2 mt-2 focus:ring-2 focus:ring-primary-500 focus:outline-none resize-none"
+            required
+            th:field="*{content}"
+        ></textarea>
+      </div>
+      <div class="flex justify-between items-center">
+        <button class="bg-neutral-300 text-neutral-800 py-2 px-6 rounded-md">
+          첨부파일
+        </button>
+        <button class="bg-green-400 text-neutral-50 py-2 px-8 rounded-md" type="submit">
+          등록
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

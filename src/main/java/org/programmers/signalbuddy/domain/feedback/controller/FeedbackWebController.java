@@ -1,17 +1,22 @@
 package org.programmers.signalbuddy.domain.feedback.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.comment.dto.CommentResponse;
 import org.programmers.signalbuddy.domain.comment.service.CommentService;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
+import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.service.FeedbackService;
 import org.programmers.signalbuddy.global.dto.PageResponse;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -46,6 +51,37 @@ public class FeedbackWebController {
         mv.setViewName("feedback/info");
         mv.addObject("feedback", feedback);
         mv.addObject("commentPage", commentPage);
+        return mv;
+    }
+
+    @GetMapping("/write")
+    public ModelAndView showWriteFeedbackPage(
+        User user,  // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        ModelAndView mv) {
+        mv.setViewName("feedback/write");
+        mv.addObject("request", new FeedbackWriteRequest());
+        return mv;
+    }
+
+    @PostMapping("/write")
+    public ModelAndView writeFeedback(
+        @ModelAttribute @Valid FeedbackWriteRequest feedbackWriteRequest,
+        User user,  // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        ModelAndView mv) {
+        user.setName("1");  // TODO: 나중에 해당 코드 제거
+        feedbackService.writeFeedback(feedbackWriteRequest, user);
+        mv.setViewName("redirect:/feedbacks");
+        return mv;
+    }
+
+    @GetMapping("/edit/{feedbackId}")
+    public ModelAndView showEditFeedbackPage(@PathVariable("feedbackId") Long feedbackId,
+        User user,  // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        ModelAndView mv) {
+        FeedbackResponse feedback = feedbackService.searchFeedbackDetail(feedbackId);
+        mv.setViewName("feedback/edit");
+        mv.addObject("feedback", new FeedbackWriteRequest(feedback.getSubject(),
+            feedback.getContent()));
         return mv;
     }
 }

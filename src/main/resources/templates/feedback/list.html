@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Webcrumbs Plugin</title>
+  <title>Signal Buddy</title>
   <!-- 공통 스타일 -->
   <link href="/css/common/common.css" rel="stylesheet" />
   <!-- 헤더 스타일 -->
@@ -92,9 +92,10 @@
         </table>
       </section>
       <footer class="flex justify-between items-center mt-4">
-            <span class="material-symbols-outlined text-neutral-400"
-            >edit 작성하기</span
-            >
+            <a class="material-symbols-outlined text-neutral-400"
+               th:href="@{/feedbacks/write}">
+              edit 작성하기
+            </a>
       </footer>
       <div class="flex gap-4 justify-center items-center">
         <div class="flex gap-2 items-center text-sm text-neutral-600"
