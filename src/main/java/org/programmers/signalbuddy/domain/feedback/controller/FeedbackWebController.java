@@ -66,11 +66,9 @@ public class FeedbackWebController {
     @PostMapping("/write")
     public ModelAndView writeFeedback(
         @ModelAttribute @Valid FeedbackWriteRequest feedbackWriteRequest,
-        //User user,  // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        User user,  // TODO: 인자값에 User 객체는 나중에 변경해야 함!
         ModelAndView mv) {
-        // TODO: 나중에 해당 값 변경
-        User user = new User();
-        user.setName("1");
+        user.setName("1");  // TODO: 나중에 해당 코드 제거
         feedbackService.writeFeedback(feedbackWriteRequest, user);
         mv.setViewName("redirect:/feedbacks");
         return mv;
