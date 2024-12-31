@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long>,
     BookmarkRepositoryCustom {
 
-    List<Bookmark> findAllByMember_MemberId(Long id);
 }

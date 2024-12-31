@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Webcrumbs Plugin</title>
+  <!-- 공통 스타일 -->
+  <link href="/css/common/common.css" rel="stylesheet" />
+  <!-- 헤더 스타일 -->
+  <link href="/css/common/header.css" rel="stylesheet" />
+
+  <link href="/css/feedback/list.css" rel="stylesheet" />
 </head>
+<th:block th:replace="~{fragments/header::headerFragment}"></th:block>
+
 <body>
+<aside><th:block th:replace="~{fragments/sidebar::sidebarFragment}"></th:block></aside>
+<table>
+  <tr th:each="member : ${members.content}">
+    <td th:text="${member.memberId}"></td>
+    <td th:text="${member.nickname}"></td>
+    <td th:each="bookmark, bookmarkStat : ${member.bookmarkResponses}" th:text="${bookmark.address}" ></td>
+    <p th:if="${bookmarkStat != null}" th:text="${bookmarkStat.size}"></p>
+  </tr>
+</table>
+
 
 </body>
 </html>

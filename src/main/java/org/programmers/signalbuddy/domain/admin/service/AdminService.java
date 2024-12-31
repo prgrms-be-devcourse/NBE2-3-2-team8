@@ -1,5 +1,6 @@
 package org.programmers.signalbuddy.domain.admin.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +8,7 @@ import org.programmers.signalbuddy.domain.bookmark.entity.Bookmark;
 import org.programmers.signalbuddy.domain.bookmark.dto.AdminBookmarkResponse;
 import org.programmers.signalbuddy.domain.bookmark.mapper.BookmarkMapper;
 import org.programmers.signalbuddy.domain.bookmark.repository.BookmarkRepository;
+import org.programmers.signalbuddy.domain.bookmark.repository.BookmarkRepositoryCustom;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.admin.dto.AdminMemberResponse;
 import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
@@ -24,12 +26,16 @@ public class AdminService {
     private final MemberRepository memberRepository;
     private final BookmarkRepository bookmarkRepository;
 
+
     public Page<AdminMemberResponse> getAllMembers(Pageable pageable) {
         Page<Member> membersPage = memberRepository.findAll(pageable);
 
         Page<AdminMemberResponse> adminMemberResponses = membersPage.map(member -> {
-            List<Bookmark> bookmarks = bookmarkRepository.findAllByMember_MemberId(member.getMemberId());
-            List<AdminBookmarkResponse> adminBookmarkResponses = BookmarkMapper.INSTANCE.toAdminDto(bookmarks);
+
+            List<AdminBookmarkResponse> adminBookmarkResponses = bookmarkRepository.findBookmarkByMember(
+                member.getMemberId());
+
+            String userAddress = checkUserAddress(adminBookmarkResponses);
 
             return AdminMemberResponse.builder()
                 .memberId(member.getMemberId())
@@ -38,6 +44,8 @@ public class AdminService {
                 .profileImageUrl(member.getProfileImageUrl())
                 .role(member.getRole())
                 .memberStatus(member.getMemberStatus())
+                .userAddress(userAddress)
+                .bookmarkCount(adminBookmarkResponses.size())
                 .bookmarkResponses(adminBookmarkResponses)
                 .build();
         });
@@ -46,10 +54,13 @@ public class AdminService {
     }
 
     public AdminMemberResponse getMember(Long id) {
-        Member member = memberRepository.findById(id).orElseThrow(()-> new BusinessException(
+        Member member = memberRepository.findById(id).orElseThrow(() -> new BusinessException(
             MemberErrorCode.NOT_FOUND_MEMBER));
-        List<Bookmark> bookmarks = bookmarkRepository.findAllByMember_MemberId(member.getMemberId());
-        List<AdminBookmarkResponse> adminBookmarkResponses = BookmarkMapper.INSTANCE.toAdminDto(bookmarks);
+
+        List<AdminBookmarkResponse> adminBookmarkResponses = bookmarkRepository.findBookmarkByMember(
+            member.getMemberId());
+
+        String userAddress = checkUserAddress(adminBookmarkResponses);
 
         AdminMemberResponse response = AdminMemberResponse.builder()
             .memberId(member.getMemberId())
@@ -58,12 +69,21 @@ public class AdminService {
             .profileImageUrl(member.getProfileImageUrl())
             .role(member.getRole())
             .memberStatus(member.getMemberStatus())
+            .userAddress(userAddress)
+            .bookmarkCount(adminBookmarkResponses.size())
             .bookmarkResponses(adminBookmarkResponses)
             .build();
 
         return response;
     }
 
+    public String checkUserAddress(List<AdminBookmarkResponse> adminBookmarkResponse) {
+        if(adminBookmarkResponse.isEmpty()){
+            return "";
+        }else{
+            return adminBookmarkResponse.get(0).getAddress();
+        }
+    }
 
 
 }

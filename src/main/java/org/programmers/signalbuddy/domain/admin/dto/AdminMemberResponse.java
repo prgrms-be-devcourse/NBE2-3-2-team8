@@ -27,6 +27,10 @@ public class AdminMemberResponse {
 
     private MemberStatus memberStatus;
 
+    private String userAddress;
+
+    private int bookmarkCount;
+
     private List<AdminBookmarkResponse> bookmarkResponses;
 
 }
