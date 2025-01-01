@@ -96,7 +96,8 @@
           </button>
           <button
               class="py-1 px-3 bg-neutral-200 text-neutral-700 rounded-md hover:bg-neutral-300"
-              id="comment-delete-btn">
+              id="comment-delete-btn"
+              th:onclick="'deleteComment(' + ${comment.getCommentId()} + ')'">
             삭제
           </button>
         </div>
@@ -227,9 +228,7 @@
   });
 
   // 댓글 삭제 요청
-  commentDeleteBtn.addEventListener("click", (event) => {
-    const commentId = commentBox.getAttribute('data-comment-id');
-
+  function deleteComment(commentId) {
     fetch(`/api/comments/${commentId}`, {
       method: 'DELETE',
       headers: {
@@ -248,7 +247,7 @@
     .catch(error => {
       console.error('삭제 요청 중 오류 발생:', error);
     });
-  });
+  }
 
   // 댓글 수정 박스 보이게 하기
   function showEditBox(commentId) {
