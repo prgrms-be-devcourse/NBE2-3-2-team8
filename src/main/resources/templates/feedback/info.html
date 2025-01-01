@@ -90,7 +90,8 @@
         <div class="flex gap-2">
           <button
               class="py-1 px-3 bg-neutral-200 text-neutral-700 rounded-md hover:bg-neutral-300"
-              id="comment-edit-btn">
+              id="comment-edit-btn"
+              th:onclick="'showEditBox(' + ${comment.getCommentId()} + ')'">
             수정
           </button>
           <button
@@ -100,9 +101,27 @@
           </button>
         </div>
       </div>
-      <p class="text-neutral-900 break-words" th:text="${comment.getContent()}">
+
+      <!-- 댓글 내용이 p로 표시되지만, 수정 버튼을 클릭하면 textarea로 바뀐다. -->
+      <p class="text-neutral-900 break-words"
+         th:id="'comment-content-' + ${comment.getCommentId()}"
+         th:text="${comment.getContent()}">
         이건인정;;;;;;;;;;;;;;;;;;;;;;;;
       </p>
+      <!-- 댓글 수정 textarea (초기에는 숨겨짐) -->
+      <textarea class="hidden comment-edit-textarea"
+                th:id="'comment-edit-textarea-' + ${comment.getCommentId()}"
+                th:text="${comment.getContent()}"></textarea>
+      <button class="hidden py-1 px-4 bg-primary-500 text-primary-50 rounded-md hover:bg-primary-600"
+              th:id="'comment-edit-cancel-btn-' + ${comment.getCommentId()}"
+              th:onclick="'hideEditBox(' + ${comment.getCommentId()} + ')'">
+        수정 취소
+      </button>
+      <button class="hidden py-1 px-4 bg-primary-500 text-primary-50 rounded-md hover:bg-primary-600"
+              th:id="'comment-edit-complete-btn-' + ${comment.getCommentId()}"
+              th:onclick="'editComment(' + ${comment.getCommentId()} + ')'">
+        수정 완료
+      </button>
     </section>
 
     <!-- 댓글 작성 부분 -->
@@ -131,9 +150,10 @@
   const menuBtn = document.getElementById("feedback-menu-btn");
   const menu = document.getElementById("menu-box");
   const deleteBtn = document.getElementById("delete-btn");
-  const commnet = document.getElementById("comment-box");
+  const commentBox = document.getElementById("comment-box");
   const commentWriteBtn = document.getElementById("comment-write-btn");
   const commentDeleteBtn = document.getElementById("comment-delete-btn");
+  const commentEditeBtn = document.getElementById("comment-edit-complete-btn");
 
   menuBtn.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -208,7 +228,7 @@
 
   // 댓글 삭제 요청
   commentDeleteBtn.addEventListener("click", (event) => {
-    const commentId = commnet.getAttribute('data-comment-id');
+    const commentId = commentBox.getAttribute('data-comment-id');
 
     fetch(`/api/comments/${commentId}`, {
       method: 'DELETE',
@@ -229,4 +249,67 @@
       console.error('삭제 요청 중 오류 발생:', error);
     });
   });
+
+  // 댓글 수정 박스 보이게 하기
+  function showEditBox(commentId) {
+    const commentContent = document.getElementById('comment-content-' + commentId);
+    const commentTextarea = document.getElementById('comment-edit-textarea-' + commentId);
+    const cancelButton = document.getElementById('comment-edit-cancel-btn-' + commentId);
+    const completeButton = document.getElementById('comment-edit-complete-btn-' + commentId);
+
+    // 댓글을 textarea로 변환
+    commentContent.classList.add('hidden');  // 기존 댓글 텍스트 숨기기
+    commentTextarea.classList.remove('hidden');  // textarea 보이기
+    cancelButton.classList.remove('hidden');  // 취소 버튼 보이기
+    completeButton.classList.remove('hidden');  // 완료 버튼 보이기
+  }
+
+  // 댓글 수정 박스 숨기기
+  function hideEditBox(commentId) {
+    const commentContent = document.getElementById('comment-content-' + commentId);
+    const commentTextarea = document.getElementById('comment-edit-textarea-' + commentId);
+    const cancelButton = document.getElementById('comment-edit-cancel-btn-' + commentId);
+    const completeButton = document.getElementById('comment-edit-complete-btn-' + commentId);
+
+    // 댓글을 p로 변환
+    commentContent.classList.remove('hidden');  // 기존 댓글 텍스트 보이기
+    commentTextarea.classList.add('hidden');  // textarea 숨기기
+    cancelButton.classList.add('hidden');  // 취소 버튼 숨기기
+    completeButton.classList.add('hidden');  // 완료 버튼 숨기기
+  }
+
+  // 댓글 수정 요청
+  function editComment(commentId) {
+    const feedbackId = menu.getAttribute('data-feedback-id');
+    const commentEditBox = document.getElementById('comment-edit-textarea-' + commentId);
+    const commentContent = document.getElementById('comment-content-' + commentId);
+
+    const updatedComment = commentEditBox.value;
+
+    fetch(`/api/comments/${commentId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        'feedbackId': feedbackId,
+        'content': updatedComment
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        // 서버 응답 후 댓글 내용 업데이트
+        commentContent.innerText = updatedComment;
+
+        hideEditBox(commentId);
+      } else {
+        alert('댓글 수정에 실패했습니다.');
+        response.json()
+        .then(data => console.log(data.message));
+      }
+    })
+    .catch(error => {
+      console.error('댓글 수정 요청 중 오류 발생:', error);
+    });
+  }
 </script>
