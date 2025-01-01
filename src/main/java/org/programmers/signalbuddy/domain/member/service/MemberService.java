@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     public MemberResponse getMember(Long id) {
         return memberRepository.findById(id).map(MemberMapper.INSTANCE::toDto)
