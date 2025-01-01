@@ -1,15 +1,12 @@
 package org.programmers.signalbuddy.domain.admin.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.programmers.signalbuddy.domain.admin.dto.WithdrawalMemberResponse;
 import org.programmers.signalbuddy.domain.admin.mapper.AdminMapper;
-import org.programmers.signalbuddy.domain.bookmark.entity.Bookmark;
 import org.programmers.signalbuddy.domain.bookmark.dto.AdminBookmarkResponse;
-import org.programmers.signalbuddy.domain.bookmark.mapper.BookmarkMapper;
 import org.programmers.signalbuddy.domain.bookmark.repository.BookmarkRepository;
-import org.programmers.signalbuddy.domain.bookmark.repository.BookmarkRepositoryCustom;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.admin.dto.AdminMemberResponse;
 import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
@@ -55,5 +52,11 @@ public class AdminService {
             adminBookmarkResponses);
 
         return response;
+    }
+
+    public Page<WithdrawalMemberResponse> getAllWithdrawalMembers(Pageable pageable) {
+        Page<WithdrawalMemberResponse> membersPage = memberRepository.findAllWithdrawMembers(pageable);
+
+       return membersPage;
     }
 }

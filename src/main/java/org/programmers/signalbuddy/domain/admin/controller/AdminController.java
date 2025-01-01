@@ -3,6 +3,7 @@ package org.programmers.signalbuddy.domain.admin.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.programmers.signalbuddy.domain.admin.dto.WithdrawalMemberResponse;
 import org.programmers.signalbuddy.domain.admin.service.AdminService;
 import org.programmers.signalbuddy.domain.admin.dto.AdminMemberResponse;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,7 @@ public class AdminController {
 
     @Operation(summary = "사용자 전체 조회 API")
     @GetMapping("/members")
-    public ResponseEntity<Page<AdminMemberResponse>> getAdminMembers(
+    public ResponseEntity<Page<AdminMemberResponse>> getAllMembers(
         @PageableDefault(page = 0, size = 10, sort = "email") Pageable pageable) {
 
         Page<AdminMemberResponse> members = adminService.getAllMembers(pageable);
@@ -33,9 +34,18 @@ public class AdminController {
     }
 
     @Operation(summary = "사용자 상세 조회 API")
-    @GetMapping("members/{id}")
-    public ResponseEntity<AdminMemberResponse> getAdminMember(@PathVariable Long id) {
+    @GetMapping("members-detail/{id}")
+    public ResponseEntity<AdminMemberResponse> getMember(@PathVariable Long id) {
         final AdminMemberResponse member = adminService.getMember(id);
         return ResponseEntity.ok(member);
+    }
+
+    @Operation(summary = "탈퇴 사용자 전체 조회 API")
+    @GetMapping("/members-withdrawal")
+    public ResponseEntity<Page<WithdrawalMemberResponse>> getAllWithdrawMembers(
+        @PageableDefault(page = 0, size = 10, sort = "email") Pageable pageable) {
+
+            Page<WithdrawalMemberResponse> members = adminService.getAllWithdrawalMembers(pageable);
+            return ResponseEntity.ok(members);
     }
 }
