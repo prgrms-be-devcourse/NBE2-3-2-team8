@@ -109,9 +109,11 @@
       <textarea
           class="w-full h-[100px] bg-neutral-50 rounded-md p-2 border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
           placeholder="댓글을 입력하세요."
+          id="comment-write-box"
       ></textarea>
       <div class="text-right mt-2">
-        <button class="py-1 px-4 bg-primary-500 text-primary-50 rounded-md hover:bg-primary-600">
+        <button class="py-1 px-4 bg-primary-500 text-primary-50 rounded-md hover:bg-primary-600"
+                id="comment-write-btn">
           등록
         </button>
       </div>
@@ -125,6 +127,7 @@
   const menuBtn = document.getElementById("feedback-menu-btn");
   const menu = document.getElementById("menu-box");
   const deleteBtn = document.getElementById("delete-btn");
+  const commentWriteBtn = document.getElementById("comment-write-btn");
 
   menuBtn.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -144,7 +147,7 @@
     event.stopPropagation();
   });
 
-  // 삭제 요청
+  // 피드백 삭제 요청
   deleteBtn.addEventListener("click", (event) => {
     const feedbackId = menu.getAttribute('data-feedback-id');
 
@@ -165,6 +168,35 @@
     })
     .catch(error => {
       console.error('삭제 요청 중 오류 발생:', error);
+    });
+  });
+
+  // 댓글 작성 요청
+  commentWriteBtn.addEventListener("click", (event) => {
+    const feedbackId = menu.getAttribute('data-feedback-id');
+    const comment = document.getElementById("comment-write-box").value;
+
+    fetch(`/api/comments/write`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        'feedbackId': feedbackId,
+        'content': comment
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        window.location.href = location.href; // 페이지 새로고침
+      } else {
+        alert('댓글 작성에 실패했습니다.');
+        response.json()
+        .then(data => console.log(data.message));
+      }
+    })
+    .catch(error => {
+      console.error('댓글 작성 요청 중 오류 발생:', error);
     });
   });
 </script>
