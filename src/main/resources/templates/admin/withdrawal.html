@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Webcrumbs Plugin</title>
-  <!-- 공통 스타일 -->
+  <title>탈퇴 사용자 조회</title>
   <link href="/css/common/common.css" rel="stylesheet" />
-  <!-- 헤더 스타일 -->
   <link href="/css/common/header.css" rel="stylesheet" />
-
-  <link href="/css/feedback/list.css" rel="stylesheet" />
-</head>
-<aside>
   <th:block th:replace="~{fragments/header::headerFragment}"></th:block>
-</aside>
+</head>
 <body>
-<aside><th:block th:replace="~{fragments/sidebar::sidebarFragment}"></th:block></aside>
-<table th:each="member : ${members.content}">
+<div>
+<table>
   <tr>
+    <td>프로필</td>
+    <td>이름</td>
+    <td>요청 날짜</td>
+    <td>삭제 요청</td>
+  </tr>
+  <tr th:each="member : ${members.content}">
     <td th:text="${member.nickname}"></td>
     <td th:text="${member.updatedAt}"></td>
     <td th:text="${member.memberStatus}"></td>
   </tr>
 </table>
-
+</div>
 
 </body>
 </html>
