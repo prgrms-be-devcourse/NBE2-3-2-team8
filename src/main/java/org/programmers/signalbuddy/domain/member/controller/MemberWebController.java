@@ -15,5 +15,11 @@ public class MemberWebController {
         // TODO : 미구현...
         return mv;
     }
+
+    @GetMapping("/login")
+    public ModelAndView loginForm(ModelAndView mv) {
+        mv.setViewName("member/loginform");
+        return mv;
+    }
 }
 
