@@ -2,6 +2,7 @@ package org.programmers.signalbuddy.domain.feedback.service;
 
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import org.programmers.signalbuddy.domain.comment.repository.CommentRepository;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackMapper;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
@@ -28,6 +29,7 @@ public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final MemberRepository memberRepository;
     private final FeedbackJdbcRepository feedbackJdbcRepository;
+    private final CommentRepository commentRepository;
 
     public PageResponse<FeedbackResponse> searchFeedbackList(Pageable pageable, Long answerStatus) {
         Page<FeedbackResponse> responsePage = feedbackRepository.findAllByActiveMembers(pageable,
@@ -92,6 +94,7 @@ public class FeedbackService {
             throw new BusinessException(FeedbackErrorCode.FEEDBACK_ELIMINATOR_NOT_AUTHORIZED);
         }
 
+        commentRepository.deleteAllByFeedbackId(feedbackId);
         feedbackRepository.deleteById(feedbackId);
     }
 
