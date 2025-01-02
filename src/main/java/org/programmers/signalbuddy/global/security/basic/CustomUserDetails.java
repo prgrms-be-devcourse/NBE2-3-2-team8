@@ -1,4 +1,4 @@
-package org.programmers.signalbuddy.global.security;
+package org.programmers.signalbuddy.global.security.basic;
 
 import java.util.ArrayList;
 import java.util.Collection;

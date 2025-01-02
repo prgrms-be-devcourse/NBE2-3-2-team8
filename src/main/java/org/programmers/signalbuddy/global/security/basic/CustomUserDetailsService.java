@@ -1,4 +1,4 @@
-package org.programmers.signalbuddy.global.security;
+package org.programmers.signalbuddy.global.security.basic;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
