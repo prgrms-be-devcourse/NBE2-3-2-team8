@@ -80,4 +80,27 @@ class LikeServiceTest extends ServiceTest {
             softAssertions.assertThat(updatedFeedback.get().getLikeCount()).isOne();
         });
     }
+
+    @DisplayName("좋아요 취소")
+    @Test
+    void deleteLike() {
+        // given
+        Long feedbackId = feedback.getFeedbackId();
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
+
+        // when
+        likeService.addLike(feedbackId, user);
+        likeService.deleteLike(feedbackId, user);
+
+        // then
+        List<Like> actual = likeRepository.findAll();
+        Optional<Feedback> updatedFeedback = feedbackRepository.findById(feedbackId);
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(actual).isEmpty();
+            softAssertions.assertThat(updatedFeedback).isPresent();
+            softAssertions.assertThat(updatedFeedback.get().getLikeCount()).isZero();
+        });
+    }
 }
