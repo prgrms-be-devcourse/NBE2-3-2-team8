@@ -7,8 +7,9 @@ import org.programmers.signalbuddy.domain.comment.service.CommentService;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.service.FeedbackService;
+import org.programmers.signalbuddy.global.annotation.CurrentUser;
+import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.dto.PageResponse;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -56,7 +57,7 @@ public class FeedbackWebController {
 
     @GetMapping("/write")
     public ModelAndView showWriteFeedbackPage(
-        User user,  // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        @CurrentUser CustomUser2Member user,
         ModelAndView mv) {
         mv.setViewName("feedback/write");
         mv.addObject("request", new FeedbackWriteRequest());
@@ -66,9 +67,8 @@ public class FeedbackWebController {
     @PostMapping("/write")
     public ModelAndView writeFeedback(
         @ModelAttribute @Valid FeedbackWriteRequest feedbackWriteRequest,
-        User user,  // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        @CurrentUser CustomUser2Member user,
         ModelAndView mv) {
-        user.setName("1");  // TODO: 나중에 해당 코드 제거
         feedbackService.writeFeedback(feedbackWriteRequest, user);
         mv.setViewName("redirect:/feedbacks");
         return mv;
@@ -76,7 +76,7 @@ public class FeedbackWebController {
 
     @GetMapping("/edit/{feedbackId}")
     public ModelAndView showEditFeedbackPage(@PathVariable("feedbackId") Long feedbackId,
-        User user,  // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        @CurrentUser CustomUser2Member user,
         ModelAndView mv) {
         FeedbackResponse feedback = feedbackService.searchFeedbackDetail(feedbackId);
         mv.setViewName("feedback/edit");
