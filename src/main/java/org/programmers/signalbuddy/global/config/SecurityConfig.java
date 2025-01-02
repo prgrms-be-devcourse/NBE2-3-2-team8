@@ -43,9 +43,9 @@ public class SecurityConfig {
                     "/images/**",
                     "/webjars/**").permitAll()
                 // 로그인
-                .requestMatchers("/members/login").anonymous()
+                .requestMatchers("/members/login", "admins/login", "/api/members/join", "/api/admins/join").permitAll()
                 // 북마크
-                .requestMatchers("/api/bookmarks/**").hasRole("USER")
+                .requestMatchers("/api/bookmarks/**", "/bookmarks/**").hasRole("USER")
                 // 댓글
                 .requestMatchers(HttpMethod.GET, "/api/comments").permitAll()
                 // 교차로
@@ -53,8 +53,8 @@ public class SecurityConfig {
                 // 피드백
                 .requestMatchers(HttpMethod.GET, "/api/feedbacks", "/feedbacks/**").permitAll()
                 // 회원
-                .requestMatchers("/api/admins/**").hasRole("ADMIN")
-                .requestMatchers("/api/members/**").hasRole("USER")
+                .requestMatchers("/api/admins/**", "/admins/members/**").hasRole("ADMIN")
+                .requestMatchers("/api/members/**", "/members/**").hasRole("USER")
                 .anyRequest().authenticated()
             );
 

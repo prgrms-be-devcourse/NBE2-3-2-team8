@@ -44,4 +44,9 @@ public class AdminWebController {
         return mv;
     }
 
+    @GetMapping("/login")
+    public ModelAndView loginForm(ModelAndView mv) {
+        mv.setViewName("admin/loginform");
+        return mv;
+    }
 }

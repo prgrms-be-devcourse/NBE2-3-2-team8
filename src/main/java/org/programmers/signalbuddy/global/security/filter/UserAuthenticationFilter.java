@@ -24,11 +24,9 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             .getAttribute("user");
         if (userDetails != null) {
 
-            GrantedAuthority authority = new SimpleGrantedAuthority(
-                userDetails.getAuthorities().toString());
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails,
                 null,
-                Collections.singleton(authority));
+                userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
