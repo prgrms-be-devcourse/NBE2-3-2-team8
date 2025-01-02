@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
     void deleteByMemberAndFeedback(Member member, Feedback feedback);
+
+    boolean existsByMemberAndFeedback(Member member, Feedback feedback);
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.feedback.exception.FeedbackErrorCode;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
+import org.programmers.signalbuddy.domain.like.dto.LikeExistResponse;
 import org.programmers.signalbuddy.domain.like.entity.Like;
 import org.programmers.signalbuddy.domain.like.repository.LikeRepository;
 import org.programmers.signalbuddy.domain.member.entity.Member;
@@ -32,6 +33,16 @@ public class LikeService {
 
         likeRepository.save(Like.create(member, feedback));
         feedback.increaseLike();
+    }
+
+    public LikeExistResponse existsLike(Long feedbackId, CustomUser2Member user) {
+        Feedback feedback = feedbackRepository.findById(feedbackId)
+            .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
+        Member member = memberRepository.findById(user.getMemberId())
+            .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
+
+        boolean isExisted = likeRepository.existsByMemberAndFeedback(member, feedback);
+        return new LikeExistResponse(isExisted);
     }
 
     @Transactional
