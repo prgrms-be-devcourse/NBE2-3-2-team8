@@ -13,14 +13,15 @@ import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.feedback.exception.FeedbackErrorCode;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
-import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.exception.BusinessException;
+import org.programmers.signalbuddy.global.security.CustomUserDetails;
 import org.programmers.signalbuddy.global.support.ServiceTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,9 +67,9 @@ class FeedbackServiceTest extends ServiceTest {
         String subject = "test subject";
         String content = "test content";
         FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
-        // TODO: User 객체는 나중에 변경해야 함!
-        User user = new User();
-        user.setName(member.getMemberId().toString());
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when
         FeedbackResponse actual = feedbackService.writeFeedback(request, user);
@@ -80,7 +81,7 @@ class FeedbackServiceTest extends ServiceTest {
             softAssertions.assertThat(actual.getContent()).isEqualTo(content);
             softAssertions.assertThat(actual.getLikeCount()).isZero();
             softAssertions.assertThat(actual.getMember().getMemberId())
-                .isEqualTo(Long.parseLong(user.getName()));
+                .isEqualTo(user.getMemberId());
         });
     }
 
@@ -92,9 +93,9 @@ class FeedbackServiceTest extends ServiceTest {
         String updatedSubject = "test updated subject";
         String updatedContent = "test updated content";
         FeedbackWriteRequest request = new FeedbackWriteRequest(updatedSubject, updatedContent);
-        // TODO: User 객체는 나중에 변경해야 함!
-        User user = new User();
-        user.setName(member.getMemberId().toString());
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when
         feedbackService.updateFeedback(feedbackId, request, user);
@@ -106,7 +107,7 @@ class FeedbackServiceTest extends ServiceTest {
             softAssertions.assertThat(actual.get().getSubject()).isEqualTo(updatedSubject);
             softAssertions.assertThat(actual.get().getContent()).isEqualTo(updatedContent);
             softAssertions.assertThat(actual.get().getMember().getMemberId())
-                .isEqualTo(Long.parseLong(user.getName()));
+                .isEqualTo(user.getMemberId());
         });
     }
 
@@ -118,9 +119,9 @@ class FeedbackServiceTest extends ServiceTest {
         String updatedSubject = "test updated subject";
         String updatedContent = "test updated content";
         FeedbackWriteRequest request = new FeedbackWriteRequest(updatedSubject, updatedContent);
-        // TODO: User 객체는 나중에 변경해야 함!
-        User user = new User();
-        user.setName("99999");
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(9999999L, "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when & then
         assertThatThrownBy(() -> {
@@ -134,9 +135,9 @@ class FeedbackServiceTest extends ServiceTest {
     void deleteFeedback() {
         // given
         Long feedbackId = feedback.getFeedbackId();
-        // TODO: User 객체는 나중에 변경해야 함!
-        User user = new User();
-        user.setName(member.getMemberId().toString());
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when
         feedbackService.deleteFeedback(feedbackId, user);
@@ -150,9 +151,9 @@ class FeedbackServiceTest extends ServiceTest {
     void deleteFeedbackFailure() {
         // given
         Long feedbackId = feedback.getFeedbackId();
-        // TODO: User 객체는 나중에 변경해야 함!
-        User user = new User();
-        user.setName("99999");
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(999999L, "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when & then
         assertThatThrownBy(() -> {

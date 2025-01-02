@@ -3,7 +3,6 @@ package org.programmers.signalbuddy.domain.comment.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,14 +19,15 @@ import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.feedback.entity.enums.AnswerStatus;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
-import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.exception.BusinessException;
+import org.programmers.signalbuddy.global.security.CustomUserDetails;
 import org.programmers.signalbuddy.global.support.ServiceTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -82,9 +82,9 @@ class CommentServiceTest extends ServiceTest {
         Long feedbackId = feedback.getFeedbackId();
         String content = "test comment content";
         CommentRequest request = new CommentRequest(feedbackId, content);
-        // TODO: User 객체는 나중에 변경해야 함!
-        User user = new User();
-        user.setName(member.getMemberId().toString());
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when
         commentService.writeComment(request, user);
@@ -96,7 +96,7 @@ class CommentServiceTest extends ServiceTest {
             softAssertions.assertThat(actual.get().getCommentId()).isNotNull();
             softAssertions.assertThat(actual.get().getContent()).isEqualTo(content);
             softAssertions.assertThat(actual.get().getMember().getMemberId())
-                .isEqualTo(Long.parseLong(user.getName()));
+                .isEqualTo(user.getMemberId());
             softAssertions.assertThat(actual.get().getFeedback().getFeedbackId())
                 .isEqualTo(feedbackId);
         });
@@ -110,10 +110,9 @@ class CommentServiceTest extends ServiceTest {
         Long feedbackId = feedback.getFeedbackId();
         String content = "test admin comment content";
         CommentRequest request = new CommentRequest(feedbackId, content);
-        // TODO: User 객체는 나중에 변경해야 함!
-        User user = new User();
-        user.setName(admin.getMemberId().toString());
-        user.setRoles(List.of("ADMIN"));
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(admin.getMemberId(), "", "",
+                "", "", MemberRole.ADMIN, MemberStatus.ACTIVITY));
 
         // when
         commentService.writeComment(request, user);
@@ -125,7 +124,7 @@ class CommentServiceTest extends ServiceTest {
             softAssertions.assertThat(actual.get().getCommentId()).isNotNull();
             softAssertions.assertThat(actual.get().getContent()).isEqualTo(content);
             softAssertions.assertThat(actual.get().getMember().getMemberId())
-                .isEqualTo(Long.parseLong(user.getName()));
+                .isEqualTo(user.getMemberId());
             softAssertions.assertThat(actual.get().getFeedback().getFeedbackId())
                 .isEqualTo(feedbackId);
             softAssertions.assertThat(actual.get().getFeedback().getAnswerStatus())
@@ -141,9 +140,9 @@ class CommentServiceTest extends ServiceTest {
         Long feedbackId = feedback.getFeedbackId();
         String updatedContent = "update comment content";
         CommentRequest request = new CommentRequest(feedbackId, updatedContent);
-        // TODO: User 객체는 나중에 변경해야 함!
-        User user = new User();
-        user.setName(member.getMemberId().toString());
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when
         commentService.updateComment(comment.getCommentId(), request, user);
@@ -154,7 +153,7 @@ class CommentServiceTest extends ServiceTest {
             softAssertions.assertThat(actual.get().getCommentId()).isNotNull();
             softAssertions.assertThat(actual.get().getContent()).isEqualTo(updatedContent);
             softAssertions.assertThat(actual.get().getMember().getMemberId())
-                .isEqualTo(Long.parseLong(user.getName()));
+                .isEqualTo(user.getMemberId());
         });
     }
 
@@ -167,8 +166,9 @@ class CommentServiceTest extends ServiceTest {
         String updatedContent = "update comment content";
         CommentRequest request = new CommentRequest(feedbackId, updatedContent);
         // TODO: User 객체는 나중에 변경해야 함!
-        User user = new User();
-        user.setName("999999");
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(999999L, "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when & then
         assertThatThrownBy(() -> {
@@ -182,10 +182,9 @@ class CommentServiceTest extends ServiceTest {
     @Order(5)
     void deleteComment() {
         // given
-        // TODO: User 객체는 나중에 변경해야 함!
-        User user = new User();
-        user.setName(member.getMemberId().toString());
-        user.setRoles(List.of("ADMIN"));
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.ADMIN, MemberStatus.ACTIVITY));
 
         // when
         commentService.deleteComment(comment.getCommentId(), user);
@@ -199,9 +198,9 @@ class CommentServiceTest extends ServiceTest {
     @Order(6)
     void deleteCommentFailure() {
         // given
-        // TODO: User 객체는 나중에 변경해야 함!
-        User user = new User();
-        user.setName("999999");
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(999999L, "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when & then
         assertThatThrownBy(() -> {
@@ -218,10 +217,9 @@ class CommentServiceTest extends ServiceTest {
         Long feedbackId = feedback.getFeedbackId();
         String content = "test admin comment content";
         CommentRequest request = new CommentRequest(feedbackId, content);
-        // TODO: User 객체는 나중에 변경해야 함!
-        User user = new User();
-        user.setName(admin.getMemberId().toString());
-        user.setRoles(List.of("ADMIN"));
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(admin.getMemberId(), "", "",
+                "", "", MemberRole.ADMIN, MemberStatus.ACTIVITY));
 
         // when
         commentService.writeComment(request, user);
