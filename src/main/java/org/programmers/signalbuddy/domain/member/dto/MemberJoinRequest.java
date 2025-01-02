@@ -21,11 +21,11 @@ public class MemberJoinRequest {
     @Schema(description = "이메일", requiredMode = RequiredMode.NOT_REQUIRED, defaultValue = "udpate@example.com")
     private String email;
 
-    @NotBlank(message = "이메일은 필수 입력 사항입니다.")
+    @NotBlank(message = "닉네임은 필수 입력 사항입니다.")
     @Schema(description = "닉네임", requiredMode = RequiredMode.NOT_REQUIRED, defaultValue = "Nickname")
     private String nickname;
 
-    @NotBlank(message = "이메일은 필수 입력 사항입니다.")
+    @NotBlank(message = "비밀번호는 필수 입력 사항입니다.")
     @Schema(description = "비밀번호", requiredMode = RequiredMode.NOT_REQUIRED, defaultValue = "password123")
     private String password;
 
