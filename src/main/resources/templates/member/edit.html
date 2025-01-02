@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>계정 관리</title>
+  <title>Signal Buddy - 계정 관리</title>
   <th:block th:replace="~{fragments/header::headerStyles}"></th:block>
   <link href="/css/member/info.css" rel="stylesheet">
 </head>
@@ -40,7 +40,8 @@
                    id="password" type="text"/>
           </div>
           <div class="mt-6 flex justify-center space-x-4">
-            <a class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50 cancel" href="/members">취소</a>
+            <!-- TODO : Path Variable 수정 필요 -->
+            <a class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50 cancel" href="/members/1">취소</a>
             <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50" th:attr="data-id=${member.memberId}" onclick="editBtn(this)">확인</button>
           </div>
         </div>
@@ -75,7 +76,8 @@
     .then(data => {
       console.log('업데이트 성공:', data);
       alert("수정이 완료되었습니다.")
-      window.location.href = '/members'
+      // TODO : Path Variable 수정 필요
+      window.location.href = '/members/1'
     })
     .catch(error => {
       console.error('업데이트 실패:', error);

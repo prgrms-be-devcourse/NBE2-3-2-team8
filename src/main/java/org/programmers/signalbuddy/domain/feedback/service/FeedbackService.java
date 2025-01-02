@@ -98,7 +98,7 @@ public class FeedbackService {
         feedbackRepository.deleteById(feedbackId);
     }
 
-    public Page<FeedbackResponse> getFeedbacksByMemberId(Long memberId, Pageable pageable) {
+    public Page<FeedbackResponse> findPagedFeedbacksByMember(Long memberId, Pageable pageable) {
         return feedbackRepository.findPagedByMember(memberId, pageable);
     }
 }

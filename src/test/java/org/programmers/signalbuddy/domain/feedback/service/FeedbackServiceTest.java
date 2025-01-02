@@ -191,7 +191,7 @@ class FeedbackServiceTest extends ServiceTest {
             feedbackRepository.save(Feedback.create(request, member));
         }
 
-        final Page<FeedbackResponse> feedbacks = feedbackService.getFeedbacksByMemberId(
+        final Page<FeedbackResponse> feedbacks = feedbackService.findPagedFeedbacksByMember(
             member.getMemberId(), PageRequest.of(0, 5));
 
         SoftAssertions.assertSoftly(softAssertions -> {
