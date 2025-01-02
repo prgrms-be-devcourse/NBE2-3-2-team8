@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>계정 관리</title>
+  <title>Signal Buddy - 계정 관리</title>
   <th:block th:replace="~{fragments/header::headerStyles}"></th:block>
   <link href="/css/member/info.css" rel="stylesheet">
 </head>
@@ -38,8 +38,9 @@
             <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50 cancel"
                     onclick="deleteBtn(this)" th:attr="data-id=${member.memberId}">탈퇴
             </button>
+            <!-- TODO : Path Variable 수정 필요 -->
             <a class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50"
-               href="/members/edit">수정</a>
+               href="/members/1/edit">수정</a>
           </div>
         </div>
       </form>
