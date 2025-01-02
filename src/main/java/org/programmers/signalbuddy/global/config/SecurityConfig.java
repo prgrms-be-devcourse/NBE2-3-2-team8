@@ -47,17 +47,11 @@ public class SecurityConfig {
                 // 북마크
                 .requestMatchers("/api/bookmarks/**").hasRole("USER")
                 // 댓글
-                .requestMatchers("/api/comments/write").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.PATCH, "/api/comments/").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/comments/").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/comments/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/comments").permitAll()
                 // 교차로
                 .requestMatchers("/api/crossroads/save").hasRole("ADMIN")
                 // 피드백
-                .requestMatchers("/api/feedbacks/write").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.PATCH, "/api/feedbacks/").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/feedbacks/").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/feedbacks/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/feedbacks", "/feedbacks/**").permitAll()
                 // 회원
                 .requestMatchers("/api/admins/**").hasRole("ADMIN")
                 .requestMatchers("/api/members/**").hasRole("USER")
