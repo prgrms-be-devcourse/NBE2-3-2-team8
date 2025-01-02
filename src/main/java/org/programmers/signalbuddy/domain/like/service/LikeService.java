@@ -33,4 +33,15 @@ public class LikeService {
         likeRepository.save(Like.create(member, feedback));
         feedback.increaseLike();
     }
+
+    @Transactional
+    public void deleteLike(Long feedbackId, CustomUser2Member user) {
+        Feedback feedback = feedbackRepository.findById(feedbackId)
+            .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
+        Member member = memberRepository.findById(user.getMemberId())
+            .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
+
+        likeRepository.deleteByMemberAndFeedback(member, feedback);
+        feedback.decreaseLike();
+    }
 }
