@@ -30,9 +30,8 @@ public class BookmarkService {
     private final GeometryFactory geometryFactory;
     private final MemberRepository memberRepository;
 
-    public Page<BookmarkResponse> findPagedBookmarks(Pageable pageable, User user) {
-        // TODO : 2번째 인자 memberId 수정 필요
-        return bookmarkRepository.findPagedByMember(pageable, Long.parseLong(user.getName()));
+    public Page<BookmarkResponse> findPagedBookmarks(Pageable pageable, Long memberId) {
+        return bookmarkRepository.findPagedByMember(pageable, memberId);
     }
 
     public BookmarkResponse createBookmark(BookmarkRequest createRequest, User user) {
@@ -76,5 +75,11 @@ public class BookmarkService {
             throw new BusinessException(BookmarkErrorCode.INVALID_COORDINATES);
         }
         return geometryFactory.createPoint(new Coordinate(lng, lat));
+    }
+
+    public BookmarkResponse getBookmark(Long bookmarkId) {
+        final Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
+            .orElseThrow(() -> new BusinessException(BookmarkErrorCode.NOT_FOUND_BOOKMARK));
+        return BookmarkMapper.INSTANCE.toDto(bookmark);
     }
 }

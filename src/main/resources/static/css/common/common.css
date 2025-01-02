@@ -644,3 +644,7 @@ video {
 :is(.bg-neutral-300) {
   color: rgba(0, 0, 0, 0.9) !important;
 }
+
+.text-white {
+  color: #ffffff;
+}

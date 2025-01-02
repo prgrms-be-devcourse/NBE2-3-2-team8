@@ -34,11 +34,11 @@ public class BookmarkController {
     private final BookmarkService bookmarkService;
 
     @Operation(summary = "즐겨찾기 목록 조회", description = "Pagination")
-    @GetMapping
+    @GetMapping("{memberId}")
     @ApiResponse(responseCode = "200", description = "즐겨찾기 목록 조회 성공")
     public ResponseEntity<Page<BookmarkResponse>> getBookmarks(
-        @PageableDefault(page = 0, size = 5) Pageable pageable, User user) {
-        final Page<BookmarkResponse> bookmarks = bookmarkService.findPagedBookmarks(pageable, user);
+        @PageableDefault(page = 0, size = 5) Pageable pageable, @PathVariable Long memberId) {
+        final Page<BookmarkResponse> bookmarks = bookmarkService.findPagedBookmarks(pageable, memberId);
         return ResponseEntity.ok().body(bookmarks);
     }
 
@@ -66,6 +66,7 @@ public class BookmarkController {
     @DeleteMapping("{id}")
     @ApiResponse(responseCode = "200", description = "즐겨찾기 삭제 성공")
     public ResponseEntity<Void> deleteBookmark(@PathVariable Long id, User user) {
+        user.setName("1");
         log.info("delete bookmark id: {}", id);
         bookmarkService.deleteBookmark(id, user);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

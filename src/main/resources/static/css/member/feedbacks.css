@@ -1,0 +1,159 @@
+.gap-2 {
+  gap: 8px;
+}
+
+.text-primary-700 {
+  --tw-text-opacity: 1;
+  color: rgba(70, 140, 213, 1);
+}
+
+.text-neutral-500 {
+  --tw-text-opacity: 1;
+  color: rgb(153 153 153 / var(--tw-text-opacity));
+}
+
+.p-6 {
+  padding: 24px;
+}
+
+.p-4 {
+  padding: 16px;
+}
+
+.border-t {
+  border-top-width: 1px;
+}
+
+.pt-4 {
+  padding-top: 16px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.bookmark-box {
+  border-radius: 9999px;
+  height: 60px;
+}
+
+.bookmark-name {
+  font-size: 13px;
+}
+
+.bookmark-address {
+  font-size: 11px;
+}
+
+.bookmarks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.active {
+  color: #486284;
+  font-weight: bold;
+}
+
+.bookmark-add {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.add {
+  color: rgba(148, 146, 154, 1)
+}
+
+.add-box {
+  cursor: pointer;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.text-neutral-700 {
+  --tw-text-opacity: 1;
+  color: rgb(103 103 103 / var(--tw-text-opacity));
+}
+
+.bg-green-500 {
+  --tw-bg-opacity: 1;
+  --tw-border-opacity: 1;
+  --tw-text-opacity: 1;
+  background-color: rgb(220 252 231 / var(--tw-bg-opacity));
+  border-color: rgb(22 163 74 / var(--tw-border-opacity));
+  color: rgb(22 163 74 / var(--tw-text-opacity));
+  border-width: 2px;
+}
+
+.bg-red-500 {
+  --tw-bg-opacity: 1;
+  --tw-border-opacity: 1;
+  --tw-text-opacity: 1;
+  background-color: rgb(254 226 226 / var(--tw-bg-opacity));
+  border-color: rgb(220 38 38 / var(--tw-border-opacity));
+  color: rgb(220 38 38 / var(--tw-text-opacity));
+  border-width: 2px;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.shadow-md {
+  --tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color),
+  0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+  var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.p-6 {
+  padding: 24px;
+}
+
+.px-3 {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.text-xs {
+  font-size: 12px;
+  line-height: 19.200000000000003px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.border-collapse {
+  border-collapse: collapse;
+}
+
+.border-b {
+  border-bottom-width: 1px;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.w-auto {
+  width: auto;
+}
+
+tbody {
+  font-size: 14px;
+  text-align: center;
+}
+
+tbody tr {
+  cursor: pointer;
+}

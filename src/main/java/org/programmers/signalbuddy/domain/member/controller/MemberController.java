@@ -90,7 +90,7 @@ public class MemberController {
     public ResponseEntity<Page<FeedbackResponse>> getFeedbacks(@PathVariable Long id,
         @PageableDefault(page = 0, size = 10) Pageable pageable) {
         log.info("id : {}", id);
-        final Page<FeedbackResponse> feedbacks = feedbackService.getFeedbacksByMemberId(id,
+        final Page<FeedbackResponse> feedbacks = feedbackService.findPagedFeedbacksByMember(id,
             pageable);
         return ResponseEntity.ok(feedbacks);
     }

@@ -6,17 +6,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.dto.MemberJoinRequest;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
 import org.programmers.signalbuddy.domain.member.entity.Member;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.mapper.MemberMapper;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
 import org.programmers.signalbuddy.global.exception.BusinessException;
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -68,8 +67,7 @@ public class MemberService {
             throw new BusinessException(MemberErrorCode.ALREADY_EXIST_EMAIL);
         }
 
-        Member joinMember = Member.builder()
-            .email(memberJoinRequest.getEmail())
+        Member joinMember = Member.builder().email(memberJoinRequest.getEmail())
             .nickname(memberJoinRequest.getNickname())
             .password(bCryptPasswordEncoder.encode(memberJoinRequest.getPassword()))
             .profileImageUrl(memberJoinRequest.getProfileImageUrl())

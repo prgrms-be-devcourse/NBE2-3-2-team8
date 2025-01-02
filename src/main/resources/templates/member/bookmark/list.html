@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>계정 관리</title>
+  <title>Signal Buddy - 나의 즐겨찾기</title>
   <th:block th:replace="~{fragments/header::headerStyles}"></th:block>
   <link href="/css/member/bookmarks.css" rel="stylesheet">
 </head>
@@ -30,9 +30,9 @@
                 </p>
               </div>
             </div>
-            <button class="flex items-center text-neutral-500">
+            <a class="flex items-center text-neutral-500" th:href="@{/bookmarks/{id}(id=${bookmark.bookmarkId})}">
               <span class="material-symbols-outlined">edit</span>
-            </button>
+            </a>
           </div>
         </div>
         <div class="flex items-center justify-between bg-neutral-100 p-4 rounded-md bookmark-box add-box"
@@ -48,8 +48,9 @@
         <div class="border-t pt-4 text-center text-neutral-500">
           <!-- 페이지 번호 -->
           <span th:each="i : ${#numbers.sequence(1, pagination.totalPages)}">
+      <!-- TODO : Path Variable 수정 필요 -->
             <a th:classappend="${pagination.number + 1 == i ? 'active' : ''}"
-               th:href="@{/bookmarks(page=${i - 1}, size=${pagination.size})}"
+               th:href="@{/members/1/bookmarks(page=${i - 1}, size=${pagination.size})}"
                th:text="${i}"></a>
           </span>
         </div>

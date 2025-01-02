@@ -41,7 +41,7 @@ public class Bookmark extends BaseTimeEntity {
     @Column
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 

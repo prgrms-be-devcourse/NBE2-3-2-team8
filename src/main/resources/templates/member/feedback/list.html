@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Signal Buddy - 나의 피드백</title>
+  <th:block th:replace="~{fragments/header::headerStyles}"></th:block>
+  <link href="/css/member/feedbacks.css" rel="stylesheet">
+</head>
+<body>
+<!-- 헤더 파일 -->
+<th:block th:replace="~{fragments/header::headerFragment}"></th:block>
+<div class="bg-neutral-100 shadow rounded-lg mx-auto">
+  <main class="flex px-6 py-10">
+    <!--  마이페이지 사이드바  -->
+    <aside th:replace="~{fragments/sidebar::sidebarFragment}"></aside>
+    <!--  본문 시작  -->
+    <section class="flex-1 bg-white rounded-lg shadow-md p-6">
+      <h2 class="font-title text-neutral-950 text-xl mb-8">작성한 피드백</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-center border-collapse">
+          <thead>
+          <tr class="text-neutral-600 border-b border-neutral-300">
+            <th class="py-2 px-4">번호</th>
+            <th class="py-2 px-4">내용</th>
+            <th class="py-2 px-4">작성자</th>
+            <th class="py-2 px-4">작성일</th>
+            <th class="py-2 px-4">상태</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="border-b last:border-0" th:each="feedback : ${pagination}" th:onclick="|window.location='/feedbacks/${feedback.feedbackId}'|">
+            <td class="py-2 px-4" th:text="${feedback.feedbackId}">1</td>
+            <td class="py-2 px-4" th:text="${feedback.subject}">제목</td>
+            <td class="py-2 px-4" th:text="${feedback.member.nickname}">작성자</td>
+            <td class="py-2 px-4" th:text="${#temporals.format(feedback.createdAt, 'yyyy-MM-dd')}">
+              2024-12-04
+            </td>
+            <td class="py-2 px-4" th:switch="${feedback.answerStatus.name()}">
+              <span class="inline-block w-auto px-3 py-1 text-sm rounded-full text-white bg-red-500"
+                    th:case="BEFORE">답변 전</span>
+              <span class="inline-block w-auto px-3 py-1 text-sm rounded-full text-white bg-green-500"
+                    th:case="COMPLETION">답변 완료</span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+        <div class="border-t pt-4 text-center text-neutral-500">
+          <!-- 페이지 번호 -->
+          <span th:each="i : ${#numbers.sequence(1, pagination.totalPages)}">
+          <!-- TODO : Path Variable 수정 필요 -->
+            <a th:classappend="${pagination.number + 1 == i ? 'active' : ''}"
+               th:href="@{/members/1/feedbacks(page=${i - 1}, size=${pagination.size})}"
+               th:text="${i}"></a>
+          </span>
+        </div>
+      </div>
+</div>
+
+</section>
+
+</main>
+</div>
+</body>
+</html>
