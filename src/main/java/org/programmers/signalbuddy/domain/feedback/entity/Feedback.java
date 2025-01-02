@@ -72,4 +72,8 @@ public class Feedback extends BaseTimeEntity {
             this.answerStatus = AnswerStatus.BEFORE;
         }
     }
+
+    public void increaseLike() {
+        this.likeCount += 1;
+    }
 }
