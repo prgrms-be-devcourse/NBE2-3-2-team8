@@ -1,7 +1,10 @@
 package org.programmers.signalbuddy.global.config;
 
+import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.global.security.filter.UserAuthenticationFilter;
 import org.programmers.signalbuddy.global.security.handler.CustomAuthenticationSuccessHandler;
+
+import org.programmers.signalbuddy.global.security.oauth.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -26,6 +30,8 @@ public class SecurityConfig {
     CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
         return new CustomAuthenticationSuccessHandler();
     }
+
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -59,16 +65,25 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             );
 
-        // 로그인 관련 설정
+        // 기본 로그인 관련 설정
         http
             .formLogin((auth) -> auth
                 .loginPage("/members/login")
                 .loginProcessingUrl("/login")
-                // 메인으로 이동하도록 설정
-                //.defaultSuccessUrl("/home", true)
                 .successHandler(customAuthenticationSuccessHandler())
                 .permitAll()
             );
+
+        // 소셜 로그인 관련 설정
+        http
+            .oauth2Login((oauth) -> oauth
+                .loginPage("/login")
+                .userInfoEndpoint(userInfoEndpointConfig ->
+                    userInfoEndpointConfig.userService(customOAuth2UserService))
+                .authorizationEndpoint(authorization -> authorization
+                    .baseUri("/oauth2/authorization"))
+                .successHandler(customAuthenticationSuccessHandler())
+                .permitAll());
 
         // 로그아웃 관련 설정
         http
