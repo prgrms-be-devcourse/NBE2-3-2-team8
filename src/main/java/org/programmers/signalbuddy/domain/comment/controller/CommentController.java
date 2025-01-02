@@ -7,8 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.comment.dto.CommentRequest;
 import org.programmers.signalbuddy.domain.comment.dto.CommentResponse;
 import org.programmers.signalbuddy.domain.comment.service.CommentService;
+import org.programmers.signalbuddy.global.annotation.CurrentUser;
+import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.dto.PageResponse;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class CommentController {
     @Operation(summary = "댓글 작성")
     @PostMapping("/write")
     public ResponseEntity<Void> writeComment(@RequestBody @Valid CommentRequest request,
-        User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        @CurrentUser CustomUser2Member user) {
         commentService.writeComment(request, user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -50,7 +51,7 @@ public class CommentController {
     @PatchMapping("/{commentId}")
     public ResponseEntity<Void> modifyComment(@PathVariable("commentId") Long commentId,
         @RequestBody @Valid CommentRequest request,
-        User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        @CurrentUser CustomUser2Member user) {
         commentService.updateComment(commentId, request, user);
         return ResponseEntity.ok().build();
     }
@@ -58,7 +59,7 @@ public class CommentController {
     @Operation(summary = "댓글 삭제")
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable("commentId") Long commentId,
-        User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        @CurrentUser CustomUser2Member user) {
         commentService.deleteComment(commentId, user);
         return ResponseEntity.ok().build();
     }

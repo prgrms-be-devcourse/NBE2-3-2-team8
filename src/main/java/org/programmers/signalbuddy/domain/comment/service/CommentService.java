@@ -12,9 +12,9 @@ import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.dto.PageResponse;
 import org.programmers.signalbuddy.global.exception.BusinessException;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,10 +29,9 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final FeedbackRepository feedbackRepository;
 
-    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
     @Transactional
-    public void writeComment(CommentRequest request, User user) {
-        Member member = memberRepository.findById(Long.parseLong(user.getName()))
+    public void writeComment(CommentRequest request, CustomUser2Member user) {
+        Member member = memberRepository.findById(user.getMemberId())
             .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
         Feedback feedback = feedbackRepository.findById(request.getFeedbackId())
             .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
@@ -54,9 +53,8 @@ public class CommentService {
         return new PageResponse<>(responsePage);
     }
 
-    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
     @Transactional
-    public void updateComment(Long commentId, CommentRequest request, User user) {
+    public void updateComment(Long commentId, CommentRequest request, CustomUser2Member user) {
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND_COMMENT));
 
@@ -68,9 +66,8 @@ public class CommentService {
         comment.updateContent(request);
     }
 
-    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
     @Transactional
-    public void deleteComment(Long commentId, User user) {
+    public void deleteComment(Long commentId, CustomUser2Member user) {
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND_COMMENT));
 
