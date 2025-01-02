@@ -1,5 +1,7 @@
 package org.programmers.signalbuddy.domain.like.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
+import org.programmers.signalbuddy.domain.like.dto.LikeExistResponse;
 import org.programmers.signalbuddy.domain.like.entity.Like;
 import org.programmers.signalbuddy.domain.like.repository.LikeRepository;
 import org.programmers.signalbuddy.domain.member.entity.Member;
@@ -102,5 +105,38 @@ class LikeServiceTest extends ServiceTest {
             softAssertions.assertThat(updatedFeedback).isPresent();
             softAssertions.assertThat(updatedFeedback.get().getLikeCount()).isZero();
         });
+    }
+
+    @DisplayName("해당 좋아요가 존재할 때")
+    @Test
+    void existsLikeTrue() {
+        // given
+        Long feedbackId = feedback.getFeedbackId();
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
+
+        // when
+        likeService.addLike(feedbackId, user);
+        LikeExistResponse actual = likeService.existsLike(feedbackId, user);
+
+        // then
+        assertThat(actual.getStatus()).isTrue();
+    }
+
+    @DisplayName("해당 좋아요가 존재하지 않을 때")
+    @Test
+    void existsLikeFalse() {
+        // given
+        Long feedbackId = feedback.getFeedbackId();
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
+
+        // when
+        LikeExistResponse actual = likeService.existsLike(feedbackId, user);
+
+        // then
+        assertThat(actual.getStatus()).isFalse();
     }
 }
