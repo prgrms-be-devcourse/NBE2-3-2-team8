@@ -14,8 +14,23 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
         Authentication authentication) throws IOException, ServletException {
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        request.getSession().setAttribute("user", userDetails);
+        Object principal = authentication.getPrincipal();
+        // 임시 경로
+        String redirectUrl = "/feedbacks";
+
+        if(principal instanceof  CustomUserDetails) {
+            CustomUserDetails customUserDetails = (CustomUserDetails) principal;
+
+            if(customUserDetails.getRole().name().contains("ADMIN")){
+                // 임시 경로
+                redirectUrl = "/admins/members/list";
+            }
+            request.getSession().setAttribute("user", customUserDetails);
+        }
+
+        request.getSession().setMaxInactiveInterval(3600);
+        response.sendRedirect(redirectUrl);
+
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }

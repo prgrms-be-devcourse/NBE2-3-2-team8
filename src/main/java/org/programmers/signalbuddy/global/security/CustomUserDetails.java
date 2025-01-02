@@ -47,7 +47,7 @@ public class CustomUserDetails implements UserDetails {
         authorities.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return role.name();
+                return "ROLE_"+role.name();
             }
         });
 
