@@ -38,7 +38,7 @@
         <div class="relative">
           <button class="cursor-pointer"
                   id="feedback-menu-btn"
-                  th:attr="hidden=${feedback.getMember().getMemberId() != user.getMemberId()}">
+                  th:attr="hidden=${user != null && feedback.getMember().getMemberId() != user.getMemberId()}">
             <span class="material-symbols-outlined">more_vert</span>
           </button>
           <div class="absolute bg-white rounded-md shadow-md z-10 right-0 mt-2 text-sm w-[120px]"
@@ -89,7 +89,8 @@
            ${feedback.getUpdatedAt().toString().replace('T', ' ').substring(0, 16)}">
           nick | 2024-12-12 16:20:45
         </div>
-        <div class="flex gap-2" th:if="${comment.getMember().getMemberId() == user.getMemberId()}">
+        <div class="flex gap-2"
+             th:if="${user != null && comment.getMember().getMemberId() == user.getMemberId()}">
           <button
               class="py-1 px-3 bg-neutral-200 text-neutral-700 rounded-md hover:bg-neutral-300"
               id="comment-edit-btn"
@@ -139,7 +140,8 @@
       ></textarea>
       <div class="text-right mt-2">
         <button class="py-1 px-4 bg-primary-500 text-primary-50 rounded-md hover:bg-primary-600"
-                id="comment-write-btn">
+                id="comment-write-btn"
+                onclick="writeComment()">
           등록
         </button>
       </div>
@@ -198,7 +200,7 @@
   });
 
   // 댓글 작성 요청
-  commentWriteBtn.addEventListener("click", (event) => {
+  function writeComment() {
     const feedbackId = menu.getAttribute('data-feedback-id');
     const comment = document.getElementById("comment-write-box").value;
 
@@ -224,7 +226,7 @@
     .catch(error => {
       console.error('댓글 작성 요청 중 오류 발생:', error);
     });
-  });
+  }
 
   // 댓글 삭제 요청
   function deleteComment(commentId) {
