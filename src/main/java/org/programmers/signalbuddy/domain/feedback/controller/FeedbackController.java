@@ -8,8 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.service.FeedbackService;
+import org.programmers.signalbuddy.global.annotation.CurrentUser;
+import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.dto.PageResponse;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -38,7 +39,7 @@ public class FeedbackController {
     @PostMapping("/write")
     public ResponseEntity<FeedbackResponse> writeFeedback(
         @RequestBody @Valid FeedbackWriteRequest feedbackWriteRequest,
-        User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        @CurrentUser CustomUser2Member user) {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(feedbackService.writeFeedback(feedbackWriteRequest, user));
     }
@@ -83,7 +84,7 @@ public class FeedbackController {
     @PatchMapping("/{feedbackId}")
     public ResponseEntity<Void> updateFeedback(@PathVariable("feedbackId") Long feedbackId,
         @RequestBody @Valid FeedbackWriteRequest feedbackWriteRequest,
-        User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        @CurrentUser CustomUser2Member user) {
         feedbackService.updateFeedback(feedbackId, feedbackWriteRequest, user);
         return ResponseEntity.ok().build();
     }
@@ -91,7 +92,7 @@ public class FeedbackController {
     @Operation(summary = "피드백 삭제")
     @DeleteMapping("/{feedbackId}")
     public ResponseEntity<Void> deleteFeedback(@PathVariable("feedbackId") Long feedbackId,
-        User user) {    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
+        @CurrentUser CustomUser2Member user) {
         feedbackService.deleteFeedback(feedbackId, user);
         return ResponseEntity.ok().build();
     }

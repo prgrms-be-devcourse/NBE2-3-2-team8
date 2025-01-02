@@ -13,9 +13,9 @@ import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.dto.PageResponse;
 import org.programmers.signalbuddy.global.exception.BusinessException;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -57,10 +57,9 @@ public class FeedbackService {
         return FeedbackMapper.INSTANCE.toResponse(feedback);
     }
 
-    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
     @Transactional
-    public FeedbackResponse writeFeedback(FeedbackWriteRequest request, User user) {
-        Member member = memberRepository.findById(Long.parseLong(user.getName()))
+    public FeedbackResponse writeFeedback(FeedbackWriteRequest request, CustomUser2Member user) {
+        Member member = memberRepository.findById(user.getMemberId())
             .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
 
         Feedback feedback = Feedback.create(request, member);
@@ -69,9 +68,8 @@ public class FeedbackService {
         return FeedbackMapper.INSTANCE.toResponse(savedFeedback);
     }
 
-    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
     @Transactional
-    public void updateFeedback(Long feedbackId, FeedbackWriteRequest request, User user) {
+    public void updateFeedback(Long feedbackId, FeedbackWriteRequest request, CustomUser2Member user) {
         Feedback feedback = feedbackRepository.findById(feedbackId)
             .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
 
@@ -83,9 +81,8 @@ public class FeedbackService {
         feedback.updateFeedback(request);
     }
 
-    // TODO: 인자값에 User 객체는 나중에 변경해야 함!
     @Transactional
-    public void deleteFeedback(Long feedbackId, User user) {
+    public void deleteFeedback(Long feedbackId, CustomUser2Member user) {
         Feedback feedback = feedbackRepository.findById(feedbackId)
             .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
 
