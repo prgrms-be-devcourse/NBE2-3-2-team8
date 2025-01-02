@@ -33,12 +33,14 @@ public class FeedbackWebController {
     @GetMapping
     public ModelAndView searchFeedbackList(@PageableDefault(page = 0, size = 10) Pageable pageable,
         @RequestParam(required = false, name = "answerStatus", defaultValue = "-1") Long answerStatus,
+        @CurrentUser CustomUser2Member user,
         ModelAndView mv) {
         PageResponse<FeedbackResponse> response = feedbackService.searchFeedbackList(pageable,
             answerStatus);
         mv.setViewName("feedback/list");
         mv.addObject("response", response);
         mv.addObject("answerStatus", answerStatus);
+        mv.addObject("user", user);
         return mv;
     }
 

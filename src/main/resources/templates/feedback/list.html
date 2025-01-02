@@ -93,7 +93,7 @@
       </section>
       <footer class="flex justify-between items-center mt-4">
             <a class="material-symbols-outlined text-neutral-400"
-               th:href="@{/feedbacks/write}">
+               th:href="@{/feedbacks/write}" th:if="${user != null && user.getMemberId() != null}">
               edit 작성하기
             </a>
       </footer>
