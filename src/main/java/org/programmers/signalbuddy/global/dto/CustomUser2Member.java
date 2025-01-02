@@ -23,4 +23,6 @@ public class CustomUser2Member {
         this.role = customUserDetails.getRole();
         this.status = customUserDetails.getStatus();
     }
+
+    public CustomUser2Member(String arg) {}
 }
