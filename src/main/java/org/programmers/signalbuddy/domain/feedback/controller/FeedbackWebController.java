@@ -44,6 +44,7 @@ public class FeedbackWebController {
 
     @GetMapping("/{feedbackId}")
     public ModelAndView searchFeedbackDetail(@PathVariable("feedbackId") Long feedbackId,
+        @CurrentUser CustomUser2Member user,
         ModelAndView mv) {
         FeedbackResponse feedback = feedbackService.searchFeedbackDetail(feedbackId);
         PageResponse<CommentResponse> commentPage = commentService.searchCommentList(feedbackId,
@@ -52,12 +53,12 @@ public class FeedbackWebController {
         mv.setViewName("feedback/info");
         mv.addObject("feedback", feedback);
         mv.addObject("commentPage", commentPage);
+        mv.addObject("user", user);
         return mv;
     }
 
     @GetMapping("/write")
     public ModelAndView showWriteFeedbackPage(
-        @CurrentUser CustomUser2Member user,
         ModelAndView mv) {
         mv.setViewName("feedback/write");
         mv.addObject("request", new FeedbackWriteRequest());
@@ -76,7 +77,6 @@ public class FeedbackWebController {
 
     @GetMapping("/edit/{feedbackId}")
     public ModelAndView showEditFeedbackPage(@PathVariable("feedbackId") Long feedbackId,
-        @CurrentUser CustomUser2Member user,
         ModelAndView mv) {
         FeedbackResponse feedback = feedbackService.searchFeedbackDetail(feedbackId);
         mv.setViewName("feedback/edit");
