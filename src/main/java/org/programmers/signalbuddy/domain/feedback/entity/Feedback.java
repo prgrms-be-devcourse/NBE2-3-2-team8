@@ -76,4 +76,10 @@ public class Feedback extends BaseTimeEntity {
     public void increaseLike() {
         this.likeCount += 1;
     }
+
+    public void decreaseLike() {
+        if (this.likeCount > 0) {
+            this.likeCount -= 1;
+        }
+    }
 }
