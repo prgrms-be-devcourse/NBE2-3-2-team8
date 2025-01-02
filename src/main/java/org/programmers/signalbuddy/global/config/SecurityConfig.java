@@ -38,6 +38,9 @@ public class SecurityConfig {
                     "/swagger-ui/**",
                     "/api-docs/**",
                     "/swagger-resources/**",
+                    "/css/**",
+                    "/js/**",
+                    "/images/**",
                     "/webjars/**").permitAll()
                 // 로그인
                 .requestMatchers("/members/login").anonymous()
