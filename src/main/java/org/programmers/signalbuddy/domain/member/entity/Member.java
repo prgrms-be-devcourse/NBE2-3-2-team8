@@ -77,4 +77,8 @@ public class Member extends BaseTimeEntity {
     public static boolean isNotSameMember(User user, Member member) {
         return !user.getName().equals(member.getMemberId().toString());
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
