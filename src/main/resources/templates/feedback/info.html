@@ -36,7 +36,9 @@
             건의합니다~</h2>
         </div>
         <div class="relative">
-          <button class="cursor-pointer" id="feedback-menu-btn">
+          <button class="cursor-pointer"
+                  id="feedback-menu-btn"
+                  th:attr="hidden=${feedback.getMember().getMemberId() != user.getMemberId()}">
             <span class="material-symbols-outlined">more_vert</span>
           </button>
           <div class="absolute bg-white rounded-md shadow-md z-10 right-0 mt-2 text-sm w-[120px]"
@@ -87,7 +89,7 @@
            ${feedback.getUpdatedAt().toString().replace('T', ' ').substring(0, 16)}">
           nick | 2024-12-12 16:20:45
         </div>
-        <div class="flex gap-2">
+        <div class="flex gap-2" th:if="${comment.getMember().getMemberId() == user.getMemberId()}">
           <button
               class="py-1 px-3 bg-neutral-200 text-neutral-700 rounded-md hover:bg-neutral-300"
               id="comment-edit-btn"
@@ -151,10 +153,7 @@
   const menuBtn = document.getElementById("feedback-menu-btn");
   const menu = document.getElementById("menu-box");
   const deleteBtn = document.getElementById("delete-btn");
-  const commentBox = document.getElementById("comment-box");
   const commentWriteBtn = document.getElementById("comment-write-btn");
-  const commentDeleteBtn = document.getElementById("comment-delete-btn");
-  const commentEditeBtn = document.getElementById("comment-edit-complete-btn");
 
   menuBtn.addEventListener("click", (event) => {
     event.stopPropagation();
