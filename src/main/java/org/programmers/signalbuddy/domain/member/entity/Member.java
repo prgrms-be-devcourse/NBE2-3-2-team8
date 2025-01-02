@@ -15,9 +15,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.programmers.signalbuddy.domain.basetime.BaseTimeEntity;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
-import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
+import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 
 @Entity(name = "members")
 @Getter
@@ -74,8 +74,8 @@ public class Member extends BaseTimeEntity {
     }
 
     // 요청자와 작성자가 다른 경우
-    public static boolean isNotSameMember(User user, Member member) {
-        return !user.getName().equals(member.getMemberId().toString());
+    public static boolean isNotSameMember(CustomUser2Member user, Member member) {
+        return !user.getMemberId().equals(member.getMemberId());
     }
 
     public void setPassword(String password) {
