@@ -49,7 +49,8 @@ public class SecurityConfig {
                     "/images/**",
                     "/webjars/**").permitAll()
                 // 로그인
-                .requestMatchers("/members/login", "admins/login", "/api/members/join", "/api/admins/join").permitAll()
+                .requestMatchers("/members/login", "admins/login", "/api/members/join",
+                    "/api/admins/join").permitAll()
                 // 북마크
                 .requestMatchers("/api/bookmarks/**", "/bookmarks/**").hasRole("USER")
                 // 댓글
@@ -79,8 +80,6 @@ public class SecurityConfig {
                 .loginPage("/login")
                 .userInfoEndpoint(userInfoEndpointConfig ->
                     userInfoEndpointConfig.userService(customOAuth2UserService))
-                .authorizationEndpoint(authorization -> authorization
-                    .baseUri("/oauth2/authorization"))
                 .successHandler(customAuthenticationSuccessHandler())
                 .permitAll());
 
