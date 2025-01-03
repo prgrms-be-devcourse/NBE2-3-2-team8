@@ -13,6 +13,7 @@ import org.programmers.signalbuddy.global.security.oauth.response.NaverResponse;
 import org.programmers.signalbuddy.global.security.oauth.response.OAuth2Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -55,7 +56,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 Member newMember = Member.builder()
                     .email(email)
                     .nickname(oAuth2Response.getName())
-                    .profileImageUrl("/image")
+                    .profileImageUrl("static/images/member/profile-icon.png")
                     .role(MemberRole.USER)
                     .memberStatus(MemberStatus.ACTIVITY)
                     .build();
@@ -63,14 +64,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 return newMember;
             });
 
-        // SocialProvider 생성 및 저장
-        SocialProvider socialProvider = SocialProvider.builder()
-            .socialId(oAuth2Response.getProviderId())
-            .oauthProvider(oAuth2Response.getProvider())
-            .member(saveMember)
-            .build();
+        // 이미 소셜이 저장되어 있는 경우, 중복 저장하지 않음.
+        if(!socialProviderRepository.existsByOauthProviderAndSocialId(oAuth2Response.getProvider(), oAuth2Response.getProviderId())){
 
-        socialProviderRepository.save(socialProvider);
+            SocialProvider socialProvider = SocialProvider.builder()
+                .oauthProvider(oAuth2Response.getProvider())
+                .socialId(oAuth2Response.getProviderId())
+                .member(saveMember)
+                .build();
+
+            socialProviderRepository.save(socialProvider);
+        }
 
         return new CustomOAuth2User(oAuth2Response, saveMember.getMemberId(), email,
             saveMember.getPassword(), saveMember.getProfileImageUrl(), saveMember.getNickname(),
