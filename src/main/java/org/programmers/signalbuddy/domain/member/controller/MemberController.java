@@ -66,24 +66,6 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 
-    //TODO : 주석제거
-    /*
-    @Operation(summary = "관리자: 전체 사용자 조회 API")
-    @GetMapping("admin")
-    public ResponseEntity<Page<AdminMemberResponse>> getAdminMembers(
-        @PageableDefault(page = 0, size = 10, sort = "email") Pageable pageable) {
-
-        Page<AdminMemberResponse> members = adminMemberService.getAllMembers(pageable);
-        return ResponseEntity.ok(members);
-    }
-
-    @Operation(summary = "관리자 : 사용자 조회 API")
-    @GetMapping("admin/{id}")
-    public ResponseEntity<AdminMemberResponse> getAdminMember(@PathVariable Long id) {
-        final AdminMemberResponse member = adminMemberService.getMember(id);
-        return ResponseEntity.ok(member);
-    }
-*/
     @Operation(summary = "해당 사용자 피드백 목록 조회 API")
     @ApiResponse(responseCode = "200", description = "피드백 목록 조회 성공")
     @GetMapping("{id}/feedbacks")
