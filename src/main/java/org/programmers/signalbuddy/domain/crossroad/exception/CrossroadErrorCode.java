@@ -1,9 +1,9 @@
 package org.programmers.signalbuddy.domain.crossroad.exception;
 
+import org.programmers.signalbuddy.global.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.programmers.signalbuddy.global.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 @Getter

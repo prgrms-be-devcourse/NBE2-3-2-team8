@@ -1,7 +1,6 @@
 package org.programmers.signalbuddy.domain.crossroad.dto;
 
-import static org.programmers.signalbuddy.domain.crossroad.service.PointUtil.toPoint;
-
+import org.programmers.signalbuddy.domain.crossroad.entity.Crossroad;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
@@ -9,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.locationtech.jts.geom.Point;
+
+import static org.programmers.signalbuddy.domain.crossroad.service.PointUtil.toPoint;
 
 @Getter
 @Builder
@@ -30,5 +31,12 @@ public class CrossroadApiResponse {
 
     public Point getPoint() {
         return toPoint(this.lat, this.lng);
+    }
+
+    public CrossroadApiResponse(Crossroad crossroad) {
+        this.crossroadApiId = crossroad.getCrossroadApiId();
+        this.name = crossroad.getName();
+        this.lat = crossroad.getCoordinate().getX();
+        this.lng = crossroad.getCoordinate().getY();
     }
 }
