@@ -72,7 +72,8 @@ public class CustomFeedbackRepositoryImpl implements CustomFeedbackRepository {
             .offset(pageable.getOffset()).limit(pageable.getPageSize())
             .orderBy(new OrderSpecifier<>(Order.DESC, feedback.createdAt)).fetch();
         final Long count = jpaQueryFactory.select(feedback.count()).from(feedback).join(member)
-            .on(member.memberId.eq(memberId)).fetchOne();
+            .on(feedback.member.eq(member).and(member.memberId.eq(memberId)))
+            .fetchOne();
         return new PageImpl<>(responses, pageable, count != null ? count : 0);
     }
 

@@ -17,6 +17,8 @@ import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.programmers.signalbuddy.global.dto.CustomUser2Member;
+import org.programmers.signalbuddy.global.security.CustomUserDetails;
 import org.programmers.signalbuddy.global.support.ServiceTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
@@ -57,8 +59,10 @@ class BookmarkServiceTest extends ServiceTest {
     @Test
     @DisplayName("즐겨찾기 등록 테스트")
     void createBookmark() {
-        User user = new User();
-        user.setName(member.getMemberId().toString());
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
+
         final BookmarkRequest request = BookmarkRequest.builder().lat(37.12345).lng(127.12345)
             .address("test").build();
         final BookmarkResponse response = bookmarkService.createBookmark(request, user);
@@ -74,8 +78,10 @@ class BookmarkServiceTest extends ServiceTest {
     @Test
     @DisplayName("즐겨찾기 수정 테스트")
     void updateBookmark() {
-        User user = new User();
-        user.setName(member.getMemberId().toString());
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
+
         final BookmarkRequest request = BookmarkRequest.builder().lat(37.12345).lng(127.12345)
             .address("test").build();
 
@@ -94,8 +100,10 @@ class BookmarkServiceTest extends ServiceTest {
     @Test
     @DisplayName("즐겨찾기 삭제 테스트")
     void deleteBookmark() {
-        User user = new User();
-        user.setName(member.getMemberId().toString());
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
+
         bookmarkService.deleteBookmark(bookmark.getBookmarkId(), user);
         final Optional<Bookmark> found = bookmarkRepository.findById(bookmark.getBookmarkId());
 
