@@ -14,8 +14,8 @@ import org.programmers.signalbuddy.domain.bookmark.repository.BookmarkRepository
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.exception.BusinessException;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class BookmarkService {
         return bookmarkRepository.findPagedByMember(pageable, memberId);
     }
 
-    public BookmarkResponse createBookmark(BookmarkRequest createRequest, User user) {
+    public BookmarkResponse createBookmark(BookmarkRequest createRequest, CustomUser2Member user) {
         final Member member = getMember(user);
 
         final Point point = toPoint(createRequest.getLng(), createRequest.getLat());
@@ -45,7 +45,8 @@ public class BookmarkService {
     }
 
     @Transactional
-    public BookmarkResponse updateBookmark(BookmarkRequest updateRequest, Long id, User user) {
+    public BookmarkResponse updateBookmark(BookmarkRequest updateRequest, Long id,
+        CustomUser2Member user) {
         final Member member = getMember(user);
 
         final Bookmark bookmark = bookmarkRepository.findById(id)
@@ -58,15 +59,15 @@ public class BookmarkService {
     }
 
     @Transactional
-    public void deleteBookmark(Long id, User user) {
+    public void deleteBookmark(Long id, CustomUser2Member user) {
         final Member member = getMember(user);
         final Bookmark bookmark = bookmarkRepository.findById(id)
             .orElseThrow(() -> new BusinessException(BookmarkErrorCode.NOT_FOUND_BOOKMARK));
         bookmarkRepository.delete(bookmark);
     }
 
-    private Member getMember(User user) {
-        return memberRepository.findById(Long.parseLong(user.getName())) // TODO : User 수정 필요
+    private Member getMember(CustomUser2Member user) {
+        return memberRepository.findById(user.getMemberId())
             .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 

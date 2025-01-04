@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.programmers.signalbuddy.domain.bookmark.dto.BookmarkRequest;
 import org.programmers.signalbuddy.domain.bookmark.dto.BookmarkResponse;
 import org.programmers.signalbuddy.domain.bookmark.service.BookmarkService;
+import org.programmers.signalbuddy.global.annotation.CurrentUser;
+import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +48,7 @@ public class BookmarkController {
     @PostMapping
     @ApiResponse(responseCode = "201", description = "즐겨찾기 등록 성공")
     public ResponseEntity<BookmarkResponse> addBookmark(
-        @RequestBody @Validated BookmarkRequest createRequest, User user) {
+        @RequestBody @Validated BookmarkRequest createRequest, @CurrentUser CustomUser2Member user) {
         log.info("createRequest: {}", createRequest);
         final BookmarkResponse created = bookmarkService.createBookmark(createRequest, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -56,7 +58,7 @@ public class BookmarkController {
     @PatchMapping("{id}")
     @ApiResponse(responseCode = "200", description = "즐겨찾기 수정 성공")
     public ResponseEntity<BookmarkResponse> updateBookmark(
-        @RequestBody @Validated BookmarkRequest updateRequest, @PathVariable Long id, User user) {
+        @RequestBody @Validated BookmarkRequest updateRequest, @PathVariable Long id, @CurrentUser CustomUser2Member user) {
         log.info("updateRequest: {}", updateRequest);
         final BookmarkResponse updated = bookmarkService.updateBookmark(updateRequest, id, user);
         return ResponseEntity.ok().body(updated);
@@ -65,8 +67,7 @@ public class BookmarkController {
     @Operation(summary = "즐겨찾기 삭제", description = "즐겨찾기 삭제 기능")
     @DeleteMapping("{id}")
     @ApiResponse(responseCode = "200", description = "즐겨찾기 삭제 성공")
-    public ResponseEntity<Void> deleteBookmark(@PathVariable Long id, User user) {
-        user.setName("1");
+    public ResponseEntity<Void> deleteBookmark(@PathVariable Long id, @CurrentUser CustomUser2Member user) {
         log.info("delete bookmark id: {}", id);
         bookmarkService.deleteBookmark(id, user);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

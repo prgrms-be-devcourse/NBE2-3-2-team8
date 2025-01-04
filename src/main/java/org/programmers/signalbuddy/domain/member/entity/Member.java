@@ -18,6 +18,7 @@ import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.global.dto.CustomUser2Member;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity(name = "members")
 @Getter
@@ -49,12 +50,22 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MemberStatus memberStatus;
 
-    public void updateMember(MemberUpdateRequest request) {
+    // 관리자인지 확인
+    public static boolean isAdmin(Member member) {
+        return MemberRole.ADMIN.equals(member.getRole());
+    }
+
+    // 요청자와 작성자가 다른 경우
+    public static boolean isNotSameMember(CustomUser2Member user, Member member) {
+        return !user.getMemberId().equals(member.getMemberId());
+    }
+
+    public void updateMember(MemberUpdateRequest request, String encodedPassword) {
         if (request.getEmail() != null) {
             this.email = request.getEmail();
         }
         if (request.getPassword() != null) {
-            this.password = request.getPassword(); // TODO: 암호화 적용
+            this.password = encodedPassword;
         }
         if (request.getNickname() != null) {
             this.nickname = request.getNickname();
@@ -66,19 +77,5 @@ public class Member extends BaseTimeEntity {
 
     public void softDelete() {
         this.memberStatus = MemberStatus.WITHDRAWAL;
-    }
-
-    // 관리자인지 확인
-    public static boolean isAdmin(Member member) {
-        return MemberRole.ADMIN.equals(member.getRole());
-    }
-
-    // 요청자와 작성자가 다른 경우
-    public static boolean isNotSameMember(CustomUser2Member user, Member member) {
-        return !user.getMemberId().equals(member.getMemberId());
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

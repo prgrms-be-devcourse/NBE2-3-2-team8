@@ -16,6 +16,7 @@ import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.mapper.MemberMapper;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
 import org.programmers.signalbuddy.global.exception.BusinessException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -28,9 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final String FILE_PATH = "images/"; // TODO : 프로퍼티로 이동
-
     private final MemberRepository memberRepository;
+    @Value("${file-path}")
+    private String filePath;
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     public MemberResponse getMember(Long id) {
@@ -44,14 +45,15 @@ public class MemberService {
     public MemberResponse updateMember(Long id, MemberUpdateRequest memberUpdateRequest) {
         final Member member = memberRepository.findById(id)
             .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
-        member.updateMember(memberUpdateRequest);
+        final String encodedPassword = bCryptPasswordEncoder.encode(
+            memberUpdateRequest.getPassword());
+        member.updateMember(memberUpdateRequest, encodedPassword);
         log.info("Member updated: {}", member);
         return MemberMapper.INSTANCE.toDto(member);
     }
 
     @Transactional
     public MemberResponse deleteMember(Long id) {
-        // TODO : id 검증 로직 추가
         final Member member = memberRepository.findById(id)
             .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
         member.softDelete();
@@ -79,7 +81,7 @@ public class MemberService {
 
     public Resource getProfileImage(String filename) {
         try {
-            final Path path = Paths.get(FILE_PATH).resolve(filename);
+            final Path path = Paths.get(filePath).resolve(filename);
             if (Files.notExists(path)) {
                 return new ClassPathResource("static/images/member/profile-icon.png");
                 // 프로필 이미지가 없을 경우 기본 이미지

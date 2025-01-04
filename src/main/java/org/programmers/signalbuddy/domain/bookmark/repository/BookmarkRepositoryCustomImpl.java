@@ -37,12 +37,12 @@ public class BookmarkRepositoryCustomImpl implements BookmarkRepositoryCustom {
     public Page<BookmarkResponse> findPagedByMember(Pageable pageable, Long memberId) {
         final List<BookmarkResponse> responses = queryFactory.select(pageBookmarkDto).from(bookmark)
             .join(member)
-            .on(bookmark.member.eq(member).and(member.memberId.eq(1L))) // TODO : 1L -> memberId
+            .on(bookmark.member.eq(member).and(member.memberId.eq(memberId)))
             .offset(pageable.getOffset()).limit(pageable.getPageSize())
             .orderBy(new OrderSpecifier<>(Order.ASC, bookmark.bookmarkId)).fetch();
 
         final Long count = queryFactory.select(bookmark.count()).from(bookmark).join(member)
-            .on(member.memberId.eq(1L)) // TODO : 1L -> memberId
+            .on(bookmark.member.eq(member).and(member.memberId.eq(memberId)))
             .fetchOne();
         return new PageImpl<>(responses, pageable, count != null ? count : 0);
     }
