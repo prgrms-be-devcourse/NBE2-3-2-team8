@@ -20,27 +20,30 @@
       <h2 class="font-title text-neutral-950 text-xl mb-8">계정 관리</h2>
       <div class="flex items-center justify-center mb-6">
         <img alt="Profile" class="rounded-full profile-img"
-             th:src="${'/api/members/files/' + member.profileImageUrl}">
+             th:src="${'/api/members/files/' + user.profileImageUrl}">
       </div>
       <form class="space-y-4">
         <div class="input-box">
           <div class="flex flex-col input-value">
-            <label class="text-neutral-600 text-sm mb-1">이메일</label>
-            <input class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
-                   id="email" readonly th:value="${member.email}" type="text"/>
+            <label class="text-neutral-600 text-sm mb-1">이메일
+              <input
+                  class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
+                  id="email" readonly th:value="${user.email}" type="text"/>
+            </label>
           </div>
           <div class="flex flex-col input-value">
-            <label class="text-neutral-600 text-sm mb-1">닉네임</label>
-            <input class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
-                   id="nickname" readonly th:value="${member.nickname}" type="text"/>
+            <label class="text-neutral-600 text-sm mb-1">닉네임
+              <input
+                  class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
+                  id="nickname" readonly th:value="${user.nickname}" type="text"/>
+            </label>
           </div>
           <div class="mt-6 flex justify-center space-x-4">
             <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50 cancel"
-                    onclick="deleteBtn(this)" th:attr="data-id=${member.memberId}">탈퇴
+                    onclick="deleteBtn(this)" th:attr="data-id=${user.memberId}">탈퇴
             </button>
-            <!-- TODO : Path Variable 수정 필요 -->
             <a class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50"
-               href="/members/1/edit">수정</a>
+               th:href="@{/members/edit}">수정</a>
           </div>
         </div>
       </form>
@@ -56,22 +59,29 @@
       return;
     }
     fetch(`/api/members/${id}`, {
-      method: "delete",
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       }
     })
-    .then(response => {
-      return response.json();
-    })
     .then(data => {
       console.log('회원 탈퇴 성공:', data);
       alert("탈퇴 성공했습니다.")
-      window.location.href = '/'
+      sendLogoutRequest();
     })
     .catch(error => {
       console.error('회원 탈퇴 실패:', error);
     });
+  }
+  const sendLogoutRequest = () => {
+    // HTML Form을 동적으로 생성해 POST 요청으로 로그아웃 처리
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/logout"; // Spring Security의 기본 로그아웃 경로
+
+    form.appendChild(csrfInput);
+    document.body.appendChild(form);
+    form.submit();
   }
 </script>
 </body>

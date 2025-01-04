@@ -49,10 +49,10 @@
 
         <div class="border-t pt-4 text-center text-neutral-500">
           <!-- 페이지 번호 -->
-          <span th:each="i : ${#numbers.sequence(1, pagination.totalPages)}">
-          <!-- TODO : Path Variable 수정 필요 -->
+          <span th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
+                th:if="${pagination.totalPages > 0}">
             <a th:classappend="${pagination.number + 1 == i ? 'active' : ''}"
-               th:href="@{/members/1/feedbacks(page=${i - 1}, size=${pagination.size})}"
+               th:href="@{/members/{id}/feedbacks(page=${i - 1}, size=${pagination.size}, id=${user.memberId})}"
                th:text="${i}"></a>
           </span>
         </div>

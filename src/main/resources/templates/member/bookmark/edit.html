@@ -44,9 +44,8 @@
           </div>
         </div>
         <div class="mt-6 flex justify-center space-x-4">
-          <!-- TODO : Path Variable 수정 필요 -->
           <a class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50 cancel"
-             th:href="@{/members/{memberId}/bookmarks(memberId=${1})}">취소</a>
+             th:href="@{/members/{memberId}/bookmarks(memberId=${user.memberId})}">취소</a>
           <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50">저장</button>
         </div>
       </div>
@@ -69,7 +68,7 @@
       },
     })
     .then(response => {
-      window.location.href = '/members/1/bookmarks'
+      window.location.href = `/members/${id}/bookmarks`
     })
     .catch(error => {
       console.error('삭제 실패:', error);
