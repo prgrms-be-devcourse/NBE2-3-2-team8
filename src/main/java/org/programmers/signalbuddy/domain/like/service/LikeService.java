@@ -2,16 +2,13 @@ package org.programmers.signalbuddy.domain.like.service;
 
 import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
-import org.programmers.signalbuddy.domain.feedback.exception.FeedbackErrorCode;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
 import org.programmers.signalbuddy.domain.like.dto.LikeExistResponse;
 import org.programmers.signalbuddy.domain.like.entity.Like;
 import org.programmers.signalbuddy.domain.like.repository.LikeRepository;
 import org.programmers.signalbuddy.domain.member.entity.Member;
-import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
 import org.programmers.signalbuddy.global.dto.CustomUser2Member;
-import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +23,8 @@ public class LikeService {
 
     @Transactional
     public void addLike(Long feedbackId, CustomUser2Member user) {
-        Feedback feedback = feedbackRepository.findById(feedbackId)
-            .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
-        Member member = memberRepository.findById(user.getMemberId())
-            .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
+        Feedback feedback = feedbackRepository.findByIdOrThrow(feedbackId);
+        Member member = memberRepository.findByIdOrThrow(user.getMemberId());
 
         likeRepository.save(Like.create(member, feedback));
         feedback.increaseLike();
@@ -42,10 +37,8 @@ public class LikeService {
 
     @Transactional
     public void deleteLike(Long feedbackId, CustomUser2Member user) {
-        Feedback feedback = feedbackRepository.findById(feedbackId)
-            .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
-        Member member = memberRepository.findById(user.getMemberId())
-            .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
+        Feedback feedback = feedbackRepository.findByIdOrThrow(feedbackId);
+        Member member = memberRepository.findByIdOrThrow(user.getMemberId());
 
         likeRepository.deleteByMemberAndFeedback(member, feedback);
         feedback.decreaseLike();
