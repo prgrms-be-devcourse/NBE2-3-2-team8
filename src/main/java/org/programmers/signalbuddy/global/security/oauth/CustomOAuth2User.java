@@ -41,7 +41,7 @@ public class CustomOAuth2User implements OAuth2User, Serializable {
         authorities.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return role.toString();
+                return "ROLE_" + role.name();
             }
         });
 
