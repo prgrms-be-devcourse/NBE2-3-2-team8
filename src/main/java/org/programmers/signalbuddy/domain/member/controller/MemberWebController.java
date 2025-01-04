@@ -6,8 +6,6 @@ import org.programmers.signalbuddy.domain.bookmark.dto.BookmarkResponse;
 import org.programmers.signalbuddy.domain.bookmark.service.BookmarkService;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.feedback.service.FeedbackService;
-import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
-import org.programmers.signalbuddy.domain.member.service.MemberService;
 import org.programmers.signalbuddy.global.annotation.CurrentUser;
 import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.springframework.data.domain.Page;
@@ -26,7 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
 @RequiredArgsConstructor
 public class MemberWebController {
 
-    private final MemberService memberService;
     private final BookmarkService bookmarkService;
     private final FeedbackService feedbackService;
 
@@ -35,21 +32,15 @@ public class MemberWebController {
         return user;
     }
 
-    @GetMapping("{id}")
-    public ModelAndView getMemberView(ModelAndView mv, @PathVariable Long id) {
+    @GetMapping
+    public ModelAndView getMemberView(ModelAndView mv) {
         mv.setViewName("member/info");
-        final MemberResponse member = memberService.getMember(id);
-        mv.addObject("member", member);
-        mv.addObject("memberId", id);
         return mv;
     }
 
-    @GetMapping("{id}/edit")
-    public ModelAndView editMemberView(ModelAndView mv, @PathVariable Long id) {
+    @GetMapping("edit")
+    public ModelAndView editMemberView(ModelAndView mv) {
         mv.setViewName("member/edit");
-        final MemberResponse member = memberService.getMember(id);
-        mv.addObject("member", member);
-        mv.addObject("memberId", id);
         return mv;
     }
 
@@ -65,7 +56,6 @@ public class MemberWebController {
         final Page<BookmarkResponse> pagedBookmarks = bookmarkService.findPagedBookmarks(pageable,
             id);
         mv.addObject("pagination", pagedBookmarks);
-        mv.addObject("memberId", id);
         mv.setViewName("/member/bookmark/list");
         return mv;
     }
@@ -76,7 +66,6 @@ public class MemberWebController {
         final Page<FeedbackResponse> pagedFeedbacks = feedbackService.findPagedFeedbacksByMember(id,
             pageable);
         mv.addObject("pagination", pagedFeedbacks);
-        mv.addObject("memberId", id);
         mv.setViewName("member/feedback/list");
         return mv;
     }
