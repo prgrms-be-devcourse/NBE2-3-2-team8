@@ -60,8 +60,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .role(MemberRole.USER)
                     .memberStatus(MemberStatus.ACTIVITY)
                     .build();
-                memberRepository.save(newMember);
-                return newMember;
+                return memberRepository.save(newMember);
             });
 
         // 이미 소셜이 저장되어 있는 경우, 중복 저장하지 않음.
