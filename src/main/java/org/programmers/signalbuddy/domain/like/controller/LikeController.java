@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "좋아요 API")
 @RestController
-@RequestMapping("/api/likes")
+@RequestMapping("/api/feedbacks")
 @RequiredArgsConstructor
 public class LikeController {
 
     private final LikeService likeService;
 
     @Operation(summary = "좋아요 추가")
-    @PostMapping("/{feedbackId}")
+    @PostMapping("/{feedbackId}/like")
     public ResponseEntity<Void> addLike(@PathVariable("feedbackId") Long feedbackId,
         @CurrentUser CustomUser2Member user) {
         likeService.addLike(feedbackId, user);
@@ -33,14 +33,14 @@ public class LikeController {
     }
 
     @Operation(summary = "좋아요 유무 확인")
-    @GetMapping("/exist/{feedbackId}")
+    @GetMapping("/{feedbackId}/exist")
     public ResponseEntity<LikeExistResponse> existsLike(@PathVariable("feedbackId") Long feedbackId,
         @CurrentUser CustomUser2Member user) {
         return ResponseEntity.ok(likeService.existsLike(feedbackId, user));
     }
 
     @Operation(summary = "좋아요 취소")
-    @DeleteMapping("/{feedbackId}")
+    @DeleteMapping("/{feedbackId}/like")
     public ResponseEntity<Void> deleteLike(@PathVariable("feedbackId") Long feedbackId,
         @CurrentUser CustomUser2Member user) {
         likeService.deleteLike(feedbackId, user);
