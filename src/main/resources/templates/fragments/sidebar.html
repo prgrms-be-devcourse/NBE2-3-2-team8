@@ -6,18 +6,15 @@
   <ul class="space-y-4">
     <li class="flex items-center space-x-2 text-neutral-600 text-sm">
       <span class="material-symbols-outlined">person</span>
-      <!-- TODO : Path Variable 수정 필요 -->
-      <a href="/members/1">계정 관리</a>
+      <a th:href="@{/members}">계정 관리</a>
     </li>
     <li class="flex items-center space-x-2 text-neutral-600 text-sm">
       <span class="material-symbols-outlined">flag</span>
-      <!-- TODO : Path Variable 수정 필요 -->
-      <a href="/members/1/bookmarks">자주가는 곳</a>
+      <a th:href="@{/members/{id}/bookmarks(id=${user.memberId})}">자주가는 곳</a>
     </li>
     <li class="flex items-center space-x-2 text-neutral-600 text-sm">
       <span class="material-symbols-outlined">edit</span>
-      <!-- TODO : Path Variable 수정 필요 -->
-      <a href="/members/1/feedbacks">작성한 글</a>
+      <a th:href="@{/members/{id}/feedbacks(id=${user.memberId})}">작성한 글</a>
     </li>
   </ul>
 </aside>

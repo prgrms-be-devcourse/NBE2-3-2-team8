@@ -27,6 +27,6 @@ public class MemberUpdateRequest {
     @Schema(description = "닉네임", requiredMode = RequiredMode.NOT_REQUIRED, defaultValue = "Nickname")
     private String nickname;
 
-    @Schema(description = "프로필 사진", requiredMode = RequiredMode.NOT_REQUIRED, defaultValue = "/images/test.png")
+    @Schema(description = "프로필 사진", requiredMode = RequiredMode.NOT_REQUIRED, defaultValue = "test.png")
     private String profileImageUrl;
 }

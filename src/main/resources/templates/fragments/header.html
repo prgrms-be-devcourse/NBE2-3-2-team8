@@ -8,22 +8,31 @@
 </head>
 <header th:fragment="headerFragment">
   <div class="flex items-center justify-between px-6 py-4 bg-neutral-200">
-    <a class="logo-box" href="#">
+    <a class="logo-box" href="/">
       <img alt="" class="logo" src="/images/logo.png">
       <div class="font-title text-neutral-950 text-lg">Signal Buddy</div>
     </a>
     <nav class="flex items-center space-x-4">
       <!--   회원 헤더   -->
-      <!--      <a class="text-neutral-600 text-sm" href="#">피드백</a>-->
-      <!--      <a class="text-neutral-600 text-sm" href="#">마이 페이지</a>-->
-      <!--      <span class="border-l border-neutral-300 h-4 mx-2"></span>-->
-      <!--      <button class="px-4 py-1 rounded-md bg-neutral-950 text-neutral-50 text-sm">로그아웃</button>-->
+      <th:block th:if="${user.memberId != null}">
+        <a class="text-neutral-600 text-sm" href="/feedbacks">피드백</a>
+        <a class="text-neutral-600 text-sm" th:href="@{/members}">마이 페이지</a>
+        <span class="border-l border-neutral-300 h-4 mx-2"></span>
+        <form action="/logout" method="post">
+          <button class="px-4 py-1 rounded-md bg-neutral-950 text-neutral-50 text-sm" type="submit">
+            로그아웃
+          </button>
+        </form>
+      </th:block>
       <!--   비회원 헤더   -->
-      <a class="text-neutral-600 text-sm" href="#">피드백</a>
-      <span class="border-l border-neutral-300 h-4 mx-2"></span>
-      <button class="px-4 py-1 rounded-md bg-neutral-950 text-neutral-50 text-sm" href="#">회원가입
-      </button>
-      <button class="px-4 py-1 rounded-md bg-neutral-950 text-neutral-50 text-sm">로그인</button>
+      <th:block th:unless="${user.memberId != null}">
+        <a class="text-neutral-600 text-sm" href="/feedbacks">피드백</a>
+        <span class="border-l border-neutral-300 h-4 mx-2"></span>
+        <button class="px-4 py-1 rounded-md bg-neutral-950 text-neutral-50 text-sm" href="#">회원가입
+        </button>
+        <a class="px-4 py-1 rounded-md bg-neutral-950 text-neutral-50 text-sm"
+           href="/loginform">로그인</a>
+      </th:block>
     </nav>
   </div>
 </header>

@@ -3,12 +3,11 @@ package org.programmers.signalbuddy.domain.bookmark.controller;
 import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.bookmark.dto.BookmarkResponse;
 import org.programmers.signalbuddy.domain.bookmark.service.BookmarkService;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.programmers.signalbuddy.global.annotation.CurrentUser;
+import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,6 +18,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class BookmarkWebController {
 
     private final BookmarkService bookmarkService;
+
+    @ModelAttribute("user")
+    public CustomUser2Member currentUser(@CurrentUser CustomUser2Member user) {
+        return user;
+    }
 
     @GetMapping("{id}")
     public ModelAndView getBookmark(@PathVariable Long id, ModelAndView mv) {
