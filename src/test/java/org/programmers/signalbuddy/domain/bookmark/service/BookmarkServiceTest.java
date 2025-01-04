@@ -13,15 +13,14 @@ import org.programmers.signalbuddy.domain.bookmark.dto.BookmarkRequest;
 import org.programmers.signalbuddy.domain.bookmark.dto.BookmarkResponse;
 import org.programmers.signalbuddy.domain.bookmark.entity.Bookmark;
 import org.programmers.signalbuddy.domain.bookmark.repository.BookmarkRepository;
-import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
 import org.programmers.signalbuddy.global.dto.CustomUser2Member;
-import org.programmers.signalbuddy.global.security.CustomUserDetails;
+import org.programmers.signalbuddy.global.security.basic.CustomUserDetails;
 import org.programmers.signalbuddy.global.support.ServiceTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -44,8 +43,8 @@ class BookmarkServiceTest extends ServiceTest {
 
     @BeforeEach
     void setup() {
-        member = Member.builder().email("bookmark@bookmark.com").password("123456").role(MemberRole.USER)
-            .nickname("bookmarkTest").memberStatus(MemberStatus.ACTIVITY)
+        member = Member.builder().email("bookmark@bookmark.com").password("123456")
+            .role(MemberRole.USER).nickname("bookmarkTest").memberStatus(MemberStatus.ACTIVITY)
             .profileImageUrl("https://book-test-image.com/test-123131").build();
         member = memberRepository.save(member);
 
@@ -60,8 +59,8 @@ class BookmarkServiceTest extends ServiceTest {
     @DisplayName("즐겨찾기 등록 테스트")
     void createBookmark() {
         CustomUser2Member user = new CustomUser2Member(
-            new CustomUserDetails(member.getMemberId(), "", "",
-                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
+            new CustomUserDetails(member.getMemberId(), "", "", "", "", MemberRole.USER,
+                MemberStatus.ACTIVITY));
 
         final BookmarkRequest request = BookmarkRequest.builder().lat(37.12345).lng(127.12345)
             .address("test").build();
@@ -79,8 +78,8 @@ class BookmarkServiceTest extends ServiceTest {
     @DisplayName("즐겨찾기 수정 테스트")
     void updateBookmark() {
         CustomUser2Member user = new CustomUser2Member(
-            new CustomUserDetails(member.getMemberId(), "", "",
-                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
+            new CustomUserDetails(member.getMemberId(), "", "", "", "", MemberRole.USER,
+                MemberStatus.ACTIVITY));
 
         final BookmarkRequest request = BookmarkRequest.builder().lat(37.12345).lng(127.12345)
             .address("test").build();
@@ -101,8 +100,8 @@ class BookmarkServiceTest extends ServiceTest {
     @DisplayName("즐겨찾기 삭제 테스트")
     void deleteBookmark() {
         CustomUser2Member user = new CustomUser2Member(
-            new CustomUserDetails(member.getMemberId(), "", "",
-                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
+            new CustomUserDetails(member.getMemberId(), "", "", "", "", MemberRole.USER,
+                MemberStatus.ACTIVITY));
 
         bookmarkService.deleteBookmark(bookmark.getBookmarkId(), user);
         final Optional<Bookmark> found = bookmarkRepository.findById(bookmark.getBookmarkId());
