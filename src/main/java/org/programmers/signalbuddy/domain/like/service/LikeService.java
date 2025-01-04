@@ -36,12 +36,7 @@ public class LikeService {
     }
 
     public LikeExistResponse existsLike(Long feedbackId, CustomUser2Member user) {
-        Feedback feedback = feedbackRepository.findById(feedbackId)
-            .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
-        Member member = memberRepository.findById(user.getMemberId())
-            .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
-
-        boolean isExisted = likeRepository.existsByMemberAndFeedback(member, feedback);
+        boolean isExisted = likeRepository.existsByMemberAndFeedback(user.getMemberId(), feedbackId);
         return new LikeExistResponse(isExisted);
     }
 
