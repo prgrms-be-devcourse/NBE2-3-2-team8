@@ -19,7 +19,7 @@ import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
 import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.exception.BusinessException;
-import org.programmers.signalbuddy.global.security.CustomUserDetails;
+import org.programmers.signalbuddy.global.security.basic.CustomUserDetails;
 import org.programmers.signalbuddy.global.support.ServiceTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -1,7 +1,10 @@
 package org.programmers.signalbuddy.global.config;
 
+import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.global.security.filter.UserAuthenticationFilter;
 import org.programmers.signalbuddy.global.security.handler.CustomAuthenticationSuccessHandler;
+
+import org.programmers.signalbuddy.global.security.oauth.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -26,6 +30,8 @@ public class SecurityConfig {
     CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
         return new CustomAuthenticationSuccessHandler();
     }
+
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -43,7 +49,8 @@ public class SecurityConfig {
                     "/images/**",
                     "/webjars/**").permitAll()
                 // 로그인
-                .requestMatchers("/members/login", "admins/login", "/api/members/join", "/api/admins/join").permitAll()
+                .requestMatchers("/members/login", "admins/login", "/api/members/join",
+                    "/api/admins/join").permitAll()
                 // 북마크
                 .requestMatchers("/api/bookmarks/**", "/bookmarks/**").hasRole("USER")
                 // 댓글
@@ -58,22 +65,29 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             );
 
-        // 로그인 관련 설정
+        // 기본 로그인 관련 설정
         http
             .formLogin((auth) -> auth
                 .loginPage("/members/login")
                 .loginProcessingUrl("/login")
-                // 메인으로 이동하도록 설정
-                //.defaultSuccessUrl("/home", true)
                 .successHandler(customAuthenticationSuccessHandler())
                 .permitAll()
             );
+
+        // 소셜 로그인 관련 설정
+        http
+            .oauth2Login((oauth) -> oauth
+                .loginPage("/login")
+                .userInfoEndpoint(userInfoEndpointConfig ->
+                    userInfoEndpointConfig.userService(customOAuth2UserService))
+                .successHandler(customAuthenticationSuccessHandler())
+                .permitAll());
 
         // 로그아웃 관련 설정
         http
             .logout((auth) -> auth
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl("/members/login")
                 .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true));
