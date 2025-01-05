@@ -8,6 +8,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.admin.dto.WithdrawalMemberResponse;
+import org.programmers.signalbuddy.domain.member.entity.Member;
+import org.programmers.signalbuddy.domain.member.entity.QMember;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,8 +25,28 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository {
         WithdrawalMemberResponse.class, member.memberId, member.email, member.nickname, member.profileImageUrl, member.role, member.memberStatus,
         member.createdAt, member.updatedAt);
 
+    private static final QMember qmember= QMember.member;
+
     private final JPAQueryFactory jpaQueryFactory;
 
+    @Override
+    public Page<Member> findAllMembers(Pageable pageable) {
+        List<Member> members = jpaQueryFactory
+            .select(qmember)
+            .from(member)
+            .where(member.role.eq(MemberRole.USER))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        long total = jpaQueryFactory
+            .select(qmember)
+            .from(member)
+            .where(member.role.eq(MemberRole.USER))
+            .fetchCount();
+
+        return new PageImpl<>(members, pageable, total);
+    }
 
     @Override
     public Page<WithdrawalMemberResponse> findAllWithdrawMembers(Pageable pageable) {
