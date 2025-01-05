@@ -1,8 +1,10 @@
 
 let marker = null;// 마커 변수
 let abortController = new AbortController(); // API 요청 중 signal로 상태 변경
+
 let startMarker= null;
 let endMarker= null;
+
 let input = null; // 데이터
 let routeLayer= null;
 
@@ -10,6 +12,9 @@ let routeLayer= null;
 let isFetchingData = false;
 let marker_id;
 let minTime;
+
+let startLatLng;
+let endLatLng;
 
 const markers = {};
 
@@ -23,18 +28,18 @@ var map = new Tmapv2.Map("map", {
 });
 
 map.addListener("click", function (event) {
-    latLng = null; // 값 초기화
-    latLng = event.latLng; // 클릭한 위치의 위도, 경도 정보
+    startLatLng = null; // 값 초기화
+    startLatLng = event.latLng; // 클릭한 위치의 위도, 경도 정보
 
-    console.log(latLng);
+    console.log(startLatLng);
 
-    if (startMarker && latLng) {
+    if (startMarker && startLatLng) {
         startMarker.setMap(null); // 기존 마커 제거
     }
 
-    if(latLng){
+    if(startLatLng){
         startMarker = new Tmapv2.Marker({
-            position: latLng,
+            position: startLatLng,
             map: map
         });
     }
@@ -219,7 +224,19 @@ async function searchAddress(address, signal) {
 //이벤트 핸들러 변수 저장
 const handleClick = (poi) => {
     document.getElementById("searchInput").value = poi.name; // 클릭 시 입력 필드에 채우기
-    findRoute(poi.frontLat, poi.frontLon); // 경로 찾기
+    document.getElementById("suggestions").style.visibility = "hidden";// 추천어 목록 숨김
+
+    if(endMarker&&poi){
+        endMarker.setMap(null);
+    }
+
+    if(poi){
+        endLatLng = new Tmapv2.LatLng(poi.frontLat, poi.frontLon);
+        endMarker = new Tmapv2.Marker({
+            position: endLatLng,
+            map: map
+        });
+    }
 };
 
 function updateSuggestions(pois) {
@@ -251,14 +268,10 @@ function updateSuggestions(pois) {
 
 // 마커를 제거하는 함수
 function clearMarker() {
-
-    if (startMarker) {
-        startMarker.setMap(null); // 지도에서 마커 제거
-        startMarker = null; // 마커 변수 초기화
+    if( endMarker ){
         endMarker.setMap(null);
         endMarker = null;
     }
-
 }
 
 document.getElementById("searchInput").addEventListener("input", function () {
@@ -269,20 +282,32 @@ document.getElementById("searchInput").addEventListener("input", function () {
     }
 });
 
+
+document.getElementById("route").addEventListener("click", function (){
+    console.log("click route");
+    findRoute();
+}); // 경로 찾기
+
 // 경로 검색
-async function findRoute(endLat,endLon) {
+async function findRoute() {
 
-    console.log(latLng);
+    if(!startLatLng._lat || !startLatLng._lng){
+        alert("출발지를 선택하세요!");
+        return;
+    }
 
-    let startLat = latLng._lat;
-    let startLon = latLng._lng;
-
-    document.getElementById("suggestions").style.visibility = "hidden";// 추천어 목록 숨김
-
-    if (!endLat || !endLon) {
+    if (!endLatLng._lat || !endLatLng._lng) {
         alert("도착지를 선택하세요!");
         return;
     }
+
+    let startLat = startLatLng._lat;
+    let startLon = startLatLng._lng;
+    let endLat = endLatLng._lat;
+    let endLon = endLatLng._lng;
+
+    console.log(startLon);
+    console.log(endLon);
 
     const url = `https://apis.openapi.sk.com/tmap/routes/pedestrian`;
     const headers = {
@@ -317,7 +342,7 @@ async function findRoute(endLat,endLon) {
 
         console.log(routeData);
 
-        drawRoute(routeData, startLat, startLon, endLat, endLon);
+        drawRoute(routeData);
     } catch (error) {
         console.error("길찾기 중 오류:", error);
     }
@@ -326,13 +351,14 @@ async function findRoute(endLat,endLon) {
 function convertToWGS84(x, y) {
     var lon = (x / 20037508.34) * 180;
     var lat = (y / 20037508.34) * 180;
-    lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
+    lat = 180 / Math.PI * (2 * Math.atan( Math.exp (lat * Math.PI / 180)) - Math.PI / 2);
 
     return { lat: lat, lon: lon };
 } // 더러운거 보지 마세요 -> 좌표계 변경
 
+
 // 경로 그리기
-function drawRoute(routeData, startLat, startLon, endLat, endLon) {
+function drawRoute(routeData) {
 
     const path = routeData
         .filter(item => item.geometry.type === "LineString")
@@ -357,20 +383,6 @@ function drawRoute(routeData, startLat, startLon, endLat, endLon) {
         strokeColor: "#ff0000",
         strokeWeight: 6,
         map: map
-    });
-
-    addMarkers(startLat, startLon, endLat, endLon);
-}
-
-// 마커 추가
-function addMarkers(startLat, startLon, endLat, endLon) {
-
-    if (endMarker) endMarker.setMap(null);
-
-    endMarker = new Tmapv2.Marker({
-        position: new Tmapv2.LatLng(endLat, endLon),
-        map,
-        title: "도착지"
     });
 
 }
