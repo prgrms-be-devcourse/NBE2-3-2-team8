@@ -579,3 +579,8 @@ video {
   font-weight: bold !important;
   color: red !important;
 }
+
+.px-3 {
+  padding-left: 12px;
+  padding-right: 12px;
+}

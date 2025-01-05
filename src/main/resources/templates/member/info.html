@@ -40,49 +40,37 @@
           </div>
           <div class="mt-6 flex justify-center space-x-4">
             <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50 cancel"
-                    onclick="deleteBtn(this)" th:attr="data-id=${user.memberId}">탈퇴
+                    onclick="deleteBtn(this)" th:attr="data-id=${user.memberId}" type="button">탈퇴
             </button>
-            <a class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50"
-               th:href="@{/members/edit}">수정</a>
+            <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50"
+                    onclick="modalOpen()" type="button">수정
+            </button>
           </div>
         </div>
       </form>
     </section>
   </main>
 </div>
-<script>
-  const deleteBtn = (btn) => {
-    const id = btn.dataset.id;
-    const flag = confirm("탈퇴 하시겠습니까?");
-
-    if (!flag) {
-      return;
-    }
-    fetch(`/api/members/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      }
-    })
-    .then(data => {
-      console.log('회원 탈퇴 성공:', data);
-      alert("탈퇴 성공했습니다.")
-      sendLogoutRequest();
-    })
-    .catch(error => {
-      console.error('회원 탈퇴 실패:', error);
-    });
-  }
-  const sendLogoutRequest = () => {
-    // HTML Form을 동적으로 생성해 POST 요청으로 로그아웃 처리
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = "/logout"; // Spring Security의 기본 로그아웃 경로
-
-    form.appendChild(csrfInput);
-    document.body.appendChild(form);
-    form.submit();
-  }
-</script>
+<div class="modal" id="passwordModal" th:style="${showModal} ? 'display: flex' : 'display: none'">
+  <form action="/members/verify-password" class="modal-content" method="post">
+    <div style="color: red;" th:if="${failed}">
+      [[${failed}]]
+    </div>
+    <div class="modal-input">
+      <label class="text-neutral-600 text-sm mb-1" for="password" style="width: 35%;">비밀번호</label>
+      <input class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
+             id="password" name="password" required type="password"/>
+    </div>
+    <div class="modal-button">
+      <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50 cancel"
+              id="cancelPassword" onclick="modalClose()" type="button">취소
+      </button>
+      <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50" id="confirmPassword"
+              type="submit">확인
+      </button>
+    </div>
+  </form>
+</div>
+<script src="/js/member/member.js"></script>
 </body>
 </html>

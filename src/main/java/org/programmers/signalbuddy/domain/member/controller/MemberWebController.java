@@ -1,5 +1,7 @@
 package org.programmers.signalbuddy.domain.member.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,8 @@ import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -103,6 +107,22 @@ public class MemberWebController {
                 mv.addObject("errorMessage", e.getMessage());
             }
             mv.setViewName("member/signup");
+        }
+        return mv;
+    }
+
+    @PostMapping("verify-password")
+    @Operation(summary = "현재 사용자의 비밀번호 검사", description = "회원정보 수정 시 비밀번호 확인 API")
+    @ApiResponse(responseCode = "200", description = "비밀번호 검사")
+    public ModelAndView verifyPassword(@RequestParam String password,
+        @CurrentUser CustomUser2Member user, ModelAndView mv) {
+        final boolean verified = memberService.verifyPassword(password, user);
+        if (verified) {
+            mv.setViewName("redirect:/members/edit");
+        } else {
+            mv.setViewName("member/info");
+            mv.addObject("showModal", true); // 모달을 열도록 상태 추가
+            mv.addObject("failed", "비밀번호가 일치하지 않습니다.");
         }
         return mv;
     }
