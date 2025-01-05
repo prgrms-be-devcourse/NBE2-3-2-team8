@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
@@ -52,7 +53,11 @@ public class AdminWebController {
     }
 
     @GetMapping("/login")
-    public ModelAndView loginForm(ModelAndView mv) {
+    public ModelAndView loginForm(@RequestParam(required = false) String error, ModelAndView mv) {
+        if(error != null) {
+            mv.addObject("errorMessage", "아이디 또는 비밀번호가 잘못되었습니다.");
+        }
+
         mv.setViewName("admin/loginform");
         return mv;
     }

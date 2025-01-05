@@ -6,6 +6,8 @@
   <link href="/css/admin/login.css" rel="stylesheet">
 </head>
 <body>
+<div th:if="${errorMessage}" id="error-message" th:text="${errorMessage}"
+     style="display: none;"></div>
 <div class="signup-container">
   <form action="/login" method="post">
     <h2>Signal Buddy Admin</h2>
@@ -25,6 +27,13 @@
 
 </div>
 </div>
-
+<script>
+  window.onload = function () {
+    const errorMessageElement = document.getElementById('error-message');
+    if (errorMessageElement && errorMessageElement.textContent.trim() !== '') {
+      alert(errorMessageElement.textContent);
+    }
+  }
+</script>
 </body>
 </html>
