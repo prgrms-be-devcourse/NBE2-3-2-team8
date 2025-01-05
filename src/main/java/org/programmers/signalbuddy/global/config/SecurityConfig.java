@@ -48,22 +48,22 @@ public class SecurityConfig {
                     "/js/**",
                     "/images/**",
                     "/webjars/**").permitAll()
-                // 로그인, 회원가입
-                .requestMatchers("/members/login", "admins/login", "/api/members/join",
-                    "/api/admins/join", "/members/signup").permitAll()
-                // 북마크
-                .requestMatchers("/api/bookmarks/**", "/bookmarks/**").hasRole("USER")
-                // 댓글
-                .requestMatchers(HttpMethod.GET, "/api/comments").permitAll()
-                // 교차로
-                .requestMatchers("/api/crossroads/save").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET,"/api/crossroads/**").permitAll()
-                // 피드백
-                .requestMatchers(HttpMethod.GET, "/api/feedbacks", "/feedbacks/**").permitAll()
-                // 회원
-                .requestMatchers("/api/admins/**", "/admins/members/**", "/api/members/files/**").hasRole("ADMIN")
-                .requestMatchers("/api/members/**", "/members/**").hasRole("USER")
-                .anyRequest().authenticated()
+                    // 로그인, 회원가입
+                    .requestMatchers("/members/login", "admins/login", "/api/members/join",
+                        "/api/admins/join", "/members/signup", "/api/members/files/**").permitAll()
+                    // 북마크
+                    .requestMatchers("/api/bookmarks/**", "/bookmarks/**").hasRole("USER")
+                    // 댓글
+                    .requestMatchers(HttpMethod.GET, "/api/comments").permitAll()
+                    // 교차로
+                    .requestMatchers("/api/crossroads/save").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET,"/api/crossroads/**").permitAll()
+                    // 피드백
+                    .requestMatchers(HttpMethod.GET, "/api/feedbacks", "/feedbacks/**").permitAll()
+                    // 회원
+                    .requestMatchers("/api/admins/**", "/admins/members/**").hasRole("ADMIN")
+                    .requestMatchers("/api/members/**", "/members/**").hasRole("USER")
+                    .anyRequest().authenticated()
             );
 
         // 기본 로그인 관련 설정

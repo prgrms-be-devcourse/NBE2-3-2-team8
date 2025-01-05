@@ -31,13 +31,13 @@
         <img alt="" class="logo" src="/images/logo.png">
         <div class="font-title text-neutral-950 text-lg">Signal Buddy</div>
       </a>
-      <nav class="flex items-center space-x-4"> <a href="#" class="text-neutral-50">Home</a>
+      <nav class="flex items-center space-x-4"> <a href="#" class="text-neutral-50" th:onclick="|location.href='@{/admins}'|">Home</a>
         <a href="#" class="text-neutral-50">Feedback</a>
-        <a href="#" class="text-neutral-50">User_Manage</a>
+        <a href="#" class="text-neutral-50" th:onclick="|location.href='@{/admins/members/list}'|">User_Manage</a>
         <span class="text-neutral-50">|</span>
-        <a href="#" class="text-neutral-50">Register</a>
-        <button class="h-[40px] w-[100px] bg-white text-black rounded-md">Log In</button>
-      </nav> </header> <main class="flex justify-center items-start pt-8">
+        <button class="h-[40px] w-[100px] bg-white text-black rounded-md">Logout</button>
+      </nav>
+    </header> <main class="flex justify-center items-start pt-8">
     <div class="w-[330px] bg-neutral-200 rounded-lg p-6">
       <h1 class="text-xl font-title text-neutral-900 mb-6">회원 정보 관리</h1>
       <div class="space-y-4">
