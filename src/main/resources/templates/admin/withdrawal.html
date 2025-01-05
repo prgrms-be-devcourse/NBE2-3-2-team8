@@ -1,62 +1,68 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>탈퇴 사용자 조회</title>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet" />
-  <link href="/css/common/common.css" rel="stylesheet" />
-  <link href="/css/common/header.css" rel="stylesheet" />
-  <link href="/css/admin/list.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.11/dist/tailwind.min.css" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>탈퇴 회원 관리</title>
   <style>
-    main {
-      margin-left: 250px;
-    }
-    table {
-      width: calc(100% - 250px);
-      max-width: 1000px;
-    }
+
   </style>
+  <link href="/css/common/header.css" rel="stylesheet">
+  <link href="/css/admin/withdrawal.css" rel="stylesheet">
 </head>
-<body class="bg-neutral-100">
+<body>
+<div id="webcrumbs">
+  <div class="w-max h-max bg-neutral-800 rounded-lg shadow-lg">
+    <header class="flex justify-between items-center px-6 py-4 bg-neutral-950 text-neutral-50">
+      <a class="logo-box" href="/">
+        <img alt="" class="logo" src="/images/logo.png">
+        <div class="font-title text-neutral-300 text-lg">Signal Buddy</div>
+      </a>
+      <nav class="flex gap-6"> <a href="#" class="text-neutral-300">Home</a>
+        <a href="#" class="text-neutral-300">Feedback</a>
+        <a href="#" class="text-neutral-300">User_Manage</a>
+        <a href="#" class="text-neutral-300">Register</a>
+        <button class="px-4 py-2 bg-white text-neutral-950 rounded-md">Log In</button>
+      </nav>
+    </header>
+    <div class="flex">
+      <aside class="w-[300px] h-max bg-neutral-200 p-6">
+        <h1 class="text-xl font-title mb-6">회원 정보 관리</h1>
+        <div class="flex flex-col gap-4">
+          <button class="px-4 py-2 bg-black text-primary-50 rounded-md hover:bg-neutral-100" th:onclick="|location.href='@{/admins/members/list}'|">회원 정보</button>
+          <button class="px-4 py-2 bg-black text-white rounded-md hover:bg-neutral-100" th:onclick="|location.href='@{/admins/members-withdrawal}'|">탈퇴 회원</button>
+        </div>
+      </aside>
+      <main class="flex-1 p-6">
+        <div class="overflow-x-auto">
+          <table class="w-full bg-neutral-50 rounded-lg text-neutral-950">
+            <thead>
+            <tr class="bg-neutral-200">
+              <th class="p-4 text-left">프로필</th>
+              <th class="p-4 text-left">이름</th>
+              <th class="p-4 text-left">요청 날짜</th>
+              <th class="p-4 text-left">삭제 요청</th>
+            </tr>
+            </thead>
 
-<div class="sidebar">
-  <p class="py-2 text-left text-lg font-title">회원 정보 관리</p>
-  <a th:onclick="|location.href='@{/admins/members/list}'|">회원 즐겨찾기 정보</a>
-  <a th:onclick="|location.href='@{/admins/members-withdrawal}'|">회원 삭제</a>
-</div>
+            <tbody>
+            <tr class="bg-neutral-100 text-sm hover:bg-neutral-200" th:each="member : ${members.content}"
+                th:onclick="|location.href='@{/admins/members-detail/{id}(id=${member.memberId})}'|">
+              <td class="p-2">
+                <img src="https://tools-api.webcrumbs.org/image-placeholder/30/30/avatars/1" alt="Avatar"
+                     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-left: 10px"/>
+              </td>
+              <td class="py-4 px-6" th:text="${member.nickname}"></td>
+              <td class="py-4 px-6" th:text="${member.updatedAt}"></td>
+              <td class="py-4 px-6" th:text="${member.memberStatus}"></td>
 
-<th:block th:replace="~{fragments/header::headerFragment}"></th:block>
-
-<main class="min-h-screen flex flex-col items-center py-8">
-  <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" >
-    <thead class="bg-neutral-200">
-    <tr>
-      <th class="py-2 text-left text-lg font-title">프로필</th>
-      <th class="py-2 text-left text-lg font-title">이름</th>
-      <th class="py-2 text-left text-lg font-title">요청 날짜</th>
-      <th class="py-2 text-left text-lg font-title">삭제 요청</th>
-    </tr>
-    </thead>
-    <tbody>
-    <div class="mt-7">
-
-      <tr th:each="member : ${members.content}">
-        <td class="py-4 px-6">
-          <img th:src="@{/images/profile-icon.png}" class="w-16 h-16 rounded-full">
-        </td>
-        <td th:text="${member.nickname}"></td>
-        <td th:text="${member.updatedAt}"></td>
-        <td th:text="${member.memberStatus}"></td>
-      </tr>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
     </div>
-    </tbody>
-  </table>
-</main>
-
+  </div>
+</div>
 </body>
 </html>
