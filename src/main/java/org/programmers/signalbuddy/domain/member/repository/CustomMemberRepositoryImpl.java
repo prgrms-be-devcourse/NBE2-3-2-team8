@@ -37,6 +37,7 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository {
             .where(member.role.eq(MemberRole.USER))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
+            .orderBy(member.email.asc())
             .fetch();
 
         long total = jpaQueryFactory
@@ -56,6 +57,7 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository {
             .where(member.memberStatus.eq(MemberStatus.WITHDRAWAL))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
+            .orderBy(member.email.asc())
             .fetch();
 
         long total = jpaQueryFactory

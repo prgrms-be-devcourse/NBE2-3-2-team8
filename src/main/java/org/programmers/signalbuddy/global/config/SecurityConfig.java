@@ -61,7 +61,7 @@ public class SecurityConfig {
                 // 피드백
                 .requestMatchers(HttpMethod.GET, "/api/feedbacks", "/feedbacks/**").permitAll()
                 // 회원
-                .requestMatchers("/api/admins/**", "/admins/members/**").hasRole("ADMIN")
+                .requestMatchers("/api/admins/**", "/admins/members/**", "/api/members/files/**").hasRole("ADMIN")
                 .requestMatchers("/api/members/**", "/members/**").hasRole("USER")
                 .anyRequest().authenticated()
             );
