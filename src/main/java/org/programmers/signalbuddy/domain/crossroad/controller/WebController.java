@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/crossroad")
+@RequestMapping("/")
 public class WebController {
 
-    @GetMapping("/main")
+    @GetMapping
     public ModelAndView index(ModelAndView mv) {
-        mv.setViewName("/crossroad/main");
+        mv.setViewName("main");
         return mv;
     }
 }

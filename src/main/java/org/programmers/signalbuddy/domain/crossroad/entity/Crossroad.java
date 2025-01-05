@@ -30,7 +30,7 @@ public class Crossroad extends BaseTimeEntity {
     public Crossroad(CrossroadApiResponse response) {
         this.crossroadApiId = response.getCrossroadApiId();
         this.name = response.getName();
-        this.coordinate = response.getPoint();
+        this.coordinate = response.toPoint();
     }
 
 }

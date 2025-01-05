@@ -1,10 +1,11 @@
 
 let marker = null;// 마커 변수
 let abortController = new AbortController(); // API 요청 중 signal로 상태 변경
-let startMarker=null;
-let endMarker=null;
+let startMarker= null;
+let endMarker= null;
 let input = null; // 데이터
-let routeLayer=null;
+let routeLayer= null;
+let startLatLng=null;
 
 // 데이터 요청 상태 관리
 let isFetchingData = false;
@@ -22,23 +23,43 @@ var map = new Tmapv2.Map("map", {
     zoom: 12 // 줌 레벨 (값이 높을수록 확대)
 });
 
+map.addListener("click", function (event) {
+    latLng = null; // 값 초기화
+    latLng = event.latLng; // 클릭한 위치의 위도, 경도 정보
+
+    console.log(latLng);
+
+    if (startMarker && latLng) {
+        startMarker.setMap(null); // 기존 마커 제거
+    }
+
+    if(latLng){
+        startMarker = new Tmapv2.Marker({
+            position: latLng,
+            map: map
+        });
+    }
+
+});
+
 fetch('api/crossroads/marker')
     .then(response=> response.json())
-    .then(data=>{
+    .then(data=> {
         // 데이터 순회하며 마커 생성
         data.forEach(crossroad => {
-            const { lat, lng } = crossroad.coordinate;
+            const lat = crossroad.mapCtptIntLat;
+            const lng = crossroad.mapCtptIntLot;
 
             const marker = new Tmapv2.Marker({
                 position: new Tmapv2.LatLng(lat,lng),
                 map,
-                title: crossroad.name
+                title: crossroad.itstNm
             });
 
             markers[crossroad.crossroadApiId]=marker;
 
             marker.addListener("click",()=> {
-                marker_id=crossroad.crossroadApiId
+                marker_id=crossroad.itstId
                 console.log("click");
                 disableFetching();
                 enableFetching();
@@ -94,18 +115,17 @@ function updateUI(data) {
         const time = data[0][timeKey];
         const circle = document.getElementById(dir);
 
-        const statusColors = {
+       /* const statusColors = {
             "stop-And-Remain": "red",
             "protected-Movement-Allowed": "green",
-            "permissive-Movement-Allowed": "yellow",
-            default: "gray"
-        };
+            "permissive-Movement-Allowed": "gray"
+        };*/
 
         if (!state) {
             circle.style.display = "none"; // null 상태는 숨김
         } else if(state){
             circle.style.display = "block";
-            circle.style.backgroundColor = statusColors[state]; // 상태 색상
+            circle.style.backgroundColor = state; // 상태 색상
             minTime = Math.min(minTime, time)+10; // 최소 남은 시간 계산
         }
     });
@@ -200,7 +220,6 @@ async function searchAddress(address, signal) {
 //이벤트 핸들러 변수 저장
 const handleClick = (poi) => {
     document.getElementById("searchInput").value = poi.name; // 클릭 시 입력 필드에 채우기
-    clearMarker(); // 기존 마커 제거
     findRoute(poi.frontLat, poi.frontLon); // 경로 찾기
 };
 
@@ -234,10 +253,13 @@ function updateSuggestions(pois) {
 // 마커를 제거하는 함수
 function clearMarker() {
 
-    if (marker) {
-        marker.setMap(null); // 지도에서 마커 제거
-        marker = null; // 마커 변수 초기화
+    if (startMarker) {
+        startMarker.setMap(null); // 지도에서 마커 제거
+        startMarker = null; // 마커 변수 초기화
+        endMarker.setMap(null);
+        endMarker = null;
     }
+
 }
 
 document.getElementById("searchInput").addEventListener("input", function () {
@@ -251,10 +273,12 @@ document.getElementById("searchInput").addEventListener("input", function () {
 // 경로 검색
 async function findRoute(endLat,endLon) {
 
-    document.getElementById("suggestions").style.visibility = "hidden";// 추천어 목록 숨김
+    console.log(latLng);
 
-    const startLat = 37.5665;
-    const startLon = 126.9780;
+    let startLat = latLng._lat;
+    let startLon = latLng._lng;
+
+    document.getElementById("suggestions").style.visibility = "hidden";// 추천어 목록 숨김
 
     if (!endLat || !endLon) {
         alert("도착지를 선택하세요!");
@@ -340,14 +364,7 @@ function drawRoute(routeData, startLat, startLon, endLat, endLon) {
 // 마커 추가
 function addMarkers(startLat, startLon, endLat, endLon) {
 
-    if (startMarker) startMarker.setMap(null);
     if (endMarker) endMarker.setMap(null);
-
-    startMarker = new Tmapv2.Marker({
-        position: new Tmapv2.LatLng(startLat, startLon),
-        map,
-        title: "출발지"
-    });
 
     endMarker = new Tmapv2.Marker({
         position: new Tmapv2.LatLng(endLat, endLon),
@@ -355,6 +372,4 @@ function addMarkers(startLat, startLon, endLat, endLon) {
         title: "도착지"
     });
 
-    map.setCenter(new Tmapv2.LatLng(startLat, startLon));
-    map.setZoom(14);
 }

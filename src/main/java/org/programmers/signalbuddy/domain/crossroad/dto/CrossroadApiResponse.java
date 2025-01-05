@@ -8,8 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.locationtech.jts.geom.Point;
-
-import static org.programmers.signalbuddy.domain.crossroad.service.PointUtil.toPoint;
+import org.programmers.signalbuddy.domain.crossroad.service.PointUtil;
 
 @Getter
 @Builder
@@ -29,14 +28,14 @@ public class CrossroadApiResponse {
     @JsonProperty("mapCtptIntLot")
     private Double lng; // 경도
 
-    public Point getPoint() {
-        return toPoint(this.lat, this.lng);
+    public Point toPoint() {
+        return PointUtil.toPoint(this.lat, this.lng);
     }
 
     public CrossroadApiResponse(Crossroad crossroad) {
         this.crossroadApiId = crossroad.getCrossroadApiId();
         this.name = crossroad.getName();
-        this.lat = crossroad.getCoordinate().getX();
-        this.lng = crossroad.getCoordinate().getY();
+        this.lat = crossroad.getCoordinate().getY();
+        this.lng = crossroad.getCoordinate().getX();
     }
 }
