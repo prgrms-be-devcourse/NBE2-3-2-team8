@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head th:fragment="headerStyles">
   <!-- 공통 스타일 -->
   <link href="/css/common/common.css" rel="stylesheet">
@@ -14,7 +15,7 @@
     </a>
     <nav class="flex items-center space-x-4">
       <!--   회원 헤더   -->
-      <th:block th:if="${user.memberId != null}">
+      <th:block sec:authorize="isAuthenticated()">
         <a class="text-neutral-600 text-sm" href="/feedbacks">피드백</a>
         <a class="text-neutral-600 text-sm" th:href="@{/members}">마이 페이지</a>
         <span class="border-l border-neutral-300 h-4 mx-2"></span>
@@ -24,12 +25,13 @@
           </button>
         </form>
       </th:block>
+
       <!--   비회원 헤더   -->
-      <th:block th:unless="${user.memberId != null}">
+      <th:block sec:authorize="!isAuthenticated()">
         <a class="text-neutral-600 text-sm" href="/feedbacks">피드백</a>
         <span class="border-l border-neutral-300 h-4 mx-2"></span>
-        <button class="px-4 py-1 rounded-md bg-neutral-950 text-neutral-50 text-sm" href="#">회원가입
-        </button>
+        <a class="px-4 py-1 rounded-md bg-neutral-950 text-neutral-50 text-sm"
+           href="/members/signup">회원가입</a>
         <a class="px-4 py-1 rounded-md bg-neutral-950 text-neutral-50 text-sm"
            href="/loginform">로그인</a>
       </th:block>

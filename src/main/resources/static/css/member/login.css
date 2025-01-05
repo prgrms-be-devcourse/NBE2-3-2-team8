@@ -1,0 +1,166 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: auto;
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+  padding-top: 70px;
+}
+
+/* 헤더 고정 위치 */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  z-index: 1000; /* 다른 요소들 위에 위치하도록 */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 헤더 아래 그림자 효과 */
+}
+
+.login-container {
+  width: 350px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form {
+  width: 90%;
+  margin: 3px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.sign-in-btn {
+  width: 100%;
+  padding: 10px;
+  margin: 3px auto;
+  border: none;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.sign-in-btn:hover {
+  background-color: #555;
+}
+
+.links {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  font-size: 12px;
+}
+
+.links a {
+  text-decoration: none;
+  color: #333;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+.options {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.divider {
+  display: flex; /* Flexbox 사용 */
+  align-items: center; /* 세로 방향 가운데 정렬 */
+  justify-content: center; /* 양옆 선의 균등 분배 */
+  width: 100%; /* 부모 요소의 너비 꽉 채우기 */
+  margin: 10px 0;
+}
+
+.divider .line {
+  flex: 1; /* 양옆 선이 가능한 넓게 차지 */
+  height: 1px; /* 선 두께 */
+  background-color: #ddd; /* 선 색상 */
+}
+
+.divider span {
+  font-size: small;
+  margin: 0 10px; /* 선과 텍스트 사이 여백 */
+  color: #b4b4b4; /* 텍스트 색상 */
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
+
+.oauth-buttons {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.oauth-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px 0;
+  padding: 10px;
+
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  background: white;
+  text-align: left;
+}
+
+.oauth-button img {
+  height: 24px; /* 로고 높이 설정 */
+  width: 24px; /* 로고 너비 설정 */
+  object-fit: contain; /* 로고 비율 유지 */
+  margin-right: 10px; /* 텍스트와의 간격 설정 */
+}
+
+.oauth-button.google {
+  background: white;
+}
+
+.oauth-button.naver {
+  background: #2AC308;
+  color: white;
+}
+
+.oauth-button.kakaotalk {
+  background: #FAE100;
+  color: #371D1E
+
+}

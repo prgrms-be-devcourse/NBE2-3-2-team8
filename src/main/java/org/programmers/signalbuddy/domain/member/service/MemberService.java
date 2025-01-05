@@ -1,9 +1,12 @@
 package org.programmers.signalbuddy.domain.member.service;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.programmers.signalbuddy.domain.member.dto.MemberJoinRequest;
@@ -23,6 +26,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -69,10 +73,16 @@ public class MemberService {
             throw new BusinessException(MemberErrorCode.ALREADY_EXIST_EMAIL);
         }
 
+        String profilePath = "none";
+
+        if(!memberJoinRequest.getProfileImageUrl().isEmpty()) {
+            profilePath = saveProfileImage(memberJoinRequest.getProfileImageUrl());
+        }
+
         Member joinMember = Member.builder().email(memberJoinRequest.getEmail())
             .nickname(memberJoinRequest.getNickname())
             .password(bCryptPasswordEncoder.encode(memberJoinRequest.getPassword()))
-            .profileImageUrl(memberJoinRequest.getProfileImageUrl())
+            .profileImageUrl(profilePath)
             .memberStatus(MemberStatus.ACTIVITY).role(MemberRole.USER).build();
 
         memberRepository.save(joinMember);
@@ -81,7 +91,8 @@ public class MemberService {
 
     public Resource getProfileImage(String filename) {
         try {
-            final Path path = Paths.get(filePath).resolve(filename);
+            Path directoryPath = Paths.get("src", "main", "resources","static", "images");
+            final Path path = Paths.get(directoryPath.toString()).resolve(filename);
             if (Files.notExists(path)) {
                 return new ClassPathResource("static/images/member/profile-icon.png");
                 // 프로필 이미지가 없을 경우 기본 이미지
@@ -90,5 +101,26 @@ public class MemberService {
         } catch (MalformedURLException e) {
             throw new BusinessException(MemberErrorCode.PROFILE_IMAGE_LOAD_ERROR);
         }
+    }
+
+    public String saveProfileImage(MultipartFile profileImage) {
+
+        // static/images 경로 설정
+        Path directoryPath = Paths.get("src", "main", "resources","static", "images");
+
+        String originalFilename = profileImage.getOriginalFilename();
+        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+
+        String newFilename = UUID.randomUUID().toString() + extension;
+        Path savePath = directoryPath.resolve(newFilename);
+
+        try {
+            Files.copy(profileImage.getInputStream(), savePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            log.error("Error while saving profile image: ", e);
+            throw new BusinessException(MemberErrorCode.PROFILE_IMAGE_UPLOAD_FAILURE);
+        }
+
+        return newFilename.toString();
     }
 }

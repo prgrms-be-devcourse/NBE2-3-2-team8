@@ -48,9 +48,9 @@ public class SecurityConfig {
                     "/js/**",
                     "/images/**",
                     "/webjars/**").permitAll()
-                // 로그인
+                // 로그인, 회원가입
                 .requestMatchers("/members/login", "admins/login", "/api/members/join",
-                    "/api/admins/join").permitAll()
+                    "/api/admins/join", "/members/signup").permitAll()
                 // 북마크
                 .requestMatchers("/api/bookmarks/**", "/bookmarks/**").hasRole("USER")
                 // 댓글
