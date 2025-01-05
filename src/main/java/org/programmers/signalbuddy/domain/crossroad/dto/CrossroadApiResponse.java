@@ -1,5 +1,6 @@
 package org.programmers.signalbuddy.domain.crossroad.dto;
 
+import lombok.NoArgsConstructor;
 import org.programmers.signalbuddy.domain.crossroad.entity.Crossroad;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,6 +14,7 @@ import org.programmers.signalbuddy.domain.crossroad.service.PointUtil;
 @Getter
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CrossroadApiResponse {
 
