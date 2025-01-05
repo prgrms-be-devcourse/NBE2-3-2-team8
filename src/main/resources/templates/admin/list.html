@@ -11,42 +11,9 @@
   <link href="/css/common/header.css" rel="stylesheet" />
   <link href="/css/admin/list.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.11/dist/tailwind.min.css" rel="stylesheet">
-
 </head>
 <body class="bg-neutral-100">
 
-<div class="sidebar">
-  <p class="py-2 text-left text-lg font-title">회원 정보 관리</p>
-  <a th:onclick="|location.href='@{/admins/members/list}'|">회원 즐겨찾기 정보</a>
-  <a th:onclick="|location.href='@{/admins/members-withdrawal}'|">회원 삭제</a>
-</div>
-
-<th:block th:replace="~{fragments/header::headerFragment}"></th:block>
-
-<main class="min-h-screen flex flex-col items-center py-8">
-  <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-    <thead class="bg-neutral-200">
-    <tr>
-      <th class="py-2 text-left text-lg font-title">프로필</th>
-      <th class="py-2 text-left text-lg font-title">이름</th>
-      <th class="py-2 text-left text-lg font-title">회원 지역</th>
-      <th class="py-2 text-left text-lg font-title">즐겨찾기 개수</th>
-    </tr>
-    </thead>
-    <tbody>
-    <div class="mt-7">
-      <tr th:each="member : ${members.content}" th:onclick="|location.href='@{/admins/members-detail/{id}(id=${member.memberId})}'|">
-        <td class="py-4 px-6">
-          <img th:src="@{/images/profile-icon.png}" class="w-16 h-16 rounded-full">
-        </td>
-        <td class="py-4 px-6" th:text="${member.nickname}"></td>
-        <td class="py-4 px-6" th:text="${member.userAddress}"></td>
-        <td class="py-4 px-6" th:text="${member.bookmarkCount}"></td>
-      </tr>
-    </div>
-    </tbody>
-  </table>
-</main>
 
 </body>
 </html>

@@ -20,6 +20,11 @@ public class AdminWebController {
 
     private final AdminService adminService;
 
+    @GetMapping()
+    public ModelAndView adminsMain() {
+        return new ModelAndView("admin/main");
+    }
+
     @GetMapping("members/list")
     public ModelAndView getAllMembers(@PageableDefault(page = 0, size = 10, sort = "email") Pageable pageable, ModelAndView mv) {
         Page<AdminMemberResponse> members = adminService.getAllMembers(pageable);
