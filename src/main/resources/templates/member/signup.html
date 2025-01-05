@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/common/header.css" rel="stylesheet">
+    <link href="/css/common/common.css" rel="stylesheet">
+    <link href="/css/member/signup.css" rel="stylesheet">
+    <title>Signal Buddy 회원가입</title>
+</head>
+<body>
+<th:block th:replace="~{fragments/header::headerFragment}"></th:block>
+    <div class="signup-container">
+        <h2>Signal Buddy</h2>
+        <form th:action="@{/members/signup}" method="post" enctype="multipart/form-data" th:object="${memberJoinRequest}">
+            <div class="form-group">
+                <div class="profile-preview" id="profilePreview">
+                    <input type="file" id="fileInput" th:field="*{profileImageUrl}" name="profileImageUrl" accept="image/*" onchange="previewImage(event)">
+                    <button class="camera-btn" onclick="event.preventDefault(); document.getElementById('fileInput').click();">
+                    <img class ="upload-button" src="/images/camera-icon.png">
+                    </button>
+                
+                </div>
+            </div>
+           
+            <div class="form-group">
+                <label for="email">*이메일</label>
+                <input type="email" id="email" th:field="*{email}" name="email" placeholder="이메일" required>
+            </div>
+            <div class="form-group">
+                <label for="nickname">*별명</label>
+                <input type="text" id="nickname" th:field="*{nickname}" name="nickname" placeholder="별명" required>
+            </div>
+            <div class="form-group">
+                <label for="password">*비밀번호</label>
+                <input type="password" id="password" th:field="*{password}" name="password" placeholder="비밀번호" required>
+            </div>
+            
+            <button type="submit" class="signup-button">Sign Up</button>
+        </form>
+        <a href="/members/login" class="login-link">로그인하러 가기</a>
+    </div>
+
+    <script>
+        // 프로필 사진 미리보기 기능
+        function previewImage(event) {
+            const preview = document.getElementById('profilePreview');
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.style.backgroundImage = `url(${e.target.result})`;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.backgroundImage = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
