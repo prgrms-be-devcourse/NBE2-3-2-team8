@@ -32,21 +32,21 @@
               </div>
             </div>
             <a class="flex items-center text-neutral-500"
-               th:href="@{/bookmarks/{id}(id=${bookmark.bookmarkId})}">
+               th:href="@{/bookmarks/{id}/edit(id=${bookmark.bookmarkId})}">
               <span class="material-symbols-outlined">edit</span>
             </a>
           </div>
         </div>
-        <div
-            class="flex items-center justify-between bg-neutral-100 p-4 rounded-md bookmark-box add-box"
-            th:if="${pagination.getNumberOfElements() != pagination.size && pagination.totalElements != 20}">
+        <a class="flex items-center justify-between bg-neutral-100 p-4 rounded-md bookmark-box add-box"
+           href="/bookmarks/add"
+           th:if="${pagination.last}">
           <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-primary-700 add">add_circle</span>
             <div>
               <p class="bookmark-add">등록</p>
             </div>
           </div>
-        </div>
+        </a>
 
         <div class="border-t pt-4 text-center text-neutral-500">
           <!-- 페이지 번호 -->

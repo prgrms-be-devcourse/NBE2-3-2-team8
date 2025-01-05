@@ -31,4 +31,7 @@ public class BookmarkRequest {
     @NotBlank(message = "주소를 입력해주세요.")
     @Schema(description = "주소", example = "서울시청")
     private String address;
+
+    @Schema(description = "별명", example = "회사")
+    private String name;
 }

@@ -17,7 +17,7 @@
     <aside th:replace="~{fragments/sidebar::sidebarFragment}"></aside>
     <!--  본문 시작  -->
     <section class="flex-1 bg-white shadow rounded-md ml-6 p-8">
-      <h2 class="font-title text-neutral-950 text-xl mb-8">자주 가는 곳 - 수정</h2>
+      <h2 class="font-title text-neutral-950 text-xl mb-8">자주 가는 곳 - 등록</h2>
       <div class="p-6 space-y-4">
         <div class="bookmarks">
           <div
@@ -25,20 +25,16 @@
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-primary-700">flag</span>
               <label>
-                <input class="bookmark-name" id="alias" th:value="${bookmark.name}"/>
+                <input class="bookmark-name" id="alias" placeholder="주소"/>
               </label>
             </div>
-            <button class="flex items-center text-neutral-500"
-                    th:onclick="'deleteBtn(' + ${bookmark.bookmarkId} + ', ' + ${user.memberId} + ')'">
-              <span class="material-symbols-outlined">delete</span>
-            </button>
           </div>
           <div class="flex items-center justify-between bg-neutral-100 p-4 rounded-md bookmark-box">
             <div class="flex items-center gap-2">
               <button class="material-symbols-outlined text-primary-700" id="search">search</button>
               <label>
                 <input class="bookmark-name search-input" id="searchInput" placeholder="검색"/>
-                <span id="suggestions" class="suggestions-list"></span>
+                <span class="suggestions-list" id="suggestions"></span>
               </label>
             </div>
           </div>
@@ -46,12 +42,14 @@
         <div class="mt-6 flex justify-center space-x-4">
           <a class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50 cancel"
              th:href="@{/members/{memberId}/bookmarks(memberId=${user.memberId})}">취소</a>
-          <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50" th:onclick="'updateBtn(' + ${bookmark.bookmarkId} + ', ' + ${user.memberId} + ')'">수정</button>
+          <button class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50"
+                  th:onclick="'addBtn(' + ${user.memberId} + ')'">저장
+          </button>
         </div>
       </div>
     </section>
   </main>
 </div>
-<script src="/js/member/bookmark/update.js"></script>
+<script src="/js/member/bookmark/create.js"></script>
 </body>
 </html>
