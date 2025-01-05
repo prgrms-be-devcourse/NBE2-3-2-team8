@@ -285,7 +285,7 @@ async function findRoute(endLat,endLon) {
         return;
     }
 
-    const url = `https://apis.openapi.sk.com/tmap/routes?version=1&callback=result`;
+    const url = `https://apis.openapi.sk.com/tmap/routes/pedestrian`;
     const headers = {
         "Accept": "application/json",
         "appKey": "1bxEMLzGUg68a4EeRA5F14J5Vbgh6GWI3zLXabl9"
@@ -309,6 +309,8 @@ async function findRoute(endLat,endLon) {
         });
         const data = await response.json();
         const routeData = data.features;
+
+        console.log(data);
 
         if (routeLayer) {
             routeLayer.setMap(null);
