@@ -21,6 +21,7 @@ import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.dto.MemberResponse;
 import org.programmers.signalbuddy.domain.member.dto.MemberUpdateRequest;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.springframework.mock.web.MockMultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
@@ -89,18 +90,25 @@ class MemberServiceTest {
     @DisplayName("회원 가입 성공")
     void savedMember() {
 
+        MockMultipartFile profileImage = new MockMultipartFile(
+            "profileImage",
+            "",
+            "image/jpeg",
+            new byte[0]
+        );
+
         //given
         final MemberJoinRequest request = MemberJoinRequest.builder()
             .email("test2@example.com")
             .nickname("TestUser2")
-            .profileImageUrl("http://example.com/profile.jpg")
             .password("password123")
+            .profileImageUrl(profileImage)
             .build();
         final Member expectedMember = Member.builder()
             .memberId(id)
             .email("test2@example.com")
             .nickname("TestUser2")
-            .profileImageUrl("http://example.com/profile.jpg")
+            .profileImageUrl("none")
             .memberStatus(MemberStatus.ACTIVITY)
             .role(MemberRole.USER).build();
 
