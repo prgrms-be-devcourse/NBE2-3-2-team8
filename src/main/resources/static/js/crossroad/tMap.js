@@ -5,7 +5,6 @@ let startMarker= null;
 let endMarker= null;
 let input = null; // 데이터
 let routeLayer= null;
-let startLatLng=null;
 
 // 데이터 요청 상태 관리
 let isFetchingData = false;
