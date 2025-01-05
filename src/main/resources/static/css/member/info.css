@@ -29,3 +29,40 @@
   background-position: center;
   object-fit: cover;
 }
+
+.modal {
+  position: fixed; /* 화면 기준 고정 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 화면의 중심으로 이동 */
+  z-index: 1000; /* 다른 요소 위에 표시 */
+  background-color: rgba(0, 0, 0, 0.5); /* 배경 어둡게 */
+  width: 100%; /* 전체 화면 가로 */
+  height: 100%; /* 전체 화면 세로 */
+  display: flex; /* 모달 내용 중앙 정렬 */
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 90%; /* 모바일에서는 거의 화면 전체 너비 */
+  max-width: 400px; /* 데스크톱에서는 고정 너비 */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.modal-input {
+  display: flex;
+  align-items: center;
+}
+
+.modal-button {
+  display: flex;
+  justify-content: space-evenly;
+}

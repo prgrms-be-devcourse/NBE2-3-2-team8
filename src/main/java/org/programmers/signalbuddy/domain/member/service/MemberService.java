@@ -18,6 +18,7 @@ import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.mapper.MemberMapper;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -75,7 +76,7 @@ public class MemberService {
 
         String profilePath = "none";
 
-        if(!memberJoinRequest.getProfileImageUrl().isEmpty()) {
+        if (!memberJoinRequest.getProfileImageUrl().isEmpty()) {
             profilePath = saveProfileImage(memberJoinRequest.getProfileImageUrl());
         }
 
@@ -91,7 +92,7 @@ public class MemberService {
 
     public Resource getProfileImage(String filename) {
         try {
-            Path directoryPath = Paths.get("src", "main", "resources","static", "images");
+            Path directoryPath = Paths.get("src", "main", "resources", "static", "images");
             final Path path = Paths.get(directoryPath.toString()).resolve(filename);
             if (Files.notExists(path)) {
                 return new ClassPathResource("static/images/member/profile-icon.png");
@@ -106,7 +107,7 @@ public class MemberService {
     public String saveProfileImage(MultipartFile profileImage) {
 
         // static/images 경로 설정
-        Path directoryPath = Paths.get("src", "main", "resources","static", "images");
+        Path directoryPath = Paths.get("src", "main", "resources", "static", "images");
 
         String originalFilename = profileImage.getOriginalFilename();
         String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
@@ -115,12 +116,20 @@ public class MemberService {
         Path savePath = directoryPath.resolve(newFilename);
 
         try {
-            Files.copy(profileImage.getInputStream(), savePath, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(profileImage.getInputStream(), savePath,
+                StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             log.error("Error while saving profile image: ", e);
             throw new BusinessException(MemberErrorCode.PROFILE_IMAGE_UPLOAD_FAILURE);
         }
 
         return newFilename.toString();
+    }
+
+    public boolean verifyPassword(String password, CustomUser2Member user) {
+        final Member member = memberRepository.findById(user.getMemberId())
+            .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
+
+        return bCryptPasswordEncoder.matches(password, member.getPassword());
     }
 }
