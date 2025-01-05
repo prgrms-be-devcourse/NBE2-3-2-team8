@@ -1,19 +1,10 @@
 package org.programmers.signalbuddy.domain.crossroad.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.locationtech.jts.geom.Point;
 import org.programmers.signalbuddy.domain.basetime.BaseTimeEntity;
 import org.programmers.signalbuddy.domain.crossroad.dto.CrossroadApiResponse;
+import jakarta.persistence.*;
+import lombok.*;
+import org.locationtech.jts.geom.Point;
 
 @Entity(name = "crossroads")
 @Getter
@@ -39,6 +30,7 @@ public class Crossroad extends BaseTimeEntity {
     public Crossroad(CrossroadApiResponse response) {
         this.crossroadApiId = response.getCrossroadApiId();
         this.name = response.getName();
-        this.coordinate = response.getPoint();
+        this.coordinate = response.toPoint();
     }
+
 }
