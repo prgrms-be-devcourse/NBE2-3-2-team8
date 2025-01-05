@@ -18,11 +18,10 @@
         <img alt="" class="logo" src="/images/logo.png">
         <div class="font-title text-neutral-300 text-lg">Signal Buddy</div>
       </a>
-      <nav class="flex gap-6"> <a href="#" class="text-neutral-300">Home</a>
+      <nav class="flex gap-6"> <a href="#" class="text-neutral-300" th:onclick="|location.href='@{/admins}'|">Home</a>
         <a href="#" class="text-neutral-300">Feedback</a>
-        <a href="#" class="text-neutral-300">User_Manage</a>
-        <a href="#" class="text-neutral-300">Register</a>
-        <button class="px-4 py-2 bg-white text-neutral-950 rounded-md">Log In</button>
+        <a href="#" class="text-neutral-300" th:onclick="|location.href='@{/admins/members/list}'|">User_Manage</a>
+        <button class="px-4 py-2 bg-white text-neutral-950 rounded-md">Log out</button>
       </nav>
     </header>
     <div class="flex">
