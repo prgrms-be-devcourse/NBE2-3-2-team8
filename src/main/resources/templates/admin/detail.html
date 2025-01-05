@@ -2,27 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>사용자 상세 조회</title>
-  <link href="/css/common/common.css" rel="stylesheet" />
-  <link href="/css/common/header.css" rel="stylesheet" />
+  <style>
 
-  <th:block th:replace="~{fragments/header::headerFragment}"></th:block>
+  </style>
+  <link href="/css/common/header.css" rel="stylesheet">
+  <link href="/css/admin/withdrawal.css" rel="stylesheet">
+  <link href="/css/admin/detail.css" rel="stylesheet">
 </head>
 <body>
+<div id="webcrumbs">
+  <div class="w-max h-max bg-neutral-800 rounded-lg shadow-lg">
+    <header class="flex justify-between items-center px-6 py-4 bg-neutral-950 text-neutral-50">
+      <a class="logo-box" href="/">
+        <img alt="" class="logo" src="/images/logo.png">
+        <div class="font-title text-neutral-300 text-lg">Signal Buddy</div>
+      </a>
+      <nav class="flex gap-6"> <a href="#" class="text-neutral-300">Home</a>
+        <a href="#" class="text-neutral-300">Feedback</a>
+        <a href="#" class="text-neutral-300">User_Manage</a>
+        <a href="#" class="text-neutral-300">Register</a>
+        <button class="px-4 py-2 bg-white text-neutral-950 rounded-md">Log In</button>
+      </nav>
+    </header>
+    <div class="flex">
+      <aside class="w-[300px] h-max bg-neutral-200 p-6">
+        <h1 class="text-xl font-title mb-6">회원 정보 관리</h1>
+        <div class="flex flex-col gap-4">
+          <button class="px-4 py-2 bg-black text-primary-50 rounded-md hover:bg-neutral-100" th:onclick="|location.href='@{/admins/members/list}'|">회원 정보</button>
+          <button class="px-4 py-2 bg-black text-white rounded-md hover:bg-neutral-100" th:onclick="|location.href='@{/admins/members-withdrawal}'|">탈퇴 회원</button>
+        </div>
+      </aside>
+      <main id="user" class="flex-1 p-6">
+        <div class="w-[500px] bg-white shadow-lg rounded-lg flex">
+          <div class="flex flex-col items-center bg-neutral-200 w-[200px] p-4">
+            <img
+                src="https://tools-api.webcrumbs.org/image-placeholder/120/120/avatars/1"
+                alt="Profile"
+                class="w-[120px] h-[120px] rounded-full object-cover"
+            />
+            <p class="mt-4 text-neutral-950 text-center" th:text="${m.nickname}"></p>
+            <p class="mt-4 text-neutral-950 text-center" th:text="가입일+${m.createdAt}"></p>
+            <p class="mt-4 text-neutral-950 text-center" th:text="상태+${m.memberStatus}"></p>
 
-<div>
-  <div>
-    <img th:src="@{/images/profile-icon.png}">
-    <p th:text="${member.nickname}"></p>
-    <p th:text="가입일 + ${member.createdAt}"></p>
-    <p th:text="${member.memberStatus}"></p>
-  </div>
-  <div>
-    <table>
-      <tr th:each="bookmarks : ${member.bookmarkResponses}">
-      <td th:text="${bookmarks.getAddress()}"></td>
-      </tr>
-    </table>
+          </div>
+          <div class="flex-1 p-6">
+            <h2 class="text-neutral-950 text-lg font-title mt-6">
+              즐겨찾기 목록
+            </h2>
+            <div class="mt-2 text-neutral-950">
+              <div
+                  class="flex items-center justify-between border-b border-neutral-300 py-2 text-sm"
+                  th:each="bookmarks : ${m.bookmarkResponses}">
+                <div th:text="${bookmarks.getAddress()}" class="flex gap-4"></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
   </div>
 </div>
 </body>
