@@ -118,6 +118,7 @@ function updateUI(data) {
         const state = data[0][stateKey];
         const time = data[0][timeKey];
         const circle = document.getElementById(dir);
+        const card = document.getElementById("card");
 
        /* const statusColors = {
             "stop-And-Remain": "red",
@@ -125,10 +126,13 @@ function updateUI(data) {
             "permissive-Movement-Allowed": "gray"
         };*/
 
-        if (!state) {
-            circle.style.display = "none"; // null 상태는 숨김
-        } else if(state){
-            circle.style.display = "block";
+        if(!state){
+            circle.style.backgroundColor = "white";
+            circle.style.color = "white";
+        }
+        else if(state){
+            card.style.visibility = "visible";
+            circle.style.color = "black";
             circle.style.backgroundColor = state; // 상태 색상
             minTime = Math.min(minTime, time)+10; // 최소 남은 시간 계산
         }
@@ -157,7 +161,7 @@ function handleCountdown() {
 function time(){
     // 최소 남은 시간 표시
     const timeSpan = document.querySelector(".text-body-secondary");
-    timeSpan.textContent = `${minTime/10} s Left`;
+    timeSpan.textContent = `${Math.ceil(minTime/10)} s Left`;
 }
 
 // 1초마다 카운트다운 실행
