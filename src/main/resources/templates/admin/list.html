@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
   </style>
   <link href="/css/common/header.css" rel="stylesheet">
   <link href="/css/admin/list.css" rel="stylesheet">
+  <link href="/css/member/info.css" rel="stylesheet">
 </head>
 <body>
 <div id="webcrumbs">
@@ -49,7 +51,7 @@
 <tr class="bg-neutral-100 text-sm hover:bg-neutral-200" th:each="member : ${members.content}"
     th:onclick="|location.href='@{/admins/members-detail/{id}(id=${member.memberId})}'|">
   <td class="p-2">
-    <img src="https://tools-api.webcrumbs.org/image-placeholder/30/30/avatars/1" alt="Avatar"
+    <img th:src="@{'/api/members/files/' + ${member.profileImageUrl}}" alt="Avatar"
          style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-left: 10px"/>
   </td>
   <td class="py-4 px-6" th:text="${member.nickname}"></td>
