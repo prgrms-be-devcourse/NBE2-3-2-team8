@@ -33,7 +33,7 @@ public class AdminService {
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     public Page<AdminMemberResponse> getAllMembers(Pageable pageable) {
-        Page<Member> membersPage = memberRepository.findAll(pageable);
+        Page<Member> membersPage = memberRepository.findAllMembers(pageable);
 
         Page<AdminMemberResponse> adminMemberResponses = membersPage.map(member -> {
 
