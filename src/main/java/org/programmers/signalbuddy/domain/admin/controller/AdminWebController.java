@@ -1,6 +1,7 @@
 package org.programmers.signalbuddy.domain.admin.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.programmers.signalbuddy.domain.admin.dto.AdminMemberResponse;
 import org.programmers.signalbuddy.domain.admin.dto.WithdrawalMemberResponse;
 import org.programmers.signalbuddy.domain.admin.service.AdminService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admins")
@@ -37,7 +39,7 @@ public class AdminWebController {
     public ModelAndView getMember(@PathVariable Long id, ModelAndView mv) {
         final AdminMemberResponse member = adminService.getMember(id);
         mv.setViewName("admin/detail");
-        mv.addObject("member", member);
+        mv.addObject("m", member);
         return mv;
     }
 
