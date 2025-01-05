@@ -9,7 +9,8 @@
 </head>
 <body>
 <th:block th:replace="~{fragments/header::headerFragment}"></th:block>
-
+<div th:if="${errorMessage}" id="error-message" th:text="${errorMessage}"
+     style="display: none;"></div>
 <div class="login-container">
   <form action="/login" method="post" enctype="multipart/form-data">
     <h2>Signal Buddy</h2>
@@ -54,5 +55,13 @@
   </div>
 </div>
 
+<script>
+  window.onload = function () {
+    const errorMessageElement = document.getElementById('error-message');
+    if (errorMessageElement && errorMessageElement.textContent.trim() !== '') {
+      alert(errorMessageElement.textContent);
+    }
+  }
+</script>
 </body>
 </html>

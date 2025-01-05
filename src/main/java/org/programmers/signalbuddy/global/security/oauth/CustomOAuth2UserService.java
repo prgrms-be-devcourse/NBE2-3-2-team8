@@ -56,7 +56,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 Member newMember = Member.builder()
                     .email(email)
                     .nickname(oAuth2Response.getName())
-                    .profileImageUrl("static/images/member/profile-icon.png")
+                    .profileImageUrl("none")
                     .role(MemberRole.USER)
                     .memberStatus(MemberStatus.ACTIVITY)
                     .build();

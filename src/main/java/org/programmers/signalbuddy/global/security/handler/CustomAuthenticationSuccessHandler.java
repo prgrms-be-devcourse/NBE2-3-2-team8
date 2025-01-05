@@ -16,15 +16,13 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Authentication authentication) throws IOException, ServletException {
 
         Object principal = authentication.getPrincipal();
-        // 임시 경로
-        String redirectUrl = "/feedbacks";
+        String redirectUrl = "/";
 
         if (principal instanceof CustomUserDetails) {
             CustomUserDetails customUserDetails = (CustomUserDetails) principal;
 
             if (customUserDetails.getRole().name().contains("ADMIN")) {
-                // 임시 경로
-                redirectUrl = "/admins/members/list";
+                redirectUrl = "/admins";
             }
             request.getSession().setAttribute("user", customUserDetails);
         } else if (principal instanceof CustomOAuth2User) {
