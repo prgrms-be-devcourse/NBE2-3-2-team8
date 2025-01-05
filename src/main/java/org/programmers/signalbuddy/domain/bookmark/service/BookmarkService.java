@@ -1,5 +1,6 @@
 package org.programmers.signalbuddy.domain.bookmark.service;
 
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
@@ -52,17 +53,27 @@ public class BookmarkService {
         final Bookmark bookmark = bookmarkRepository.findById(id)
             .orElseThrow(() -> new BusinessException(BookmarkErrorCode.NOT_FOUND_BOOKMARK));
 
+        if (!Objects.equals(member.getMemberId(), bookmark.getMember().getMemberId())) {
+            throw new BusinessException(BookmarkErrorCode.UNAUTHORIZED_MEMBER_ACCESS);
+        }
+
         final Point point = toPoint(updateRequest.getLng(), updateRequest.getLat());
 
-        bookmark.update(point, updateRequest.getAddress());
+        bookmark.update(point, updateRequest.getAddress(), updateRequest.getName());
         return BookmarkMapper.INSTANCE.toDto(bookmark);
     }
 
     @Transactional
     public void deleteBookmark(Long id, CustomUser2Member user) {
         final Member member = getMember(user);
+
         final Bookmark bookmark = bookmarkRepository.findById(id)
             .orElseThrow(() -> new BusinessException(BookmarkErrorCode.NOT_FOUND_BOOKMARK));
+
+        if (!Objects.equals(member.getMemberId(), bookmark.getMember().getMemberId())) {
+            throw new BusinessException(BookmarkErrorCode.UNAUTHORIZED_MEMBER_ACCESS);
+        }
+
         bookmarkRepository.delete(bookmark);
     }
 

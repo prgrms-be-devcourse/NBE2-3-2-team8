@@ -24,7 +24,13 @@ public class BookmarkWebController {
         return user;
     }
 
-    @GetMapping("{id}")
+    @GetMapping("add")
+    public ModelAndView addBookmark(ModelAndView mv) {
+        mv.setViewName("/member/bookmark/add");
+        return mv;
+    }
+
+    @GetMapping("{id}/edit")
     public ModelAndView getBookmark(@PathVariable Long id, ModelAndView mv) {
         final BookmarkResponse bookmark = bookmarkService.getBookmark(id);
         mv.addObject("bookmark", bookmark);

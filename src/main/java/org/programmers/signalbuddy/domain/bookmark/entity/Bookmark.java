@@ -1,6 +1,5 @@
 package org.programmers.signalbuddy.domain.bookmark.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,8 +14,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.locationtech.jts.geom.Point;
 import org.programmers.signalbuddy.domain.basetime.BaseTimeEntity;
 import org.programmers.signalbuddy.domain.member.entity.Member;
@@ -46,18 +43,22 @@ public class Bookmark extends BaseTimeEntity {
     private Member member;
 
     @Builder
-    public Bookmark(Point coordinate, String address, Member member) {
+    public Bookmark(Point coordinate, String address, Member member, String name) {
         this.coordinate = coordinate;
         this.address = address;
         this.member = member;
+        this.name = name;
     }
 
-    public void update(Point coordinate, String address) {
+    public void update(Point coordinate, String address, String name) {
         if (coordinate != null) {
             this.coordinate = coordinate;
         }
         if (address != null) {
             this.address = address;
+        }
+        if (name != null) {
+            this.name = name;
         }
     }
 }
