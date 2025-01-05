@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/comments").permitAll()
                 // 교차로
                 .requestMatchers("/api/crossroads/save").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,"/api/crossroads/**").permitAll()
                 // 피드백
                 .requestMatchers(HttpMethod.GET, "/api/feedbacks", "/feedbacks/**").permitAll()
                 // 회원
