@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,9 +25,7 @@ import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.security.basic.CustomUserDetails;
 import org.programmers.signalbuddy.global.support.ServiceTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 class LikeServiceTest extends ServiceTest {
 
     @Autowired
@@ -138,5 +139,43 @@ class LikeServiceTest extends ServiceTest {
 
         // then
         assertThat(actual.getStatus()).isFalse();
+    }
+
+    @DisplayName("동시에 많은 좋아요 추가 요청이 발생할 때, 좋아요 개수의 정합성 확인")
+    @Test
+    void IsNotEqualLikeCount() throws InterruptedException {
+        // given
+        int threadCount = 1000; // 스레드 개수
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);    // 스레드 풀 생성
+        CountDownLatch latch = new CountDownLatch(threadCount); // 스레드 대기 관리
+
+        String subject = "test subject";
+        String content = "test content";
+        FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
+        Feedback savedFeedback = feedbackRepository.saveAndFlush(Feedback.create(request, member));
+
+        // when
+        for (int i = 0; i < threadCount; i++) {
+            executorService.submit(() -> {
+                try {
+                    CustomUser2Member user = new CustomUser2Member(
+                        new CustomUserDetails(member.getMemberId(), "", "",
+                            "", "", MemberRole.USER, MemberStatus.ACTIVITY));
+                    likeService.addLike(savedFeedback.getFeedbackId(), user);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        // 스레드가 다 끝날 때까지 기다리기
+        latch.await();
+        executorService.shutdown();
+
+        // then
+        Feedback updatedFeedback = feedbackRepository.findById(savedFeedback.getFeedbackId()).get();
+        assertThat(updatedFeedback.getLikeCount()).isEqualTo(threadCount);
     }
 }
