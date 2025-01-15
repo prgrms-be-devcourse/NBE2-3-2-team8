@@ -1,10 +1,8 @@
 package org.programmers.signalbuddy.domain.like.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.programmers.signalbuddy.domain.like.service.LikeService.getLikeKeyPrefix;
 
-import java.util.List;
-import java.util.Optional;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,14 +16,14 @@ import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
+import org.programmers.signalbuddy.global.db.RedisTestContainer;
 import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.security.basic.CustomUserDetails;
 import org.programmers.signalbuddy.global.support.ServiceTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
-@Transactional
-class LikeServiceTest extends ServiceTest {
+class LikeServiceTest extends ServiceTest implements RedisTestContainer {
 
     @Autowired
     private LikeService likeService;
@@ -38,6 +36,9 @@ class LikeServiceTest extends ServiceTest {
 
     @Autowired
     private LikeRepository likeRepository;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     private Member member;
     private Feedback feedback;
@@ -61,50 +62,43 @@ class LikeServiceTest extends ServiceTest {
         feedback = feedbackRepository.save(Feedback.create(request, member));
     }
 
-    @DisplayName("좋아요 추가")
+    @DisplayName("좋아요 추가 성공")
     @Test
     void addLike() {
         // given
-        Long feedbackId = feedback.getFeedbackId();
         CustomUser2Member user = new CustomUser2Member(
             new CustomUserDetails(member.getMemberId(), "", "",
                 "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when
-        likeService.addLike(feedbackId, user);
+        likeService.addLike(feedback.getFeedbackId(), user);
 
         // then
-        List<Like> actual = likeRepository.findAll();
-        Optional<Feedback> updatedFeedback = feedbackRepository.findById(feedbackId);
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(actual).isNotEmpty();
-            softAssertions.assertThat(actual.get(0).getLikeId()).isNotNull();
-            softAssertions.assertThat(updatedFeedback).isPresent();
-            softAssertions.assertThat(updatedFeedback.get().getLikeCount()).isOne();
-        });
+        String deleteLike = redisTemplate.opsForValue()
+            .get(getLikeKeyPrefix() + feedback.getFeedbackId() + ":" + member.getMemberId());
+        assertThat(deleteLike).isEqualTo("ADD");
+        redisTemplate.delete(getLikeKeyPrefix()
+            + feedback.getFeedbackId() + ":" + member.getMemberId());
     }
 
-    @DisplayName("좋아요 취소")
+    @DisplayName("좋아요 취소 성공")
     @Test
     void deleteLike() {
         // given
-        Long feedbackId = feedback.getFeedbackId();
         CustomUser2Member user = new CustomUser2Member(
             new CustomUserDetails(member.getMemberId(), "", "",
                 "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when
-        likeService.addLike(feedbackId, user);
-        likeService.deleteLike(feedbackId, user);
+        likeRepository.save(Like.create(member, feedback));
+        likeService.deleteLike(feedback.getFeedbackId(), user);
 
         // then
-        List<Like> actual = likeRepository.findAll();
-        Optional<Feedback> updatedFeedback = feedbackRepository.findById(feedbackId);
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(actual).isEmpty();
-            softAssertions.assertThat(updatedFeedback).isPresent();
-            softAssertions.assertThat(updatedFeedback.get().getLikeCount()).isZero();
-        });
+        String deleteLike = redisTemplate.opsForValue()
+            .get(getLikeKeyPrefix() + feedback.getFeedbackId() + ":" + member.getMemberId());
+        assertThat(deleteLike).isEqualTo("CANCEL");
+        redisTemplate.delete(getLikeKeyPrefix()
+            + feedback.getFeedbackId() + ":" + member.getMemberId());
     }
 
     @DisplayName("해당 좋아요가 존재할 때")
@@ -117,7 +111,7 @@ class LikeServiceTest extends ServiceTest {
                 "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when
-        likeService.addLike(feedbackId, user);
+        likeRepository.save(Like.create(member, feedback));
         LikeExistResponse actual = likeService.existsLike(feedbackId, user);
 
         // then

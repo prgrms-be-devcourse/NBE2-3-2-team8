@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "좋아요 API")
+@Tag(name = "Like API")
 @RestController
 @RequestMapping("/api/feedbacks")
 @RequiredArgsConstructor
