@@ -49,7 +49,7 @@ class LikeJobConfigTest extends BatchTest implements RedisTestContainer {
     @BeforeEach
     void setup() {
         List<Member> memberList = new ArrayList<>();
-        for (int i = 0; i < 550; i++) {
+        for (int i = 0; i < 50; i++) {
             Member member = Member.builder()
                 .email("test@test.com")
                 .password("123456" + i)
@@ -77,7 +77,7 @@ class LikeJobConfigTest extends BatchTest implements RedisTestContainer {
         Feedback savedFeedback = feedbackRepository.saveAndFlush(Feedback.create(request, savedMemberList.get(0)));
 
         // when
-        // 좋아요 추가/취소 반반씩
+        // 좋아요 추가
         for (int i = 0; i < addLikeThreadCount; i++) {
             Member member = savedMemberList.get(i);
             executorService.submit(() -> {
@@ -86,8 +86,28 @@ class LikeJobConfigTest extends BatchTest implements RedisTestContainer {
                         new CustomUserDetails(member.getMemberId(), "", "",
                             "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
-                    likeService.deleteLike(savedFeedback.getFeedbackId(), user);    // 적용 X (해당 키 존재 X)
                     likeService.addLike(savedFeedback.getFeedbackId(), user);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        // 스레드가 다 끝날 때까지 기다리기
+        latch.await();
+
+        // 좋아요 취소
+        for (int i = 0; i < 10; i++) {
+            Member member = savedMemberList.get(i);
+            executorService.submit(() -> {
+                try {
+                    CustomUser2Member user = new CustomUser2Member(
+                        new CustomUserDetails(member.getMemberId(), "", "",
+                            "", "", MemberRole.USER, MemberStatus.ACTIVITY));
+
+                    likeService.deleteLike(savedFeedback.getFeedbackId(), user);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -108,7 +128,7 @@ class LikeJobConfigTest extends BatchTest implements RedisTestContainer {
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(jobExecution.getExitStatus()).isEqualTo(ExitStatus.COMPLETED);
             softAssertions.assertThat(updatedFeedback.getLikeCount())
-                .isEqualTo(addLikeThreadCount);
+                .isEqualTo(addLikeThreadCount - 10);
         });
     }
 }
