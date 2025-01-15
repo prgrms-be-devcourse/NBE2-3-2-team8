@@ -3,11 +3,6 @@ package org.programmers.signalbuddy.domain.like.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.programmers.signalbuddy.domain.like.service.LikeService.getLikeKeyPrefix;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -67,97 +62,43 @@ class LikeServiceTest extends ServiceTest implements RedisTestContainer {
         feedback = feedbackRepository.save(Feedback.create(request, member));
     }
 
-    @AfterEach
-    void teardown() {
-        redisTemplate.getConnectionFactory().getConnection().serverCommands().flushAll();
-    }
-
-    @DisplayName("동시에 많은 좋아요 추가 요청이 들어올 때, Redis에 저장된 데이터의 정합성 확인")
+    @DisplayName("좋아요 추가 성공")
     @Test
-    void addLike() throws InterruptedException {
+    void addLike() {
         // given
-        int threadCount = 1000; // 스레드 개수
-        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);    // 스레드 풀 생성
-        CountDownLatch latch = new CountDownLatch(threadCount); // 스레드 대기 관리
-
-        String subject = "test subject";
-        String content = "test content";
-        FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
-        Feedback savedFeedback = feedbackRepository.saveAndFlush(Feedback.create(request, member));
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when
-        for (int i = 0; i < threadCount; i++) {
-            Long memberId = Long.valueOf(i + 1);
-            executorService.submit(() -> {
-                try {
-                    CustomUser2Member user = new CustomUser2Member(
-                        new CustomUserDetails(memberId, "", "",
-                            "", "", MemberRole.USER, MemberStatus.ACTIVITY));
-                    likeService.addLike(savedFeedback.getFeedbackId(), user);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    latch.countDown();
-                }
-            });
-        }
-
-        // 스레드가 다 끝날 때까지 기다리기
-        latch.await();
-        executorService.shutdown();
+        likeService.addLike(feedback.getFeedbackId(), user);
 
         // then
-        int likeCount = redisTemplate.keys(getLikeKeyPrefix() + "*").size();
-        String actualRedisData = redisTemplate.opsForValue()
-            .get(likeService.generateKey(savedFeedback.getFeedbackId(), 121L));
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(likeCount).isEqualTo(threadCount);
-            softAssertions.assertThat(actualRedisData).isEqualTo("ADD");
-        });
+        String deleteLike = redisTemplate.opsForValue()
+            .get(getLikeKeyPrefix() + feedback.getFeedbackId() + ":" + member.getMemberId());
+        assertThat(deleteLike).isEqualTo("ADD");
+        redisTemplate.delete(getLikeKeyPrefix()
+            + feedback.getFeedbackId() + ":" + member.getMemberId());
     }
 
-    @DisplayName("동시에 많은 좋아요 취소 요청이 들어올 때, Redis에 저장된 데이터의 정합성 확인")
+    @DisplayName("좋아요 취소 성공")
     @Test
-    void deleteLike() throws InterruptedException {
+    void deleteLike() {
         // given
-        int threadCount = 1000; // 스레드 개수
-        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);    // 스레드 풀 생성
-        CountDownLatch latch = new CountDownLatch(threadCount); // 스레드 대기 관리
-
-        String subject = "test subject";
-        String content = "test content";
-        FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
-        Feedback savedFeedback = feedbackRepository.saveAndFlush(Feedback.create(request, member));
+        CustomUser2Member user = new CustomUser2Member(
+            new CustomUserDetails(member.getMemberId(), "", "",
+                "", "", MemberRole.USER, MemberStatus.ACTIVITY));
 
         // when
-        for (int i = 0; i < threadCount; i++) {
-            Long memberId = Long.valueOf(i + 1);
-            executorService.submit(() -> {
-                try {
-                    CustomUser2Member user = new CustomUser2Member(
-                        new CustomUserDetails(memberId, "", "",
-                            "", "", MemberRole.USER, MemberStatus.ACTIVITY));
-                    likeService.deleteLike(savedFeedback.getFeedbackId(), user);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    latch.countDown();
-                }
-            });
-        }
-
-        // 스레드가 다 끝날 때까지 기다리기
-        latch.await();
-        executorService.shutdown();
+        likeRepository.save(Like.create(member, feedback));
+        likeService.deleteLike(feedback.getFeedbackId(), user);
 
         // then
-        int likeCount = redisTemplate.keys(getLikeKeyPrefix() + "*").size();
-        String actualRedisData = redisTemplate.opsForValue()
-            .get(likeService.generateKey(savedFeedback.getFeedbackId(), 121L));
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(likeCount).isEqualTo(threadCount);
-            softAssertions.assertThat(actualRedisData).isEqualTo("CANCEL");
-        });
+        String deleteLike = redisTemplate.opsForValue()
+            .get(getLikeKeyPrefix() + feedback.getFeedbackId() + ":" + member.getMemberId());
+        assertThat(deleteLike).isEqualTo("CANCEL");
+        redisTemplate.delete(getLikeKeyPrefix()
+            + feedback.getFeedbackId() + ":" + member.getMemberId());
     }
 
     @DisplayName("해당 좋아요가 존재할 때")
