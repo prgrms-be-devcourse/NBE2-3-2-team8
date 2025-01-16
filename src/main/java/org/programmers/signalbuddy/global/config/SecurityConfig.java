@@ -47,6 +47,7 @@ public class SecurityConfig {
                     "/css/**",
                     "/js/**",
                     "/images/**",
+                    "/ws/**",
                     "/webjars/**").permitAll()
                     // 로그인, 회원가입
                     .requestMatchers("/members/login", "admins/login", "/api/members/join",
