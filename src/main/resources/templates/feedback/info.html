@@ -71,8 +71,13 @@
           <span class="material-symbols-outlined mr-1">chat_bubble</span>
           댓글쓰기
         </button>
-        <button class="flex items-center text-neutral-700 hover:text-primary-500">
-          <span class="material-symbols-outlined mr-1">favorite</span>
+        <button class="flex items-center text-neutral-700 hover:text-primary-500"
+                th:styleappend="${isExistedLike} ? 'font-variation-settings: \'FILL\' 1, \'wght\' 700, \'GRAD\' 0, \'opsz\' 48;' : ''"
+                th:onclick="${isExistedLike} ? ''">
+          <span class="material-symbols-outlined mr-1"
+                th:classappend="${isExistedLike} ? 'text-primary-500' : ''">
+            favorite
+          </span>
           좋아요
         </button>
       </div>
