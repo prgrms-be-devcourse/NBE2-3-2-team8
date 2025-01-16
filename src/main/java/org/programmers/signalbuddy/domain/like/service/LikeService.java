@@ -26,13 +26,20 @@ public class LikeService {
 
     @Transactional
     public void addLike(Long feedbackId, CustomUser2Member user) {
+        String key = generateKey(feedbackId, user.getMemberId());
+
+        // 삭제 요청 데이터가 Redis에 있을 때
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
+            redisTemplate.delete(key);
+            return;
+        }
+
         boolean isExisted = likeRepository.existsByMemberAndFeedback(user.getMemberId(), feedbackId);
         if (isExisted) {
             throw new BusinessException(LikeErrorCode.ALREADY_ADDED_LIKE);
         }
 
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
-        String key = generateKey(feedbackId, user.getMemberId());
         operations.set(key, LikeRequestType.ADD.name(), 3L, TimeUnit.MINUTES);
     }
 
