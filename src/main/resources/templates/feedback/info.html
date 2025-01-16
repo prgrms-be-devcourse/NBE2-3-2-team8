@@ -72,10 +72,12 @@
           댓글쓰기
         </button>
         <button class="flex items-center text-neutral-700 hover:text-primary-500"
-                th:styleappend="${isExistedLike} ? 'font-variation-settings: \'FILL\' 1, \'wght\' 700, \'GRAD\' 0, \'opsz\' 48;' : ''"
-                th:onclick="${isExistedLike} ? ''">
+                th:classappend="${isExistedLike} ? 'heart-filled' : ''"
+                th:onclick="${isExistedLike} ? 'deleteLike()' : 'addLike()'"
+                id="like-btn">
           <span class="material-symbols-outlined mr-1"
-                th:classappend="${isExistedLike} ? 'text-primary-500' : ''">
+                th:classappend="${isExistedLike} ? 'text-primary-500' : ''"
+                id="heart">
             favorite
           </span>
           좋아요
@@ -315,6 +317,31 @@
     })
     .catch(error => {
       console.error('댓글 수정 요청 중 오류 발생:', error);
+    });
+  }
+
+  // 좋아요 추가 요청
+  function addLike() {
+    const feedbackId = menu.getAttribute('data-feedback-id');
+
+    fetch(`/api/feedbacks/${feedbackId}/like`, {
+      method: 'POST'
+    })
+    .then(response => {
+      if (response.ok) {
+        const likeBtn = document.getElementById('like-btn');
+        const heart = document.getElementById('heart');
+
+        likeBtn.classList.add('heart-filled');
+        heart.classList.add('text-primary-500');
+      } else {
+        alert('좋아요 추가를 실패했습니다.');
+        response.json()
+        .then(data => console.log(data.message));
+      }
+    })
+    .catch(error => {
+      console.error('좋아요 추가 요청 중 오류 발생:', error);
     });
   }
 </script>
