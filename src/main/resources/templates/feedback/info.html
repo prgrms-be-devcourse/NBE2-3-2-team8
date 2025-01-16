@@ -72,8 +72,9 @@
           댓글쓰기
         </button>
         <button class="flex items-center text-neutral-700 hover:text-primary-500"
+                th:data-is-existed-like="${isExistedLike}"
                 th:classappend="${isExistedLike} ? 'heart-filled' : ''"
-                th:onclick="${isExistedLike} ? 'deleteLike()' : 'addLike()'"
+                th:onclick="'clickLikeBtn()'"
                 id="like-btn">
           <span class="material-symbols-outlined mr-1"
                 th:classappend="${isExistedLike} ? 'text-primary-500' : ''"
@@ -320,10 +321,22 @@
     });
   }
 
-  // 좋아요 추가 요청
-  function addLike() {
+  function clickLikeBtn() {
     const feedbackId = menu.getAttribute('data-feedback-id');
+    const likeBtn = document.getElementById('like-btn');
+    const isExistedLike = likeBtn.getAttribute('data-is-existed-like') === 'true';
 
+    if (isExistedLike) {
+      deleteLike(feedbackId); // 좋아요 삭제
+    } else {
+      addLike(feedbackId); // 좋아요 추가
+    }
+
+    likeBtn.setAttribute('data-is-existed-like', !isExistedLike === true ? 'true' : 'false');
+  }
+
+  // 좋아요 추가 요청
+  function addLike(feedbackId) {
     fetch(`/api/feedbacks/${feedbackId}/like`, {
       method: 'POST'
     })
@@ -346,9 +359,7 @@
   }
 
   // 좋아요 취소 요청
-  function deleteLike() {
-    const feedbackId = menu.getAttribute('data-feedback-id');
-
+  function deleteLike(feedbackId) {
     fetch(`/api/feedbacks/${feedbackId}/like`, {
       method: 'DELETE'
     })
