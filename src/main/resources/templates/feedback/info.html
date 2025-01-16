@@ -344,4 +344,29 @@
       console.error('좋아요 추가 요청 중 오류 발생:', error);
     });
   }
+
+  // 좋아요 취소 요청
+  function deleteLike() {
+    const feedbackId = menu.getAttribute('data-feedback-id');
+
+    fetch(`/api/feedbacks/${feedbackId}/like`, {
+      method: 'DELETE'
+    })
+    .then(response => {
+      if (response.ok) {
+        const likeBtn = document.getElementById('like-btn');
+        const heart = document.getElementById('heart');
+
+        likeBtn.classList.remove('heart-filled');
+        heart.classList.remove('text-primary-500');
+      } else {
+        alert('좋아요 취소를 실패했습니다.');
+        response.json()
+        .then(data => console.log(data.message));
+      }
+    })
+    .catch(error => {
+      console.error('좋아요 취소 요청 중 오류 발생:', error);
+    });
+  }
 </script>
