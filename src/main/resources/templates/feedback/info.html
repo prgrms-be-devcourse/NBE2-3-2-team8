@@ -81,7 +81,7 @@
                 id="heart">
             favorite
           </span>
-          좋아요
+          <span id="like-count" th:text="${feedback.getLikeCount()}"></span>
         </button>
       </div>
     </section>
@@ -344,9 +344,11 @@
       if (response.ok) {
         const likeBtn = document.getElementById('like-btn');
         const heart = document.getElementById('heart');
+        const likeCount = document.getElementById('like-count');
 
         likeBtn.classList.add('heart-filled');
         heart.classList.add('text-primary-500');
+        likeCount.textContent = Number(likeCount.textContent) + 1;
       } else {
         alert('좋아요 추가를 실패했습니다.');
         response.json()
@@ -367,9 +369,11 @@
       if (response.ok) {
         const likeBtn = document.getElementById('like-btn');
         const heart = document.getElementById('heart');
+        const likeCount = document.getElementById('like-count');
 
         likeBtn.classList.remove('heart-filled');
         heart.classList.remove('text-primary-500');
+        likeCount.textContent = Number(likeCount.textContent) - 1;
       } else {
         alert('좋아요 취소를 실패했습니다.');
         response.json()
