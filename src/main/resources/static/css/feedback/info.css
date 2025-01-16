@@ -613,3 +613,7 @@ video {
   padding: 8px;
   margin-top: 8px;
 }
+
+.text-primary-500 {
+  color: red;
+}

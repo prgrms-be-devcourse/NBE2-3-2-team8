@@ -7,6 +7,7 @@ import org.programmers.signalbuddy.domain.comment.service.CommentService;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.service.FeedbackService;
+import org.programmers.signalbuddy.domain.like.service.LikeService;
 import org.programmers.signalbuddy.global.annotation.CurrentUser;
 import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.dto.PageResponse;
@@ -29,6 +30,7 @@ public class FeedbackWebController {
 
     private final FeedbackService feedbackService;
     private final CommentService commentService;
+    private final LikeService likeService;
 
     @GetMapping
     public ModelAndView searchFeedbackList(@PageableDefault(page = 0, size = 10) Pageable pageable,
@@ -51,11 +53,13 @@ public class FeedbackWebController {
         FeedbackResponse feedback = feedbackService.searchFeedbackDetail(feedbackId);
         PageResponse<CommentResponse> commentPage = commentService.searchCommentList(feedbackId,
             PageRequest.of(0, 1000));   // 페이지네이션 없이 모든 댓글을 가져오기 위함
+        boolean isExistedLike = likeService.existsLike(feedbackId, user).getStatus();
 
         mv.setViewName("feedback/info");
         mv.addObject("feedback", feedback);
         mv.addObject("commentPage", commentPage);
         mv.addObject("user", user);
+        mv.addObject("isExistedLike", isExistedLike);
         return mv;
     }
 
