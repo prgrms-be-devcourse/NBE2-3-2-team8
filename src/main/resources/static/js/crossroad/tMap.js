@@ -4,8 +4,6 @@ let abortController = new AbortController(); // API 요청 중 signal로 상태 
 
 let startMarker= null;
 let endMarker= null;
-
-let input = null; // 데이터
 let routeLayer= null;
 
 // 데이터 요청 상태 관리
@@ -183,9 +181,8 @@ document.getElementById("search").addEventListener("click", async function() {
 
 // 주소 검색 함수
 async function searchAddress(address, signal) {
-    input = document.getElementById("searchInput").value;
     // 검색할 주소
-    const url = `https://apis.openapi.sk.com/tmap/pois?version=1&searchType=all&page=1&multiPoint=Y&searchtypCd=A&searchKeyword=${input}`;
+    const url = `https://apis.openapi.sk.com/tmap/pois?version=1&searchType=all&page=1&multiPoint=Y&searchtypCd=A&searchKeyword=${address}`;
 
     try {
         const response = await fetch(url, {
@@ -262,14 +259,7 @@ function updateSuggestions(pois) {
     suggestionsElement.classList.add("show"); // 추천어 목록 표시
 }
 
-// 마커를 제거하는 함수
-function clearMarker() {
-    if( endMarker ){
-        endMarker.setMap(null);
-        endMarker = null;
-    }
-}
-
+// 검색 창 변경 시
 document.getElementById("searchInput").addEventListener("input", function () {
     const inputValue = searchInput.value.trim();
     if (inputValue === "") {
@@ -278,6 +268,12 @@ document.getElementById("searchInput").addEventListener("input", function () {
     }
 });
 
+// 마커를 제거하는 함수
+function clearMarker() {
+    if( endMarker ){
+        endMarker.setMap(null);
+    }
+}
 
 document.getElementById("route").addEventListener("click", function (){
     console.log("click route");
