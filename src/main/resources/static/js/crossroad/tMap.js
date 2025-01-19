@@ -226,14 +226,10 @@ const handleClick = (poi) => {
     document.getElementById("searchInput").value = poi.name; // 클릭 시 입력 필드에 채우기
     document.getElementById("suggestions").style.visibility = "hidden";// 추천어 목록 숨김
 
-    if(endMarker&&poi){
-        endMarker.setMap(null);
-    }
-
     if(poi){
         endLatLng = new Tmapv2.LatLng(poi.frontLat, poi.frontLon);
         endMarker = new Tmapv2.Marker({
-            position: endLatLng,
+            position:  endLatLng,
             map: map
         });
     }
