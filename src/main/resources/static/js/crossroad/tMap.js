@@ -28,27 +28,22 @@ var map = new Tmapv2.Map("map", {
 });
 
 map.addListener("click", function (event) {
+    console.log("좌표값 : "+ startLatLng)
     startLatLng = null; // 값 초기화
     startLatLng = event.latLng; // 클릭한 위치의 위도, 경도 정보
-
-    console.log(startLatLng);
-
-    if (startMarker && startLatLng) {
-        startMarker.setMap(null); // 기존 마커 제거
-    }
 
     if(startLatLng){
         startMarker = new Tmapv2.Marker({
             position: startLatLng,
             map: map
         });
-    }
-
+    } // 클릭 시 현재 startMarker 값을 이벤트로 업데이트
 });
 
 fetch('api/crossroads/marker')
     .then(response=> response.json())
     .then(data=> {
+        console.log(data);
         // 데이터 순회하며 마커 생성
         data.forEach(crossroad => {
             const lat = crossroad.mapCtptIntLat;
@@ -207,6 +202,7 @@ async function searchAddress(address, signal) {
         }
 
         const data = await response.json();
+        console.log(data);
         const pois = data.searchPoiInfo.pois.poi;
 
         if (pois && pois.length > 0) {// POI 이름만 추출
