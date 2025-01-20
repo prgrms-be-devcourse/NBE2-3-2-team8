@@ -37,7 +37,12 @@ public class RedisConfig {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(redisHost);
         redisStandaloneConfiguration.setPort(Integer.parseInt(redisPort));
-        redisStandaloneConfiguration.setPassword(redisPassword);
+
+        // 비밀번호가 설정된 경우만 적용
+        if (redisPassword != null && !redisPassword.isEmpty()) {
+            redisStandaloneConfiguration.setPassword(redisPassword);
+        }
+
         LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(
             redisStandaloneConfiguration);
         return lettuceConnectionFactory;
