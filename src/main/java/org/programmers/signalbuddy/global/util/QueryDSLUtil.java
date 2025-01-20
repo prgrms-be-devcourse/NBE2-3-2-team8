@@ -44,8 +44,8 @@ public final class QueryDSLUtil {
      * Pageable의 설정한 정렬을 QueryDSL에서 사용할 수 있게 조건을 정렬 조건을 반환
      *
      * @param pageable 쿼리 파라미터로 가져온 값들
-     * @param type     정렬할 컬럼의 클래스 <br> ex) QFeedback.feedback.getClass()
-     * @param variable 정렬할 QClass의 필드명 <br> ex) "feedback"
+     * @param type     정렬할 컬럼의 클래스 <br> ex) QFeedback.feedback.getType()
+     * @param variable 정렬할 QClass의 Entity 필드명 <br> ex) "feedback"
      * @return 정렬 조건을 반환
      * @throws org.springframework.dao.InvalidDataAccessApiUsageException 잘못된 필드명을 입력하면 쿼리를 처리하는 중
      *                                                                    해당 예외가 발생한다.
