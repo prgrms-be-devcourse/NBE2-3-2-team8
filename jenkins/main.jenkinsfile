@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+
+    environment {
+        VERSION = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        DOCKER_IMAGE = "${DOCKER_REGISTRY}/signal-buddy:${VERSION}"
+    }
+
+    stages {
+        stage ('Git clone') {
+            steps {
+                checkout scmGit(
+                  branches: [[name: 'main']],
+                  extensions: [submodule(parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: true)],
+                  userRemoteConfigs: [[credentialsId: 'signal-buddy-github-id', url: '${SIGNAL_BUDDY_SUBMODULE_REPO}']]
+                )
+            }
+        }
+
+        stage ('Gradle Build') {
+            steps {
+                sh '''
+                    chmod +x gradlew
+                    ./gradlew clean bootJar
+                '''
+            }
+        }
+
+        stage ('Docker Image Build') {
+            steps {
+                sh '''
+                    docker build -t test -f submodule/docker/Dockerfile .
+                    docker tag test ${DOCKER_IMAGE}
+
+                    export CR_PAT=${SIGNAL_BUDDY_TOKEN}
+                    echo \$CR_PAT | docker login ghcr.io -u ${GITHUB_ID} --password-stdin
+
+                    docker push ${DOCKER_IMAGE}
+
+                    docker rmi -f ${DOCKER_IMAGE}
+                    docker system prune -a -f
+                '''
+            }
+        }
+
+        stage ('Deploy') {
+            steps {
+                sshagent (credentials: ['SIGNAL_BUDDY_SSH']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ${API_SERVER_USER}@${SIGNAL_BUDDY_IP} "docker login ghcr.io -u ${GITHUB_ID} --password ${SIGNAL_BUDDY_TOKEN}"
+
+                        ssh -t ${API_SERVER_USER}@${SIGNAL_BUDDY_IP} "docker pull ${DOCKER_IMAGE}"
+
+                        ssh -t ${API_SERVER_USER}@${SIGNAL_BUDDY_IP} "docker stop signal-buddy || true"
+                        ssh -t ${API_SERVER_USER}@${SIGNAL_BUDDY_IP} "docker rm signal-buddy || true"
+
+                        ssh -t ${API_SERVER_USER}@${SIGNAL_BUDDY_IP} "docker run -d --name signal-buddy -p 8080:8080 ${DOCKER_IMAGE}"
+
+                        ssh -t ${API_SERVER_USER}@${SIGNAL_BUDDY_IP} "docker system prune -a -f || true"
+                    '''
+                }
+            }
+        }
+    }
+}
