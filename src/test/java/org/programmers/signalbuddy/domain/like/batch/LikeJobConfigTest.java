@@ -49,7 +49,7 @@ class LikeJobConfigTest extends BatchTest implements RedisTestContainer {
     @BeforeEach
     void setup() {
         List<Member> memberList = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 100; i++) {
             Member member = Member.builder()
                 .email("test@test.com")
                 .password("123456" + i)
@@ -69,7 +69,10 @@ class LikeJobConfigTest extends BatchTest implements RedisTestContainer {
         // given
         int addLikeThreadCount = savedMemberList.size(); // 좋아요 추가 요청의 스레드 개수
         ExecutorService executorService = Executors.newFixedThreadPool(addLikeThreadCount);    // 스레드 풀 생성
-        CountDownLatch latch = new CountDownLatch(addLikeThreadCount); // 스레드 대기 관리
+        final CountDownLatch latch = new CountDownLatch(addLikeThreadCount); // 스레드 대기 관리
+        int deleteLikeThreadCount = (int) (addLikeThreadCount * 0.3);   // 좋아요 취소 요청의 스레드 개수
+        final CountDownLatch latch2 = new CountDownLatch(deleteLikeThreadCount); // 스레드 대기 관리
+        ExecutorService executorService2 = Executors.newFixedThreadPool(deleteLikeThreadCount);    // 스레드 풀 생성
 
         String subject = "test subject";
         String content = "test content";
@@ -80,7 +83,7 @@ class LikeJobConfigTest extends BatchTest implements RedisTestContainer {
         // 좋아요 추가
         for (int i = 0; i < addLikeThreadCount; i++) {
             Member member = savedMemberList.get(i);
-            executorService.submit(() -> {
+            executorService.execute(() -> {
                 try {
                     CustomUser2Member user = new CustomUser2Member(
                         new CustomUserDetails(member.getMemberId(), "", "",
@@ -97,11 +100,12 @@ class LikeJobConfigTest extends BatchTest implements RedisTestContainer {
 
         // 스레드가 다 끝날 때까지 기다리기
         latch.await();
+        executorService.shutdown();
 
         // 좋아요 취소
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < deleteLikeThreadCount; i++) {
             Member member = savedMemberList.get(i);
-            executorService.submit(() -> {
+            executorService2.execute(() -> {
                 try {
                     CustomUser2Member user = new CustomUser2Member(
                         new CustomUserDetails(member.getMemberId(), "", "",
@@ -111,14 +115,14 @@ class LikeJobConfigTest extends BatchTest implements RedisTestContainer {
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    latch.countDown();
+                    latch2.countDown();
                 }
             });
         }
 
         // 스레드가 다 끝날 때까지 기다리기
-        latch.await();
-        executorService.shutdown();
+        latch2.await();
+        executorService2.shutdown();
 
         jobLauncherTestUtils.setJob(likeRequestJob);
         JobExecution jobExecution = jobLauncherTestUtils.launchJob();
@@ -128,7 +132,26 @@ class LikeJobConfigTest extends BatchTest implements RedisTestContainer {
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(jobExecution.getExitStatus()).isEqualTo(ExitStatus.COMPLETED);
             softAssertions.assertThat(updatedFeedback.getLikeCount())
-                .isEqualTo(addLikeThreadCount - 10);
+                .isEqualTo(addLikeThreadCount - deleteLikeThreadCount);
         });
+    }
+
+    /**
+     * Performs division of two numbers.
+     *
+     * @param numerator   the numerator
+     * @param denominator the denominator
+     * @return the result of division
+     * @throws ArithmeticException if the denominator is zero
+     * @throws IllegalArgumentException if the numerator is negative
+     */
+    public double divide(int numerator, int denominator) throws ArithmeticException {
+        if (denominator == 0) {
+            throw new ArithmeticException("Cannot divide by zero");
+        }
+        if (numerator < 0) {
+            throw new IllegalArgumentException("Numerator must be non-negative");
+        }
+        return (double) numerator / denominator;
     }
 }
