@@ -10,9 +10,11 @@ pipeline {
         stage ('Git clone') {
             steps {
                 checkout scmGit(
-                  branches: [[name: 'main']],
-                  extensions: [submodule(parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: true)],
-                  userRemoteConfigs: [[credentialsId: 'signal-buddy-github-id', url: '${SIGNAL_BUDDY_SUBMODULE_REPO}']]
+                    branches: [[name: '*/main']],
+                    extensions: [submodule(parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: true)],
+                    userRemoteConfigs: [
+                        [credentialsId: 'signal-buddy-github-id', refspec: '+refs/heads/main:refs/remotes/origin/main',
+                        url: 'https://github.com/prgrms-be-devcourse/NBE2-3-2-team8.git']]
                 )
             }
         }
