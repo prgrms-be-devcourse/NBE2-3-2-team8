@@ -7,8 +7,9 @@
   <title>Signal Buddy - 나의 즐겨찾기</title>
   <th:block th:replace="~{fragments/header::headerStyles}"></th:block>
   <link href="/css/member/bookmarks.css" rel="stylesheet">
+  <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=1bxEMLzGUg68a4EeRA5F14J5Vbgh6GWI3zLXabl9"></script>
 </head>
-<body>
+<body onload="initMap()">
 <!-- 헤더 파일 -->
 <th:block th:replace="~{fragments/header::headerFragment}"></th:block>
 <div class="bg-neutral-100 shadow rounded-lg mx-auto">
@@ -43,6 +44,9 @@
             </div>
           </div>
         </div>
+        <div>
+          <div id="map"></div>
+        </div>
         <div class="mt-6 flex justify-center space-x-4">
           <a class="px-6 py-2 rounded-md bg-neutral-950 text-neutral-50 cancel"
              th:href="@{/members/{memberId}/bookmarks(memberId=${user.memberId})}">취소</a>
@@ -52,6 +56,9 @@
     </section>
   </main>
 </div>
+<script th:inline="javascript">
+  const bookmark = /*[[${bookmark}]]*/ {}; // Thymeleaf 변수 삽입
+</script>
 <script src="/js/member/bookmark/update.js"></script>
 </body>
 </html>

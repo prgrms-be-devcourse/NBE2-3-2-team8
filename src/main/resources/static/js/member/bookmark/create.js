@@ -1,5 +1,7 @@
 let abortController = new AbortController(); // API 요청 중 signal로 상태 변경
 const createParams = {}; // 즐겨찾기 등록 객체
+let map;
+let marker;
 
 // 공통 동작 함수
 async function handleSearch() {
@@ -73,9 +75,15 @@ const handleClick = (poi) => {
   document.getElementById("suggestions").style.visibility = "hidden";// 추천어 목록 숨김
   document.querySelector("#alias").value = poi.name;
 
+  if (marker) {
+    marker.setMap(null); // Marker 초기화
+  }
   const address = poi.newAddressList.newAddress[0].fullAddressRoad; // 도로명 주소
   const lat = poi.noorLat;
   const lng = poi.noorLon;
+  map.setCenter(new Tmapv2.LatLng(lat, lng));
+  map.setZoom(17);
+  addMarker(lat, lng);
 
   createParams.lat = lat;
   createParams.lng = lng;
@@ -92,7 +100,6 @@ function updateSuggestions(pois) {
   }
 
   pois.forEach(poi => {
-    console.log("poi : ", poi);
     const span = document.createElement("span");
     span.textContent = poi.name;
     span.className = "search-list";
@@ -141,3 +148,19 @@ const addBtn = (memberId) => {
 const isValidUpdateParams = (params) => {
   return params && params.address && params.name && params.lat && params.lng;
 };
+
+const initMap = () => {
+  map = new Tmapv2.Map("map", {
+    center: new Tmapv2.LatLng(37.5665, 126.9780), // 지도 중심 좌표 (위도, 경도)
+    width: "100%",
+    height: "400px",
+    zoom: 12 // 줌 레벨 (값이 높을수록 확대)
+  });
+}
+
+const addMarker = (lat, lng) => {
+  marker = new Tmapv2.Marker({
+    position: new Tmapv2.LatLng(lat, lng), // Marker의 중심좌표 설정.
+    map: map, // Marker가 표시될 Map 설정..
+  });
+}
