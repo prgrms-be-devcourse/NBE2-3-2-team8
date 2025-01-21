@@ -4,7 +4,8 @@ import org.programmers.signalbuddy.domain.crossroad.entity.Crossroad;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+
 @Repository
-public interface CrossroadRepository extends JpaRepository<Crossroad, Long> {
+public interface CrossroadRepository extends JpaRepository<Crossroad, Long>, QueryCrossroadRepository{
 
 }

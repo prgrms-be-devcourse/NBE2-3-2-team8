@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum SignalState {
     GREEN("protected-Movement-Allowed",true),   // 신호등이 녹색, 이동 보장 상태
-    GRAY("permissive-Movement-Allowed",true), // 신호등이 황생, 이동 가능 상태
+    GRAY("permissive-Movement-Allowed",true), // 신호등이 황색, 이동 가능 상태
     RED("stop-And-Remain",false);               // 신호등이 적색, 정지 상태
 
     private String state;

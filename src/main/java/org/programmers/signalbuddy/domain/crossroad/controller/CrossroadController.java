@@ -2,6 +2,7 @@ package org.programmers.signalbuddy.domain.crossroad.controller;
 
 import org.programmers.signalbuddy.domain.crossroad.dto.CrossroadApiResponse;
 import org.programmers.signalbuddy.domain.crossroad.dto.CrossroadStateApiResponse;
+import org.programmers.signalbuddy.domain.crossroad.repository.CrossroadRepository;
 import org.programmers.signalbuddy.domain.crossroad.service.CrossroadService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.List;
 public class CrossroadController {
 
     private final CrossroadService crossroadService;
+    private final CrossroadRepository crossroadRepository;
 
     @PostMapping("/save")
     public ResponseEntity<Void> saveCrossroadDates(@Min(1) @RequestParam("page") int page,
@@ -51,5 +53,20 @@ public class CrossroadController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(stateRes);
     }
+
+    @GetMapping("/around") // 좌표 값을 기반으로 50m이내 신호등 반환
+    public ResponseEntity<List<CrossroadApiResponse>> aroundCrossroad(
+            @RequestParam double lat,
+            @RequestParam double lng
+    ) {
+
+        List<CrossroadApiResponse> aroundSign = crossroadRepository.findNearByCrossroads(lat, lng);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(aroundSign);
+
+    }
+
 
 }

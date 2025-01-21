@@ -1,5 +1,6 @@
 package org.programmers.signalbuddy.domain.crossroad.entity;
 
+import org.hibernate.annotations.Type;
 import org.programmers.signalbuddy.domain.basetime.BaseTimeEntity;
 import org.programmers.signalbuddy.domain.crossroad.dto.CrossroadApiResponse;
 import jakarta.persistence.*;
@@ -25,6 +26,7 @@ public class Crossroad extends BaseTimeEntity {
     private String name;
 
     @Column(nullable = false)
+    @Type(type = "org.hibernate.spatial.GeometryType") // Hibernate Spatial 매핑
     private Point coordinate;
 
     public Crossroad(CrossroadApiResponse response) {
