@@ -26,9 +26,12 @@ var map = new Tmapv2.Map("map", {
 });
 
 map.addListener("click", function (event) {
-    console.log("좌표값 : "+ startLatLng)
     startLatLng = null; // 값 초기화
     startLatLng = event.latLng; // 클릭한 위치의 위도, 경도 정보
+
+    if(startMarker!=null){
+        startMarker.setMap(null);
+    }
 
     if(startLatLng){
         startMarker = new Tmapv2.Marker({
@@ -36,6 +39,8 @@ map.addListener("click", function (event) {
             map: map
         });
     } // 클릭 시 현재 startMarker 값을 이벤트로 업데이트
+
+    console.log("좌표값 : "+ startLatLng)
 });
 
 fetch('api/crossroads/marker')
