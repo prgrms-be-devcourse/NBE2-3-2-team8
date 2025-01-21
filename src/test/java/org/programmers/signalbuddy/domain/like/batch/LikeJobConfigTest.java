@@ -135,23 +135,4 @@ class LikeJobConfigTest extends BatchTest implements RedisTestContainer {
                 .isEqualTo(addLikeThreadCount - deleteLikeThreadCount);
         });
     }
-
-    /**
-     * Performs division of two numbers.
-     *
-     * @param numerator   the numerator
-     * @param denominator the denominator
-     * @return the result of division
-     * @throws ArithmeticException if the denominator is zero
-     * @throws IllegalArgumentException if the numerator is negative
-     */
-    public double divide(int numerator, int denominator) throws ArithmeticException {
-        if (denominator == 0) {
-            throw new ArithmeticException("Cannot divide by zero");
-        }
-        if (numerator < 0) {
-            throw new IllegalArgumentException("Numerator must be non-negative");
-        }
-        return (double) numerator / denominator;
-    }
 }
