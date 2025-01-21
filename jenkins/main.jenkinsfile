@@ -64,4 +64,15 @@ pipeline {
             }
         }
     }
+
+    post {
+        success {
+            slackSend(channel: "${SLACK_NOTIFICATION_CHANNEL}", color: '#41fc03',
+                      message: "운영 서버에 성공적으로 배포했습니다! \n Job : <${env.BUILD_URL}|${env.JOB_NAME} ${env.BUILD_NUMBER}>")
+        }
+        failure {
+            slackSend (channel: "${SLACK_NOTIFICATION_CHANNEL}", color: '#fc0f03',
+                        message: "운영 서버에 배포가 실패했습니다! \n Job : <${env.BUILD_URL}|${env.JOB_NAME} ${env.BUILD_NUMBER}>")
+        }
+    }
 }
