@@ -42,7 +42,9 @@ public class JobConfig {
     public Step deleteMemberStep(JobRepository jobRepository,
         PlatformTransactionManager transactionManager) {
         return new StepBuilder("deleteMemberStep", jobRepository).<Member, Member>chunk(chunkSize,
-            transactionManager).reader(customReader()).writer(deleteMemberWriter()).build();
+            transactionManager)
+            .allowStartIfComplete(true) // COMPLETED 되어도 재실행에 포함시키기
+            .reader(customReader()).writer(deleteMemberWriter()).build();
     }
 
 
