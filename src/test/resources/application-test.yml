@@ -35,3 +35,5 @@ logging:
 schedule:
   like-job:
     cron: "2 0 3 * * ?" # 매일 1시 2초마다
+    lockAtMostFor: 23h  # 오류 발생 시 락을 유지하는 시간 (작업의 실행 시간보다 길게 하는 게 좋음)
+    lockAtLeastFor: 23h # 락을 유지하는 최소 시간 (스케줄러 시간보다 짧게 지정하는 게 좋음)
