@@ -23,6 +23,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
+import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -115,10 +117,11 @@ class AwsFileServiceTest {
         doThrow(new RuntimeException("S3 upload failed"))
             .when(s3Client).putObject(any(PutObjectRequest.class), any(RequestBody.class));
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
             awsFileService.saveProfileImage(mockFile);
         });
 
-        assertTrue(exception.getMessage().contains("S3에 파일 업로드 중 오류가 발생했습니다"));
+        assertTrue(exception.getMessage().contains(MemberErrorCode.S3_UPLOAD_FAILURE.getMessage()));
+
     }
 }

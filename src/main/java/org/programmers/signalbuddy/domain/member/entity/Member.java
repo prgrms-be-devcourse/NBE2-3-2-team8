@@ -60,7 +60,7 @@ public class Member extends BaseTimeEntity {
         return !user.getMemberId().equals(member.getMemberId());
     }
 
-    public void updateMember(MemberUpdateRequest request, String encodedPassword) {
+    public void updateMember(MemberUpdateRequest request, String encodedPassword, String profileImageUrl) {
         if (request.getEmail() != null) {
             this.email = request.getEmail();
         }
@@ -70,8 +70,8 @@ public class Member extends BaseTimeEntity {
         if (request.getNickname() != null) {
             this.nickname = request.getNickname();
         }
-        if (request.getProfileImageUrl() != null) {
-            this.profileImageUrl = request.getProfileImageUrl();
+        if (profileImageUrl != null) {
+            this.profileImageUrl = profileImageUrl;
         }
     }
 

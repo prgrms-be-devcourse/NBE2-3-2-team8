@@ -3,6 +3,7 @@ package org.programmers.signalbuddy.domain.member.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.programmers.signalbuddy.domain.admin.service.AdminService;
@@ -26,7 +27,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("api/members")
@@ -50,10 +53,15 @@ public class MemberController {
     @ApiResponse(responseCode = "200", description = "수정 성공")
     @PatchMapping("{id}")
     public ResponseEntity<MemberResponse> updateMember(@PathVariable Long id,
-        @Validated @RequestBody MemberUpdateRequest memberUpdateRequest) {
-        // TODO : 사용자 이미지 저장 방식 정해지면 수정 필요
+        @RequestPart(value = "email", required = false) String email,
+        @RequestPart(value = "nickname", required = false) String nickname,
+        @RequestPart(value = "password", required = false) String password,
+        @RequestPart(value = "imageFile", required = false) MultipartFile imageFile,
+        HttpServletRequest request) {
+        final MemberUpdateRequest memberUpdateRequest = MemberUpdateRequest.builder().email(email)
+            .nickname(nickname).password(password).imageFile(imageFile).build();
         log.info("id : {}, UpdateRequest: {}", id, memberUpdateRequest);
-        final MemberResponse updated = memberService.updateMember(id, memberUpdateRequest);
+        final MemberResponse updated = memberService.updateMember(id, memberUpdateRequest, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(updated);
     }
 

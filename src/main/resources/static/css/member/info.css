@@ -66,3 +66,30 @@
   display: flex;
   justify-content: space-evenly;
 }
+
+.camera-btn {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background-color: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.profile-preview {
+  position: relative;
+  height: 140px;
+}
+
+.camera-btn img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
