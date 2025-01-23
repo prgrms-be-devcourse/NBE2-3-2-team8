@@ -2,6 +2,7 @@ package org.programmers.signalbuddy.domain.member.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -44,14 +45,20 @@ public class AwsFileService {
     public Resource getProfileImage(String filename) {
         final String filePath = profileImageDir + filename;
         final URL url = generateFileUrl(filePath);
-        final Resource resource = new UrlResource(url);
 
-        if (!resource.exists() || !resource.isReadable()) {
-            log.error("유효하지 않은 파일: {}", filePath);
-            throw new IllegalStateException("유효하지 않은 URL 또는 읽을 수 없는 파일입니다.");
+        try {
+            final UrlResource resource = createUrlResource(url);
+
+            if (!resource.exists() || !resource.isReadable()) {
+                log.error("유효하지 않은 파일: {}", filePath);
+                throw new IllegalStateException("유효하지 않은 URL 또는 읽을 수 없는 파일입니다.");
+            }
+
+            return resource;
+        } catch (MalformedURLException e) {
+            log.error("URL 생성 실패: {}", filePath, e);
+            throw new IllegalStateException("URL 생성 중 오류가 발생했습니다.", e);
         }
-
-        return resource;
     }
 
     /**
@@ -104,5 +111,16 @@ public class AwsFileService {
             log.error("파일 업로드 실패: {}", key, e);
             throw new IllegalStateException("S3에 파일 업로드 중 오류가 발생했습니다. 객체 키: " + key, e);
         }
+    }
+
+    /**
+     * UrlResource 생성 (테스트를 위한 메서드 분리)
+     *
+     * @param url 생성할 URL
+     * @return UrlResource 객체
+     * @throws MalformedURLException URL이 잘못된 경우
+     */
+    protected UrlResource createUrlResource(URL url) throws MalformedURLException {
+        return new UrlResource(url);
     }
 }
