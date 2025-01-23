@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
+import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -51,13 +53,13 @@ public class AwsFileService {
 
             if (!resource.exists() || !resource.isReadable()) {
                 log.error("유효하지 않은 파일: {}", filePath);
-                throw new IllegalStateException("유효하지 않은 URL 또는 읽을 수 없는 파일입니다.");
+                throw new BusinessException(MemberErrorCode.PROFILE_IMAGE_LOAD_ERROR_NOT_EXIST_FILE);
             }
 
             return resource;
         } catch (MalformedURLException e) {
             log.error("URL 생성 실패: {}", filePath, e);
-            throw new IllegalStateException("URL 생성 중 오류가 발생했습니다.", e);
+            throw new BusinessException(MemberErrorCode.PROFILE_IMAGE_LOAD_ERROR_INVALID_URL);
         }
     }
 
@@ -77,7 +79,7 @@ public class AwsFileService {
             return uniqueFilename;
         } catch (IOException e) {
             log.error("파일 업로드 실패: {}", profileImage.getOriginalFilename(), e);
-            throw new IllegalStateException("파일 업로드 중 오류가 발생했습니다.", e);
+            throw new BusinessException(MemberErrorCode.PROFILE_IMAGE_UPLOAD_FAILURE);
         }
     }
 
@@ -109,7 +111,7 @@ public class AwsFileService {
             s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, size));
         } catch (Exception e) {
             log.error("파일 업로드 실패: {}", key, e);
-            throw new IllegalStateException("S3에 파일 업로드 중 오류가 발생했습니다. 객체 키: " + key, e);
+            throw new BusinessException(MemberErrorCode.S3_UPLOAD_FAILURE);
         }
     }
 
