@@ -26,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private static final String NO_PROFILE_IMAGE = "none";
     private final MemberRepository memberRepository;
     private final AwsFileService awsFileService;
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -87,13 +86,12 @@ public class MemberService {
 
     public Resource getProfileImage(String filename) {
         try {
-            if (NO_PROFILE_IMAGE.equals(filename)) {
+            if (filename.isEmpty()) {
                 return new ClassPathResource(defaultProfileImagePath);
             }
             return awsFileService.getProfileImage(filename);
-
-        } catch (IllegalStateException e) {
-            throw new BusinessException(MemberErrorCode.PROFILE_IMAGE_LOAD_ERROR);
+        } catch (BusinessException e) {
+            return new ClassPathResource(defaultProfileImagePath);
         }
     }
 
