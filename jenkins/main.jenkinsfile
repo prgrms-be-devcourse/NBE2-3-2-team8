@@ -53,10 +53,7 @@ pipeline {
 
                         ssh -t ${API_SERVER_USER}@${SIGNAL_BUDDY_IP} "docker pull ${DOCKER_IMAGE}"
 
-                        ssh -t ${API_SERVER_USER}@${SIGNAL_BUDDY_IP} "docker stop signal-buddy || true"
-                        ssh -t ${API_SERVER_USER}@${SIGNAL_BUDDY_IP} "docker rm signal-buddy || true"
-
-                        ssh -t ${API_SERVER_USER}@${SIGNAL_BUDDY_IP} "docker run -d --name signal-buddy -p 8080:8080 ${DOCKER_IMAGE}"
+                        ssh -t ${API_SERVER_USER}@${SIGNAL_BUDDY_IP} "echo 'DOCKER_IMAGE=${DOCKER_IMAGE}' > ${SUBMODULE_DIRECTORY}/docker/.env && sudo sh ${SUBMODULE_DIRECTORY}/script/deploy.sh"
 
                         ssh -t ${API_SERVER_USER}@${SIGNAL_BUDDY_IP} "docker system prune -a -f || true"
                     '''
