@@ -65,6 +65,8 @@ public class SecurityConfig {
                     // 회원
                     .requestMatchers("/api/admins/**", "/admins/members/**").hasRole("ADMIN")
                     .requestMatchers("/api/members/**", "/members/**").hasRole("USER")
+                     // Prometheus 엔드포인트 허용
+                    .requestMatchers("/actuator/prometheus").permitAll()
                     .anyRequest().authenticated()
             );
 
