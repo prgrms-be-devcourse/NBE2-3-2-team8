@@ -4,16 +4,18 @@ import lombok.RequiredArgsConstructor;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
+import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
 import org.programmers.signalbuddy.domain.social.entity.SocialProvider;
 import org.programmers.signalbuddy.domain.social.repository.SocialProviderRepository;
+import org.programmers.signalbuddy.global.exception.BusinessException;
 import org.programmers.signalbuddy.global.security.oauth.response.GoogleResponse;
 import org.programmers.signalbuddy.global.security.oauth.response.KakaoResponse;
 import org.programmers.signalbuddy.global.security.oauth.response.NaverResponse;
 import org.programmers.signalbuddy.global.security.oauth.response.OAuth2Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -27,6 +29,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private static final Logger log = LoggerFactory.getLogger(CustomOAuth2UserService.class);
     private final MemberRepository memberRepository;
     private final SocialProviderRepository socialProviderRepository;
+
+    @Value("${default.profile.image.path}")
+    private String defaultProfileImagePath;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -56,12 +61,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 Member newMember = Member.builder()
                     .email(email)
                     .nickname(oAuth2Response.getName())
-                    .profileImageUrl("none")
+                    .profileImageUrl(defaultProfileImagePath)
                     .role(MemberRole.USER)
                     .memberStatus(MemberStatus.ACTIVITY)
                     .build();
                 return memberRepository.save(newMember);
             });
+
+        if(saveMember.getMemberStatus() == MemberStatus.WITHDRAWAL){
+            throw new BusinessException(MemberErrorCode.WITHDRAWN_MEMBER);
+        }
 
         // 이미 소셜이 저장되어 있는 경우, 중복 저장하지 않음.
         if(!socialProviderRepository.existsByOauthProviderAndSocialId(oAuth2Response.getProvider(), oAuth2Response.getProviderId())){
