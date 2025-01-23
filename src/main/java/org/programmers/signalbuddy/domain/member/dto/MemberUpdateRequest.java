@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Builder
@@ -27,6 +28,6 @@ public class MemberUpdateRequest {
     @Schema(description = "닉네임", requiredMode = RequiredMode.NOT_REQUIRED, defaultValue = "Nickname")
     private String nickname;
 
-    @Schema(description = "프로필 사진", requiredMode = RequiredMode.NOT_REQUIRED, defaultValue = "test.png")
-    private String profileImageUrl;
+    @Schema(description = "프로필 사진 파일", requiredMode = RequiredMode.NOT_REQUIRED, defaultValue = "profile-img.png")
+    private MultipartFile imageFile;
 }

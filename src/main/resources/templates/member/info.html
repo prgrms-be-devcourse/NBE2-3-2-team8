@@ -20,6 +20,7 @@
       <h2 class="font-title text-neutral-950 text-xl mb-8">계정 관리</h2>
       <div class="flex items-center justify-center mb-6">
         <img alt="Profile" class="rounded-full profile-img"
+             onerror="this.src='/images/member/profile-icon.png';"
              th:src="${'/api/members/files/' + user.profileImageUrl}">
       </div>
       <form class="space-y-4">

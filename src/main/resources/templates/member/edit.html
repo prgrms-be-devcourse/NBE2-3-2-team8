@@ -19,26 +19,37 @@
     <section class="flex-1 bg-white shadow rounded-md ml-6 p-8"><h2
         class="font-title text-neutral-950 text-xl mb-8">계정 관리</h2>
       <div class="flex items-center justify-center mb-6">
-        <img alt="Profile" class="rounded-full profile-img"
-             th:src="${'/api/members/files/' + user.profileImageUrl}">
+        <div class="profile-preview">
+          <img alt="Profile" class="rounded-full profile-img" id="profileImg"
+               th:src="${'/api/members/files/' + user.profileImageUrl}">
+          <input accept="image/*" id="fileInput" name="profileImageUrl"
+                 onchange="previewImage(event)" style="display:none;" type="file">
+          <button class="camera-btn"
+                  onclick="event.preventDefault(); document.getElementById('fileInput').click();">
+            <img class="upload-button" src="/images/camera-icon.png">
+          </button>
+        </div>
       </div>
       <div class="space-y-4">
         <div class="input-box">
           <div class="flex flex-col input-value">
             <label class="text-neutral-600 text-sm mb-1">이메일
-              <input class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
+              <input
+                  class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
                   id="email" th:value="${user.email}" type="text"/>
             </label>
           </div>
           <div class="flex flex-col input-value">
             <label class="text-neutral-600 text-sm mb-1">닉네임
-              <input class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
+              <input
+                  class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
                   id="nickname" th:value="${user.nickname}" type="text"/>
             </label>
           </div>
           <div class="flex flex-col input-value">
             <label class="text-neutral-600 text-sm mb-1">비밀번호
-              <input class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
+              <input
+                  class="w-full border border-neutral-300 p-2 rounded-md text-sm text-neutral-600"
                   id="password" type="password"/>
             </label>
           </div>
@@ -60,25 +71,33 @@
     const nickname = document.querySelector('#nickname').value;
     const password = document.querySelector('#password').value.trim();
     const id = btn.dataset.id;
+    const fileInput = document.querySelector("#fileInput");
+    const file = fileInput.files[0];
 
-    const params = {
-      email,
-      nickname
-    }
+    const formData = new FormData();
+
+    formData.append("email", email);
+    formData.append("nickname", nickname);
     if (password) {
-      params.password = password
+      formData.append("password", password);
     }
+    if (file) {
+      formData.append("imageFile", file);
+    }
+
     fetch(`/api/members/${id}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(params),
+      body: formData,
     })
     .then(response => {
       return response.json();
     })
     .then(data => {
+      if (data.code) {
+        console.log('업데이트 실패 : ', data)
+        alert('수정이 실패했습니다.')
+        return;
+      }
       console.log('업데이트 성공:', data);
       alert("수정이 완료되었습니다.")
       window.location.href = `/members`
@@ -88,6 +107,19 @@
     });
   }
 
+  function previewImage(event) {
+    const fileInput = event.target;
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const preview = document.getElementById('profileImg');
+      preview.src = e.target.result;
+    };
+
+    if (fileInput.files[0]) {
+      reader.readAsDataURL(fileInput.files[0]);
+    }
+  }
 </script>
 </body>
 </html>
