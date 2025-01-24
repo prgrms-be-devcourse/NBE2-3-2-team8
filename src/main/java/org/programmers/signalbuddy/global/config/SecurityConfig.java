@@ -48,7 +48,6 @@ public class SecurityConfig {
                     "/js/**",
                     "/images/**",
                     "/ws/**",
-                    "/actuator/health",
                     "/webjars/**").permitAll()
                     // 로그인, 회원가입
                     .requestMatchers("/members/login", "admins/login", "/api/members/join",
@@ -65,8 +64,10 @@ public class SecurityConfig {
                     // 회원
                     .requestMatchers("/api/admins/**", "/admins/members/**").hasRole("ADMIN")
                     .requestMatchers("/api/members/**", "/members/**").hasRole("USER")
-                     // Prometheus 엔드포인트 허용
+                    // Prometheus 엔드포인트 허용
                     .requestMatchers("/actuator/prometheus").permitAll()
+                    // Health Check
+                    .requestMatchers("/actuator/health").permitAll()
                     .anyRequest().authenticated()
             );
 
