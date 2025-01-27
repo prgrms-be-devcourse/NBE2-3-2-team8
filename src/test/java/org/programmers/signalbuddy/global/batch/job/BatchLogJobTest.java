@@ -1,8 +1,8 @@
 package org.programmers.signalbuddy.global.batch.job;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.programmers.signalbuddy.global.support.BatchTest;
 import org.springframework.batch.core.ExitStatus;
@@ -19,7 +19,7 @@ class BatchLogJobTest extends BatchTest {
     @Autowired
     private Job oldBatchLogDeleteJob;
 
-    @야
+    @DisplayName("14일 이상된 배치 작업의 로그를 삭제하는 잡 실행")
     @Test
     void oldBatchLogDeleteJob() throws Exception {
         // when
