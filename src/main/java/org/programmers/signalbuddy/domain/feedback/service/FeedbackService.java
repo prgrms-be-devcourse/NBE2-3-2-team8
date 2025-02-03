@@ -10,6 +10,7 @@ import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.feedback.exception.FeedbackErrorCode;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackJdbcRepository;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
+import org.programmers.signalbuddy.domain.like.repository.LikeRepository;
 import org.programmers.signalbuddy.domain.member.entity.Member;
 import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
@@ -30,6 +31,7 @@ public class FeedbackService {
     private final MemberRepository memberRepository;
     private final FeedbackJdbcRepository feedbackJdbcRepository;
     private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
 
     public PageResponse<FeedbackResponse> searchFeedbackList(Pageable pageable, Long answerStatus) {
         Page<FeedbackResponse> responsePage = feedbackRepository.findAllByActiveMembers(pageable,
@@ -92,6 +94,7 @@ public class FeedbackService {
         }
 
         commentRepository.deleteAllByFeedbackId(feedbackId);
+        likeRepository.deleteAllByFeedbackId(feedbackId);
         feedbackRepository.deleteById(feedbackId);
     }
 
