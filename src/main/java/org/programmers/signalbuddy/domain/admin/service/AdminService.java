@@ -49,22 +49,18 @@ public class AdminService {
     }
 
     public AdminMemberResponse getMember(Long id) {
-        Member member = memberRepository.findById(id).orElseThrow(() -> new BusinessException(
-            MemberErrorCode.NOT_FOUND_MEMBER));
+        Member member = memberRepository.findByIdOrThrow(id);
 
-        List<AdminBookmarkResponse> adminBookmarkResponses = bookmarkRepository.findBookmarkByMember(
-            member.getMemberId());
-
-        AdminMemberResponse response = AdminMapper.INSTANCE.toAdminMemberResponse(member,
-            adminBookmarkResponses);
-
-        return response;
+        return AdminMapper.INSTANCE.toAdminMemberResponse(member,
+            bookmarkRepository.findBookmarkByMember(
+                member.getMemberId()));
     }
 
     public Page<WithdrawalMemberResponse> getAllWithdrawalMembers(Pageable pageable) {
-        Page<WithdrawalMemberResponse> membersPage = memberRepository.findAllWithdrawMembers(pageable);
+        Page<WithdrawalMemberResponse> membersPage = memberRepository.findAllWithdrawMembers(
+            pageable);
 
-       return membersPage;
+        return membersPage;
     }
 
     @Transactional
