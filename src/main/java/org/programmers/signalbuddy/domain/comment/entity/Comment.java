@@ -38,9 +38,9 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Builder(builderMethodName = "creator")
-    private Comment(CommentRequest request, Feedback feedback, Member member) {
-        this.content = Objects.requireNonNull(request.getContent());
+    @Builder(builderMethodName = "create")
+    private Comment(final String content, final Feedback feedback, final Member member) {
+        this.content = Objects.requireNonNull(content);
         this.feedback = Objects.requireNonNull(feedback);
         this.member = Objects.requireNonNull(member);
     }

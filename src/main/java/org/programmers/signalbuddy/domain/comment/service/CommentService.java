@@ -7,10 +7,8 @@ import org.programmers.signalbuddy.domain.comment.entity.Comment;
 import org.programmers.signalbuddy.domain.comment.exception.CommentErrorCode;
 import org.programmers.signalbuddy.domain.comment.repository.CommentRepository;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
-import org.programmers.signalbuddy.domain.feedback.exception.FeedbackErrorCode;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
 import org.programmers.signalbuddy.domain.member.entity.Member;
-import org.programmers.signalbuddy.domain.member.exception.MemberErrorCode;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
 import org.programmers.signalbuddy.global.dto.CustomUser2Member;
 import org.programmers.signalbuddy.global.dto.PageResponse;
@@ -31,12 +29,11 @@ public class CommentService {
 
     @Transactional
     public void writeComment(CommentRequest request, CustomUser2Member user) {
-        Member member = memberRepository.findById(user.getMemberId())
-            .orElseThrow(() -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
-        Feedback feedback = feedbackRepository.findById(request.getFeedbackId())
-            .orElseThrow(() -> new BusinessException(FeedbackErrorCode.NOT_FOUND_FEEDBACK));
+        Member member = memberRepository.findByIdOrThrow(user.getMemberId());
+        Feedback feedback = feedbackRepository.findByIdOrThrow(request.getFeedbackId());
 
-        Comment comment = Comment.creator().request(request).feedback(feedback).member(member)
+        Comment comment = Comment.create()
+            .content(request.getContent()).feedback(feedback).member(member)
             .build();
 
         // 관리자일 때 피드백 상태 변경
@@ -55,8 +52,7 @@ public class CommentService {
 
     @Transactional
     public void updateComment(Long commentId, CommentRequest request, CustomUser2Member user) {
-        Comment comment = commentRepository.findById(commentId)
-            .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND_COMMENT));
+        Comment comment = commentRepository.findByIdOrThrow(commentId);
 
         // 수정 요청자와 댓글 작성자 다른 경우
         if (Member.isNotSameMember(user, comment.getMember())) {
@@ -68,8 +64,7 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(Long commentId, CustomUser2Member user) {
-        Comment comment = commentRepository.findById(commentId)
-            .orElseThrow(() -> new BusinessException(CommentErrorCode.NOT_FOUND_COMMENT));
+        Comment comment = commentRepository.findByIdOrThrow(commentId);
 
         // 삭제 요청자와 댓글 작성자 다른 경우
         if (Member.isNotSameMember(user, comment.getMember())) {
