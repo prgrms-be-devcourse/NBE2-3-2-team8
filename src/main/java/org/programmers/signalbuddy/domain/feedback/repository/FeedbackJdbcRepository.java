@@ -32,7 +32,7 @@ public class FeedbackJdbcRepository {
                 "m.member_id, m.email, m.nickname, m.profile_image_url, m.role, m.member_status ")
             .append("FROM feedbacks f ")
             .append("JOIN members m ON f.member_id = m.member_id ")
-            .append("WHERE MATCH(f.subject, f.content) AGAINST (? IN NATURAL LANGUAGE MODE) ")
+            .append("WHERE MATCH(f.subject, f.content) AGAINST (? IN BOOLEAN MODE) ")
             .append("AND ")
             .append(answerStatusCondition(answerStatus))
             .append("LIMIT ? OFFSET ?;");
@@ -42,16 +42,18 @@ public class FeedbackJdbcRepository {
             .append("SELECT count(*) ")
             .append("FROM feedbacks f ")
             .append("JOIN members m ON f.member_id = m.member_id ")
-            .append("WHERE MATCH(f.subject, f.content) AGAINST (? IN NATURAL LANGUAGE MODE) ")
+            .append("WHERE MATCH(f.subject, f.content) AGAINST (? IN BOOLEAN MODE) ")
             .append("AND ")
             .append(answerStatusCondition(answerStatus));
 
+        String searchKeyword = "*" + keyword + "*";
+
         List<FeedbackResponse> feedbacks = jdbcTemplate.query(
-            query.toString(), new FeedbackResponseRowMapper(), keyword, pageable.getPageSize(),
+            query.toString(), new FeedbackResponseRowMapper(), searchKeyword, pageable.getPageSize(),
             pageable.getOffset());
 
         long total = Optional.ofNullable(
-                jdbcTemplate.queryForObject(countQuery.toString(), Long.class, keyword))
+                jdbcTemplate.queryForObject(countQuery.toString(), Long.class, searchKeyword))
             .orElse(0L);
 
         return new PageImpl<>(feedbacks, pageable, total);
