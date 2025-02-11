@@ -9,7 +9,6 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
 import org.programmers.signalbuddy.domain.like.service.LikeService;
@@ -76,8 +75,10 @@ class LikeJobConfigTest extends BatchTest implements RedisTestContainer {
 
         String subject = "test subject";
         String content = "test content";
-        FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
-        Feedback savedFeedback = feedbackRepository.saveAndFlush(Feedback.create(request, savedMemberList.get(0)));
+        Feedback entity = Feedback.create()
+            .subject(subject).content(content).member(savedMemberList.get(0))
+            .build();
+        Feedback savedFeedback = feedbackRepository.saveAndFlush(entity);
 
         // when
         // 좋아요 추가

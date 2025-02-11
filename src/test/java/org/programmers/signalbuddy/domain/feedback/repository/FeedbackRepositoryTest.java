@@ -10,10 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.programmers.signalbuddy.domain.feedback.dto.FeedbackResponse;
-import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
-import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
 import org.programmers.signalbuddy.global.support.RepositoryTest;
@@ -45,8 +44,12 @@ class FeedbackRepositoryTest extends RepositoryTest {
         for (int i = 0; i < 123; i++) {
             String subject = "test subject";
             String content = "test content";
-            FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
-            feedbackList.add(Feedback.create(request, member));
+
+            Feedback feedback = Feedback.create()
+                .subject(subject).content(content).member(member)
+                .build();
+
+            feedbackList.add(feedback);
         }
         feedbackRepository.saveAll(feedbackList);
     }

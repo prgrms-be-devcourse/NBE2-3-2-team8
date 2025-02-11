@@ -6,14 +6,12 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.programmers.signalbuddy.domain.comment.dto.CommentRequest;
 import org.programmers.signalbuddy.domain.comment.dto.CommentResponse;
 import org.programmers.signalbuddy.domain.comment.entity.Comment;
-import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
-import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.Member;
+import org.programmers.signalbuddy.domain.member.entity.enums.MemberRole;
 import org.programmers.signalbuddy.domain.member.entity.enums.MemberStatus;
 import org.programmers.signalbuddy.domain.member.repository.MemberRepository;
 import org.programmers.signalbuddy.global.support.RepositoryTest;
@@ -45,13 +43,15 @@ class CommentRepositoryTest extends RepositoryTest {
 
         String subject = "test subject";
         String content = "test content";
-        FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
-        feedback = feedbackRepository.save(Feedback.create(request, member));
+        Feedback entity = Feedback.create()
+            .subject(subject).content(content).member(member)
+            .build();
+        feedback = feedbackRepository.save(entity);
 
         List<Comment> commentList = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
-            Comment comment = Comment.creator()
-                .request(new CommentRequest(feedback.getFeedbackId(), "test comment content"))
+            Comment comment = Comment.create()
+                .content("test comment content")
                 .feedback(feedback).member(member).build();
             commentList.add(comment);
         }

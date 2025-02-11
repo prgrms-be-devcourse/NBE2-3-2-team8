@@ -56,8 +56,10 @@ class FeedbackServiceTest extends ServiceTest {
 
         String subject = "test subject";
         String content = "test content";
-        FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
-        feedback = feedbackRepository.save(Feedback.create(request, member));
+        Feedback entity = Feedback.create()
+            .subject(subject).content(content).member(member)
+            .build();
+        feedback = feedbackRepository.save(entity);
     }
 
     @DisplayName("피드백 작성 성공")
@@ -188,8 +190,10 @@ class FeedbackServiceTest extends ServiceTest {
         for (int i = 1; i <= 10; i++) {
             String subject = "test subject " + i;
             String content = "test content " + i;
-            FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
-            feedbackRepository.save(Feedback.create(request, member));
+            Feedback entity = Feedback.create()
+                .subject(subject).content(content).member(member)
+                .build();
+            feedbackRepository.save(entity);
         }
 
         final Page<FeedbackResponse> feedbacks = feedbackService.findPagedFeedbacksByMember(
