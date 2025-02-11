@@ -9,7 +9,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.Objects;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.programmers.signalbuddy.domain.basetime.BaseTimeEntity;
@@ -43,16 +45,13 @@ public class Feedback extends BaseTimeEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    private Feedback(FeedbackWriteRequest request, Member member) {
-        this.subject = request.getSubject();
-        this.content = request.getContent();
+    @Builder(builderMethodName = "create")
+    private Feedback(final String subject, final String content, final Member member) {
+        this.subject = Objects.requireNonNull(subject);
+        this.content = Objects.requireNonNull(content);
         this.likeCount = 0L;
         this.answerStatus = AnswerStatus.BEFORE;
-        this.member = member;
-    }
-
-    public static Feedback create(FeedbackWriteRequest request, Member member) {
-        return new Feedback(request, member);
+        this.member = Objects.requireNonNull(member);
     }
 
     public void updateFeedback(FeedbackWriteRequest request) {
