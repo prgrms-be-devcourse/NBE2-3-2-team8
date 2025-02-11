@@ -50,8 +50,9 @@ public class BookmarkRepositoryCustomImpl implements BookmarkRepositoryCustom {
     @Override
     public List<AdminBookmarkResponse> findBookmarkByMember(Long memberId) {
         final List<AdminBookmarkResponse> responses = queryFactory.select(adminBookmarkDto).from(bookmark)
-            .join(member)
-            .on(bookmark.member.eq(member).and(member.memberId.eq(memberId)))
+//            .join(member)
+//            .on(bookmark.member.eq(member).and(member.memberId.eq(memberId)))
+            .where(bookmark.member.memberId.eq(memberId))
             .orderBy(new OrderSpecifier<>(Order.ASC, bookmark.createdAt)).fetch();
         return responses;
     }
