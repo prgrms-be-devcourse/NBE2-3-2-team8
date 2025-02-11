@@ -6,7 +6,6 @@ import static org.programmers.signalbuddy.domain.like.service.LikeService.getLik
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
 import org.programmers.signalbuddy.domain.like.dto.LikeExistResponse;
@@ -58,8 +57,10 @@ class LikeServiceTest extends ServiceTest implements RedisTestContainer {
 
         String subject = "test subject";
         String content = "test content";
-        FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
-        feedback = feedbackRepository.save(Feedback.create(request, member));
+        Feedback entity = Feedback.create()
+            .subject(subject).content(content).member(member)
+            .build();
+        feedback = feedbackRepository.save(entity);
     }
 
     @DisplayName("좋아요 추가 성공")

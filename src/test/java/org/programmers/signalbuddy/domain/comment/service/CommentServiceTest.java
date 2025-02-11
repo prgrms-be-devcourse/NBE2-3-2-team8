@@ -15,7 +15,6 @@ import org.programmers.signalbuddy.domain.comment.dto.CommentRequest;
 import org.programmers.signalbuddy.domain.comment.entity.Comment;
 import org.programmers.signalbuddy.domain.comment.exception.CommentErrorCode;
 import org.programmers.signalbuddy.domain.comment.repository.CommentRepository;
-import org.programmers.signalbuddy.domain.feedback.dto.FeedbackWriteRequest;
 import org.programmers.signalbuddy.domain.feedback.entity.Feedback;
 import org.programmers.signalbuddy.domain.feedback.entity.enums.AnswerStatus;
 import org.programmers.signalbuddy.domain.feedback.repository.FeedbackRepository;
@@ -65,11 +64,13 @@ class CommentServiceTest extends ServiceTest {
 
         String subject = "test subject";
         String content = "test content";
-        FeedbackWriteRequest request = new FeedbackWriteRequest(subject, content);
-        feedback = feedbackRepository.save(Feedback.create(request, member));
+        Feedback entity = Feedback.create()
+            .subject(subject).content(content).member(member)
+            .build();
+        feedback = feedbackRepository.save(entity);
 
-        comment = Comment.creator()
-            .request(new CommentRequest(feedback.getFeedbackId(), "test comment content"))
+        comment = Comment.create()
+            .content("test comment content")
             .feedback(feedback).member(member).build();
         comment = commentRepository.save(comment);
     }
@@ -165,7 +166,6 @@ class CommentServiceTest extends ServiceTest {
         Long feedbackId = feedback.getFeedbackId();
         String updatedContent = "update comment content";
         CommentRequest request = new CommentRequest(feedbackId, updatedContent);
-        // TODO: User 객체는 나중에 변경해야 함!
         CustomUser2Member user = new CustomUser2Member(
             new CustomUserDetails(999999L, "", "",
                 "", "", MemberRole.USER, MemberStatus.ACTIVITY));
